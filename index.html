@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prof. A. Researcher — Physical Chemistry</title>
+  <meta name="description" content="Personal academic website of Prof. A. Researcher, Physical Chemistry." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #faf9f7;
+      --surface: #ffffff;
+      --text: #1a1a18;
+      --muted: #5c5b57;
+      --hint: #9e9d99;
+      --border: rgba(0,0,0,0.10);
+      --border-strong: rgba(0,0,0,0.18);
+      --accent: #2c4a8a;
+      --radius: 6px;
+      --radius-lg: 10px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #111110;
+        --surface: #1c1c1b;
+        --text: #e8e7e3;
+        --muted: #a0a09b;
+        --hint: #66655f;
+        --border: rgba(255,255,255,0.10);
+        --border-strong: rgba(255,255,255,0.18);
+        --accent: #7da0e8;
+      }
+    }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .container { max-width: 860px; margin: 0 auto; padding: 0 1.5rem 5rem; }
+
+    /* ── NAV ── */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.4rem 0; border-bottom: 1px solid var(--border);
+      margin-bottom: 3rem;
+    }
+    .nav-logo { font-family: 'EB Garamond', serif; font-size: 19px; color: var(--text); text-decoration: none; }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a {
+      font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase;
+      text-decoration: none; color: var(--muted); transition: color 0.15s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── HERO ── */
+    .hero { display: grid; grid-template-columns: 1fr 190px; gap: 3rem; align-items: start; margin-bottom: 4rem; }
+    .hero h1 { font-family: 'EB Garamond', serif; font-size: 38px; font-weight: 400; line-height: 1.2; margin-bottom: 0.3rem; }
+    .hero .subtitle { font-size: 12px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.3rem; }
+    .hero .bio { font-size: 15px; color: var(--muted); max-width: 520px; margin-bottom: 1.4rem; }
+    .affil { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); margin-bottom: 0.4rem; }
+    .affil svg { width: 15px; height: 15px; flex-shrink: 0; stroke: var(--muted); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .cta-links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 1.4rem; }
+    .cta-links a {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+      text-decoration: none; padding: 6px 14px;
+      border: 1px solid var(--border-strong); border-radius: var(--radius);
+      color: var(--muted); transition: background 0.15s, color 0.15s;
+    }
+    .cta-links a:hover { background: var(--surface); color: var(--text); }
+    .avatar-box {
+      width: 190px; aspect-ratio: 1;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--hint); font-size: 13px; flex-direction: column; gap: 8px;
+    }
+    .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* ── SECTION ── */
+    section { margin-bottom: 3.5rem; }
+    .section-heading {
+      font-family: 'EB Garamond', serif; font-size: 24px; font-weight: 400;
+      border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.6rem;
+    }
+
+    /* ── PUBLICATIONS ── */
+    .pub { padding: 1rem 0; border-bottom: 1px solid var(--border); }
+    .pub:last-of-type { border-bottom: none; }
+    .pub-year { display: inline-block; font-size: 11px; letter-spacing: 0.07em; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 1px 7px; color: var(--hint); margin-right: 6px; vertical-align: middle; }
+    .pub-title { font-size: 15px; font-weight: 600; margin-bottom: 0.25rem; }
+    .pub-authors { font-size: 13px; font-style: italic; color: var(--muted); margin-bottom: 0.2rem; }
+    .pub-journal { font-size: 13px; color: var(--muted); }
+    .pub-journal em { font-style: normal; color: var(--text); }
+    .pub-links { display: flex; gap: 6px; margin-top: 0.5rem; }
+    .pub-link {
+      font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+      text-decoration: none; padding: 3px 10px;
+      border: 1px solid var(--border-strong); border-radius: var(--radius);
+      color: var(--muted); transition: background 0.12s;
+    }
+    .pub-link:hover { background: var(--surface); }
+    .all-link { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; color: var(--muted); text-decoration: none; margin-top: 1rem; }
+    .all-link:hover { color: var(--text); }
+
+    /* ── PROJECTS ── */
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+    .project-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
+    .project-icon { font-size: 20px; margin-bottom: 0.8rem; color: var(--muted); }
+    .project-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 0.4rem; }
+    .project-card p { font-size: 13px; color: var(--muted); line-height: 1.55; }
+
+    /* ── GROUP ── */
+    .group-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; }
+    .member-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1rem; text-align: center; }
+    .member-avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: #dce8f8; color: #1a4080;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 600; margin: 0 auto 0.6rem;
+    }
+    .member-name { font-size: 13px; font-weight: 600; }
+    .member-role { font-size: 12px; color: var(--muted); }
+
+    /* ── BLOG ── */
+    .blog-item { display: flex; gap: 1.2rem; padding: 0.9rem 0; border-bottom: 1px solid var(--border); }
+    .blog-item:last-child { border-bottom: none; }
+    .blog-date { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--hint); min-width: 68px; padding-top: 3px; }
+    .blog-body .blog-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+    .blog-body .blog-excerpt { font-size: 13px; color: var(--muted); }
+
+    /* ── CONTACT ── */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+    .contact-intro { font-size: 14px; color: var(--muted); margin-bottom: 1rem; }
+    .contact-row { display: flex; align-items: center; gap: 9px; font-size: 14px; color: var(--muted); margin-bottom: 0.55rem; }
+    .contact-row svg { width: 16px; height: 16px; flex-shrink: 0; stroke: var(--hint); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .address-label { font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--hint); margin-bottom: 0.6rem; }
+    .address-body { font-size: 14px; color: var(--muted); line-height: 1.85; }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); padding-top: 1.5rem; display: flex; justify-content: space-between; font-size: 12px; color: var(--hint); }
+
+    @media (max-width: 640px) {
+      .hero { grid-template-columns: 1fr; }
+      .avatar-box { width: 140px; }
+      .contact-grid { grid-template-columns: 1fr; }
+      nav { flex-direction: column; gap: 0.8rem; }
+      .nav-links { flex-wrap: wrap; justify-content: center; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <nav>
+    <a class="nav-logo" href="#">Prof. A. Researcher</a>
+    <ul class="nav-links">
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#group">Group</a></li>
+      <li><a href="#news">News</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <div class="hero">
+    <div>
+      <h1>Prof. Alexandra Researcher</h1>
+      <div class="subtitle">Associate Professor · Physical Chemistry</div>
+      <p class="bio">
+        We study the ultrafast dynamics of chemical bond formation and electron transfer
+        processes at solid–liquid interfaces, combining femtosecond spectroscopy with
+        first-principles theory.
+      </p>
+      <div class="affil">
+        <svg viewBox="0 0 24 24"><path d="M3 21h18M6 21V7l6-4 6 4v14M9 21V12h6v9"/></svg>
+        Department of Chemistry, University Name
+      </div>
+      <div class="affil">
+        <svg viewBox="0 0 24 24"><path d="M12 21c-4-4-7-7.5-7-11a7 7 0 0 1 14 0c0 3.5-3 7-7 11z"/><circle cx="12" cy="10" r="2"/></svg>
+        City, Country
+      </div>
+      <div class="cta-links">
+        <a href="mailto:a.researcher@university.edu">&#9993; Email</a>
+        <a href="cv.pdf">&#128196; CV</a>
+        <a href="https://scholar.google.com" target="_blank" rel="noopener">Scholar</a>
+        <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://twitter.com" target="_blank" rel="noopener">Twitter</a>
+      </div>
+    </div>
+    <div class="avatar-box">
+      <!-- Replace src with your photo path, e.g. src="assets/photo.jpg" -->
+      <!-- <img src="assets/photo.jpg" alt="Photo of Prof. A. Researcher" /> -->
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      <span style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#bbb">Photo</span>
+    </div>
+  </div>
+
+  <!-- ── PUBLICATIONS ── -->
+  <section id="publications">
+    <div class="section-heading">Selected publications</div>
+
+    <div class="pub">
+      <div class="pub-title"><span class="pub-year">2024</span>Coherent phonon-driven charge separation at the TiO₂/water interface</div>
+      <div class="pub-authors">Researcher, A., Smith, B. J., &amp; Tanaka, K.</div>
+      <div class="pub-journal"><em>Nature Chemistry</em>, 16, 342–350</div>
+      <div class="pub-links">
+        <a class="pub-link" href="#">DOI</a>
+        <a class="pub-link" href="#">PDF</a>
+        <a class="pub-link" href="#">arXiv</a>
+      </div>
+    </div>
+
+    <div class="pub">
+      <div class="pub-title"><span class="pub-year">2023</span>Femtosecond X-ray spectroscopy of solvated electron dynamics in aqueous media</div>
+      <div class="pub-authors">Chen, L., Researcher, A., &amp; Müller, H.</div>
+      <div class="pub-journal"><em>Journal of Physical Chemistry Letters</em>, 14, 7891–7899</div>
+      <div class="pub-links">
+        <a class="pub-link" href="#">DOI</a>
+        <a class="pub-link" href="#">PDF</a>
+      </div>
+    </div>
+
+    <div class="pub">
+      <div class="pub-title"><span class="pub-year">2022</span>Non-adiabatic dynamics of proton-coupled electron transfer in flavin photocatalysis</div>
+      <div class="pub-authors">Researcher, A., Patel, R., &amp; Yamamoto, S.</div>
+      <div class="pub-journal"><em>Journal of the American Chemical Society</em>, 144, 18204–18215</div>
+      <div class="pub-links">
+        <a class="pub-link" href="#">DOI</a>
+        <a class="pub-link" href="#">PDF</a>
+        <a class="pub-link" href="#">arXiv</a>
+      </div>
+    </div>
+
+    <a class="all-link" href="publications.html">All publications →</a>
+  </section>
+
+  <!-- ── RESEARCH ── -->
+  <section id="research">
+    <div class="section-heading">Research projects</div>
+    <div class="projects-grid">
+      <div class="project-card">
+        <div class="project-icon">⚡</div>
+        <h3>Ultrafast interfacial dynamics</h3>
+        <p>Femtosecond pump-probe spectroscopy of electron and proton transfer at electrochemical interfaces.</p>
+      </div>
+      <div class="project-card">
+        <div class="project-icon">⚛️</div>
+        <h3>First-principles theory</h3>
+        <p>TDDFT and path-integral methods for non-adiabatic dynamics in condensed-phase chemistry.</p>
+      </div>
+      <div class="project-card">
+        <div class="project-icon">☀️</div>
+        <h3>Solar energy conversion</h3>
+        <p>Mechanistic studies of photocatalytic water splitting and CO₂ reduction on semiconductor surfaces.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── GROUP ── -->
+  <section id="group">
+    <div class="section-heading">The group</div>
+    <div class="group-grid">
+      <div class="member-card">
+        <div class="member-avatar" style="background:#dce8f8;color:#1a4080">AR</div>
+        <div class="member-name">Prof. A. Researcher</div>
+        <div class="member-role">Principal Investigator</div>
+      </div>
+      <div class="member-card">
+        <div class="member-avatar" style="background:#d8f0e4;color:#1a5c38">BS</div>
+        <div class="member-name">B. Smith</div>
+        <div class="member-role">Postdoctoral Fellow</div>
+      </div>
+      <div class="member-card">
+        <div class="member-avatar" style="background:#fef0d4;color:#7a4a0a">LC</div>
+        <div class="member-name">L. Chen</div>
+        <div class="member-role">PhD Student</div>
+      </div>
+      <div class="member-card">
+        <div class="member-avatar" style="background:#fde8e8;color:#7a1a1a">RP</div>
+        <div class="member-name">R. Patel</div>
+        <div class="member-role">PhD Student</div>
+      </div>
+    </div>
+    <a class="all-link" href="group.html" style="margin-top:1.2rem;display:inline-flex;align-items:center;gap:4px;font-size:13px;color:var(--muted);text-decoration:none;">Full group page →</a>
+  </section>
+
+  <!-- ── NEWS ── -->
+  <section id="news">
+    <div class="section-heading">News &amp; notes</div>
+
+    <div class="blog-item">
+      <div class="blog-date">Apr 2025</div>
+      <div class="blog-body">
+        <div class="blog-title">New paper accepted in <em>Nature Chemistry</em></div>
+        <div class="blog-excerpt">Our latest work on coherent phonon-mediated charge separation is now online.</div>
+      </div>
+    </div>
+    <div class="blog-item">
+      <div class="blog-date">Jan 2025</div>
+      <div class="blog-body">
+        <div class="blog-title">Two PhD positions available</div>
+        <div class="blog-excerpt">We are recruiting enthusiastic students interested in ultrafast spectroscopy and computational chemistry.</div>
+      </div>
+    </div>
+    <div class="blog-item">
+      <div class="blog-date">Oct 2024</div>
+      <div class="blog-body">
+        <div class="blog-title">Invited talk at ACS Fall Meeting</div>
+        <div class="blog-excerpt">Presenting our recent results on proton-coupled electron transfer in Denver, Colorado.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CONTACT ── -->
+  <section id="contact">
+    <div class="section-heading">Contact</div>
+    <div class="contact-grid">
+      <div>
+        <p class="contact-intro">I welcome inquiries from prospective graduate students, postdocs, and collaborators. Please include a brief description of your research interests and a CV.</p>
+        <div class="contact-row">
+          <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+          <a href="mailto:a.researcher@university.edu" style="color:var(--muted);text-decoration:none;">a.researcher@university.edu</a>
+        </div>
+        <div class="contact-row">
+          <svg viewBox="0 0 24 24"><path d="M3 21h18M6 21V7l6-4 6 4v14M9 21V12h6v9"/></svg>
+          Room 4.12, Chemistry Building
+        </div>
+        <div class="contact-row">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 12 19.79 19.79 0 0 1 1.07 3.4 2 2 0 0 1 3.05 1.2h3a2 2 0 0 1 2 1.72c.127.96.36 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.9a16 16 0 0 0 5.61 5.61l1.27-1.27a2 2 0 0 1 2.11-.45c.907.34 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          +1 (000) 000-0000
+        </div>
+      </div>
+      <div>
+        <p class="address-label">Mailing address</p>
+        <p class="address-body">
+          Department of Chemistry<br>
+          University Name<br>
+          123 Science Drive<br>
+          City, State 00000
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>&copy; 2025 Alexandra Researcher</span>
+    <span>Built with GitHub Pages</span>
+  </footer>
+
+</div>
+</body>
+</html>
