@@ -585,11 +585,10 @@
     <nav>
       <a class="nav-logo" href="#">Jacovella Group</a>
       <ul class="nav-links">
+        <li><a href="index.html" style="color: var(--text);">Home</a></li>
+        <li><a href="research.html">Research</a></li>
         <li><a href="publications.html">Publications</a></li>
-        <li><a href="#research">Research</a></li>
-        <li><a href="#group">Group</a></li>
-        <li><a href="#news">News</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <li><a href="group.html">Group</a></li>
       </ul>
     </nav>
 
@@ -676,15 +675,9 @@
     <!-- ── RESEARCH ── -->
     <section id="research">
       <div class="section-heading">Main Research Topics</div>
-      <div class="projects-grid">
-        <div class="project-card">
-          <h3>Electronic spectroscopy of ions</h3>
-          <p>Description of topic.</p>
-        </div>
-        <div class="project-card">
-          <h3>Isomer-specific ion-molecule chemistry</h3>
-          <p>Description of topic.</p>
-        </div>
+      <div class="projects-grid" id="research-topics-container">
+        <p style="font-size:14px;color:var(--muted);">Loading research topics...</p>
+      </div>
     </section>
 
     <!-- ── GROUP ── -->
@@ -833,6 +826,38 @@
       .catch(() => {
         document.getElementById('selected-pubs-container').innerHTML =
           '<p style="font-size:14px;color:var(--muted);">Could not load publications.</p>';
+      });
+    // Load research topics from research.html
+    fetch('research.html')
+      .then(r => r.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const topics = [...doc.querySelectorAll('.research-topic')];
+        const container = document.getElementById('research-topics-container');
+        
+        if (topics.length === 0) {
+          container.innerHTML = '<p style="font-size:14px;color:var(--muted);">No research topics found.</p>';
+        } else {
+          container.innerHTML = topics.map(topic => {
+            const title = topic.querySelector('h2').innerText;
+            const id = topic.id;
+            // Get the first paragraph of the description
+            const firstPara = topic.querySelector('.topic-description p').innerText;
+            
+            return `
+              <div class="project-card">
+                <h3>${title}</h3>
+                <p>${firstPara.substring(0, 150)}${firstPara.length > 150 ? '...' : ''}</p>
+                <a href="research.html#${id}" class="pub-link" style="margin-top:1rem; display:inline-block; width:fit-content;">Learn more →</a>
+              </div>
+            `;
+          }).join('\n');
+        }
+      })
+      .catch(() => {
+        document.getElementById('research-topics-container').innerHTML =
+          '<p style="font-size:14px;color:var(--muted);">Could not load research topics.</p>';
       });
   </script>
 </body>

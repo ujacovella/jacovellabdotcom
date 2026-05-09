@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jacovella Group - Research</title>
+  <meta name="description" content="Research topics of the Jacovella Group." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f5f5f7; --surface: #ffffff; --text: #1d1d1f; --muted: #515154; --hint: #86868b;
+      --border: rgba(0, 0, 0, 0.08); --border-strong: rgba(0, 0, 0, 0.15); --accent: #0066cc;
+      --radius: 8px; --radius-lg: 12px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #151516; --surface: #222224; --text: #f5f5f7; --muted: #a1a1a6; --hint: #86868b;
+        --border: rgba(255, 255, 255, 0.08); --border-strong: rgba(255, 255, 255, 0.15); --accent: #2997ff;
+      }
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.7; }
+    .container { max-width: 860px; margin: 0 auto; padding: 0 1.5rem 5rem; }
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 1.4rem 0; border-bottom: 1px solid var(--border); margin-bottom: 3rem; }
+    .nav-logo { font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 700; color: var(--text); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase; text-decoration: none; color: var(--muted); transition: color 0.15s; }
+    .nav-links a:hover { color: var(--text); }
+    
+    .section-heading { font-family: 'Inter', sans-serif; font-size: 22px; font-weight: 600; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 2rem; letter-spacing: -0.02em; }
+    
+    .research-topic { margin-bottom: 5rem; scroll-margin-top: 2rem; }
+    .research-topic h2 { font-size: 24px; font-weight: 700; margin-bottom: 1rem; letter-spacing: -0.03em; }
+    .topic-image { width: 100%; aspect-ratio: 16/9; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; color: var(--hint); font-size: 14px; overflow: hidden; }
+    .topic-image img { width: 100%; height: 100%; object-fit: cover; }
+    .topic-description { font-size: 16px; color: var(--muted); }
+    .topic-description p { margin-bottom: 1rem; }
+
+    footer { border-top: 1px solid var(--border); padding-top: 1.5rem; margin-top: 5rem; display: flex; justify-content: space-between; font-size: 12px; color: var(--hint); }
+    @media (max-width: 640px) { nav { flex-direction: column; gap: 0.8rem; } .nav-links { flex-wrap: wrap; justify-content: center; gap: 1rem; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav>
+      <a href="index.html" class="nav-logo">Jacovella Group</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="research.html" style="color: var(--text);">Research</a></li>
+        <li><a href="publications.html">Publications</a></li>
+        <li><a href="group.html">Group</a></li>
+      </ul>
+    </nav>
+
+    <div class="section-heading">Research Topics</div>
+
+    <!-- RESEARCH_TOPICS_START -->
+    <div class="research-topic" id="spectroscopy">
+      <h2>Electronic spectroscopy of ions</h2>
+      <div class="topic-image">
+        <!-- Placeholder for image -->
+        <span>[Image: Electronic spectroscopy of ions]</span>
+      </div>
+      <div class="topic-description">
+        <p>This research topic focuses on the study of molecular ions in the gas phase using high-resolution electronic spectroscopy. By cooling ions to cryogenic temperatures, we can probe their electronic structure with unprecedented detail, helping to identify potential carriers of Diffuse Interstellar Bands (DIBs).</p>
+        <p>[Additional description placeholder...]</p>
+      </div>
+    </div>
+
+    <div class="research-topic" id="isomer-chemistry">
+      <h2>Isomer-specific ion-molecule chemistry</h2>
+      <div class="topic-image">
+        <!-- Placeholder for image -->
+        <span>[Image: Isomer-specific ion-molecule chemistry]</span>
+      </div>
+      <div class="topic-description">
+        <p>We investigate the chemical reactivity of specific molecular isomers, particularly those relevant to astrochemical environments. Understanding how different structural arrangements of the same atoms react differently is crucial for modeling the chemical evolution of the interstellar medium.</p>
+        <p>[Additional description placeholder...]</p>
+      </div>
+    </div>
+    <!-- RESEARCH_TOPICS_END -->
+
+    <footer>
+      <span>&copy; 2026 Jacovella Group</span>
+      <span>Built with GitHub Pages</span>
+    </footer>
+  </div>
+</body>
+</html>
