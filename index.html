@@ -667,19 +667,9 @@
     <!-- ── PUBLICATIONS ── -->
     <section id="publications">
       <div class="section-heading">Selected publications</div>
-
-      <div class="pub">
-        <div class="pub-title"><span class="pub-year">2025</span>iSELECTION: An Instrument to Study the Kinetics of
-          Isomer-Selected Gas-Phase Ion-Molecule Reactions</div>
-        <div class="pub-authors">Corentin Rossi, Anne P. Rasmussen, Bérenger Gans, Juraj Jašík, Jan Žabka, Marc Albaret,
-          Hugo Bauduin, Christophe Charrière, Jean-Philippe Dugal, Jérôme Guigand, Catherine Le Bris, and Ugo Jacovella*
-        </div>
-        <div class="pub-journal"><em>Chem. Methods</em>, 2025, 00, e202500013</div>
-        <div class="pub-links">
-          <a class="pub-link" href="#">10.1002/cmtd.202500013</a>
-        </div>
+      <div id="selected-pubs-container">
+        <p style="font-size:14px;color:var(--muted);">Loading...</p>
       </div>
-
       <a class="all-link" href="publications.html">All publications →</a>
     </section>
 
@@ -823,6 +813,27 @@
       }
       resetInterval();
     });
+  </script>
+
+  <script>
+    // Load selected publications from publications.html
+    fetch('publications.html')
+      .then(r => r.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const selected = [...doc.querySelectorAll('.pub[data-selected="true"]')];
+        const container = document.getElementById('selected-pubs-container');
+        if (selected.length === 0) {
+          container.innerHTML = '<p style="font-size:14px;color:var(--muted);">No publications marked as selected yet.</p>';
+        } else {
+          container.innerHTML = selected.map(el => el.outerHTML).join('\n');
+        }
+      })
+      .catch(() => {
+        document.getElementById('selected-pubs-container').innerHTML =
+          '<p style="font-size:14px;color:var(--muted);">Could not load publications.</p>';
+      });
   </script>
 </body>
 

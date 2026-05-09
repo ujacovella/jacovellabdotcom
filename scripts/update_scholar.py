@@ -76,20 +76,35 @@ def fetch_publications():
             except (ValueError, TypeError):
                 year = 0
 
+            # Build a full sortable date: prefer pub_date (can be 'YYYY/MM/DD'),
+            # fall back to pub_year only.
+            raw_date = bib.get('pub_date', '') or bib.get('pub_year', '')
+            # Normalise YYYY/MM/DD  or  YYYY/MM  or  YYYY  → YYYY-MM-DD
+            parts = [p.zfill(2) for p in raw_date.replace('/', '-').split('-')]
+            if len(parts) == 3:
+                sort_date = '-'.join(parts)          # YYYY-MM-DD
+            elif len(parts) == 2:
+                sort_date = f"{parts[0]}-{parts[1]}-00"
+            elif len(parts) == 1 and parts[0]:
+                sort_date = f"{parts[0]}-00-00"
+            else:
+                sort_date = '0000-00-00'
+
             title   = bib.get('title', 'Unknown Title')
             authors = bib.get('author', 'Unknown Authors').replace(' and ', ', ')
             journal = bib.get('journal', '') or bib.get('citation', '')
             pub_url = pub.get('pub_url', '#')
 
             parsed.append({
-                'year':    year,
-                'pub_year': bib.get('pub_year', ''),
-                'title':   title,
-                'authors': authors,
-                'journal': journal,
-                'pub_url': pub_url,
+                'sort_date': sort_date,
+                'year':      year,
+                'pub_year':  bib.get('pub_year', ''),
+                'title':     title,
+                'authors':   authors,
+                'journal':   journal,
+                'pub_url':   pub_url,
             })
-            print(f"{ts()} [{i}/{len(raw_pubs)}] {year}  {title[:70]}")
+            print(f"{ts()} [{i}/{len(raw_pubs)}] {sort_date}  {title[:70]}")
         except Exception as e:
             print(f"{ts()} WARNING — Skipping publication {i}: {e}")
 
@@ -97,14 +112,14 @@ def fetch_publications():
         print(f"{ts()} ERROR — No publications could be parsed.")
         return None
 
-    # ── Sort by year descending (most recent first) ──
-    parsed.sort(key=lambda p: p['year'], reverse=True)
-    print(f"{ts()} Sorted {len(parsed)} publications by year, newest first.")
+    # ── Sort by full date descending (most recent first) ──
+    parsed.sort(key=lambda p: p['sort_date'], reverse=True)
+    print(f"{ts()} Sorted {len(parsed)} publications by date, newest first.")
 
     html_content = ""
     for p in parsed:
         html_content += f"""
-        <div class="pub">
+        <div class="pub" data-date="{p['sort_date']}">
           <div class="pub-title"><span class="pub-year">{p['pub_year']}</span>{p['title']}</div>
           <div class="pub-authors">{p['authors']}</div>
           <div class="pub-journal"><em>{p['journal']}</em></div>
@@ -115,10 +130,51 @@ def fetch_publications():
 
     return html_content
 
+def load_selected_states(html_file):
+    """Read data-selected values from existing publications.html.
+    Returns a dict keyed by canonical pub URL -> 'true' or 'false'.
+    """
+    if not os.path.exists(html_file):
+        return {}
+    with open(html_file, 'r', encoding='utf-8') as f:
+        content = f.read()
+    # Match each pub block: capture attrs and inner HTML
+    pub_re   = re.compile(r'<div class="pub"([^>]*)>(.*?)</div>\s*</div>', re.DOTALL)
+    url_re   = re.compile(r'href="([^"]+)"')
+    sel_re   = re.compile(r'data-selected="(true|false)"')
+    states   = {}
+    for m in pub_re.finditer(content):
+        attrs, body = m.group(1), m.group(2)
+        url_m = url_re.search(body)
+        sel_m = sel_re.search(attrs)
+        if url_m:
+            url   = url_m.group(1).strip()
+            value = sel_m.group(1) if sel_m else 'false'
+            states[url] = value
+    selected_count = sum(1 for v in states.values() if v == 'true')
+    print(f"{ts()} Loaded {len(states)} existing selected states ({selected_count} marked true).")
+    return states
+
 def update_html(publications_html):
     if not os.path.exists(HTML_FILE):
         print(f"{ts()} ERROR — {HTML_FILE} not found.")
         return False
+
+    # Preserve user-set data-selected values before overwriting
+    selected_states = load_selected_states(HTML_FILE)
+
+    # Apply preserved selected states to the new HTML
+    if selected_states:
+        def apply_selected(match):
+            url = match.group(1)
+            value = selected_states.get(url, 'false')
+            return f'data-selected="{value}" href="{url}"'
+        # Replace href="URL" inside pub blocks, carrying over the selected state
+        publications_html = re.sub(
+            r'data-selected="false" href="([^"]+)"',
+            apply_selected,
+            publications_html
+        )
 
     with open(HTML_FILE, 'r', encoding='utf-8') as f:
         content = f.read()
