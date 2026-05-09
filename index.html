@@ -680,25 +680,10 @@
       </div>
     </section>
 
-    <!-- ── GROUP ── -->
     <section id="group">
       <div class="section-heading">The group</div>
-      <div class="group-grid">
-        <div class="member-card">
-          <div class="member-avatar" style="background:#dce8f8;color:#1a4080">UJ</div>
-          <div class="member-name">Dr. Ugo Jacovella</div>
-          <div class="member-role">Principal Investigator</div>
-        </div>
-        <div class="member-card">
-          <div class="member-avatar" style="background:#d8f0e4;color:#1a5c38">APR</div>
-          <div class="member-name">A.P. Rasmussen</div>
-          <div class="member-role">Postdoctoral Fellow</div>
-        </div>
-        <div class="member-card">
-          <div class="member-avatar" style="background:#fef0d4;color:#7a4a0a">CR</div>
-          <div class="member-name">C. Rossi</div>
-          <div class="member-role">PhD Student</div>
-        </div>
+      <div class="group-grid" id="group-members-container">
+        <p style="font-size:14px;color:var(--muted);">Loading group members...</p>
       </div>
       <a class="all-link" href="group.html"
         style="margin-top:1.2rem;display:inline-flex;align-items:center;gap:4px;font-size:13px;color:var(--muted);text-decoration:none;">Full
@@ -858,6 +843,38 @@
       .catch(() => {
         document.getElementById('research-topics-container').innerHTML =
           '<p style="font-size:14px;color:var(--muted);">Could not load research topics.</p>';
+      });
+
+    // Load group members from group.html
+    fetch('group.html')
+      .then(r => r.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const allCards = [...doc.querySelectorAll('.member-card')];
+        
+        // Filter: Keep only current members (not alumni)
+        const currentMembers = allCards.filter(c => c.getAttribute('data-alumni') === 'false');
+        
+        // Sort: PI first
+        currentMembers.sort((a, b) => {
+          const aPi = a.getAttribute('data-pi') === 'true';
+          const bPi = b.getAttribute('data-pi') === 'true';
+          if (aPi && !bPi) return -1;
+          if (!aPi && bPi) return 1;
+          return 0;
+        });
+
+        const container = document.getElementById('group-members-container');
+        if (currentMembers.length === 0) {
+          container.innerHTML = '<p style="font-size:14px;color:var(--muted);">No current members found.</p>';
+        } else {
+          container.innerHTML = currentMembers.map(el => el.outerHTML).join('\n');
+        }
+      })
+      .catch(() => {
+        document.getElementById('group-members-container').innerHTML =
+          '<p style="font-size:14px;color:var(--muted);">Could not load group members.</p>';
       });
   </script>
 </body>
