@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,41 +10,196 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #f5f5f7; --surface: #ffffff; --text: #1d1d1f; --muted: #515154; --hint: #86868b;
-      --border: rgba(0, 0, 0, 0.08); --border-strong: rgba(0, 0, 0, 0.15); --accent: #0066cc;
-      --radius: 8px; --radius-lg: 12px;
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
+
+    :root {
+      --bg: #f5f5f7;
+      --surface: #ffffff;
+      --text: #1d1d1f;
+      --muted: #515154;
+      --hint: #86868b;
+      --border: rgba(0, 0, 0, 0.08);
+      --border-strong: rgba(0, 0, 0, 0.15);
+      --accent: #0066cc;
+      --radius: 8px;
+      --radius-lg: 12px;
+    }
+
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #151516; --surface: #222224; --text: #f5f5f7; --muted: #a1a1a6; --hint: #86868b;
-        --border: rgba(255, 255, 255, 0.08); --border-strong: rgba(255, 255, 255, 0.15); --accent: #2997ff;
+        --bg: #151516;
+        --surface: #222224;
+        --text: #f5f5f7;
+        --muted: #a1a1a6;
+        --hint: #86868b;
+        --border: rgba(255, 255, 255, 0.08);
+        --border-strong: rgba(255, 255, 255, 0.15);
+        --accent: #2997ff;
       }
     }
-    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.7; }
-    .container { max-width: 860px; margin: 0 auto; padding: 0 1.5rem 5rem; }
-    nav { display: flex; align-items: center; justify-content: space-between; padding: 1.4rem 0; border-bottom: 1px solid var(--border); margin-bottom: 3rem; }
-    .nav-logo { font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 700; color: var(--text); text-decoration: none; letter-spacing: -0.02em; }
-    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
-    .nav-links a { font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase; text-decoration: none; color: var(--muted); transition: color 0.15s; }
-    .nav-links a:hover { color: var(--text); }
-    section { margin-bottom: 3.5rem; }
-    .section-heading { font-family: 'Inter', sans-serif; font-size: 22px; font-weight: 600; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.6rem; letter-spacing: -0.02em; }
-    .pub { padding: 1rem 0; border-bottom: 1px solid var(--border); }
-    .pub:last-of-type { border-bottom: none; }
-    .pub-year { display: inline-block; font-size: 11px; letter-spacing: 0.07em; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 1px 7px; color: var(--hint); margin-right: 6px; vertical-align: middle; }
-    .pub-title { font-size: 15px; font-weight: 600; margin-bottom: 0.25rem; }
-    .pub-authors { font-size: 13px; font-style: italic; color: var(--muted); margin-bottom: 0.2rem; }
-    .pub-journal { font-size: 13px; color: var(--muted); }
-    .pub-journal em { font-style: normal; color: var(--text); }
-    .pub-links { display: flex; gap: 6px; margin-top: 0.5rem; }
-    .pub-link { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; padding: 3px 10px; border: 1px solid var(--border-strong); border-radius: var(--radius); color: var(--muted); transition: background 0.12s; }
-    .pub-link:hover { background: var(--surface); }
-    footer { border-top: 1px solid var(--border); padding-top: 1.5rem; display: flex; justify-content: space-between; font-size: 12px; color: var(--hint); }
-    @media (max-width: 640px) { nav { flex-direction: column; gap: 0.8rem; } .nav-links { flex-wrap: wrap; justify-content: center; gap: 1rem; } }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1.5rem 5rem;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.4rem 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 3rem;
+    }
+
+    .nav-logo {
+      font-family: 'Inter', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 12px;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--muted);
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    section {
+      margin-bottom: 3.5rem;
+    }
+
+    .section-heading {
+      font-family: 'Inter', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.6rem;
+      letter-spacing: -0.02em;
+    }
+
+    .pub {
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pub:last-of-type {
+      border-bottom: none;
+    }
+
+    .pub-year {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: 0.07em;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 7px;
+      color: var(--hint);
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    .pub-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .pub-authors {
+      font-size: 13px;
+      font-style: italic;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .pub-journal {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .pub-journal em {
+      font-style: normal;
+      color: var(--text);
+    }
+
+    .pub-links {
+      display: flex;
+      gap: 6px;
+      margin-top: 0.5rem;
+    }
+
+    .pub-link {
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 3px 10px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      color: var(--muted);
+      transition: background 0.12s;
+    }
+
+    .pub-link:hover {
+      background: var(--surface);
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--hint);
+    }
+
+    @media (max-width: 640px) {
+      nav {
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+      }
+    }
   </style>
 </head>
+
 <body>
   <div class="container">
     <nav>
@@ -59,485 +215,675 @@
     <section id="publications">
       <div class="section-heading">All publications</div>
       <div id="publications-list">
-<!-- PUBLICATIONS_START -->
+        <!-- PUBLICATIONS_START -->
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2026</span>Dissociation and Cooling Dynamics of 2-cyanoindene Monocations: Survival of Small PAHs in Harsh Interstellar Radiation Fields</div>
-          <div class="pub-authors">Arun Subramani, James Flotte de Pouzols, Paul Martini, José E Navarro Navarrete, Eleanor K Ashworth, James N Bull, Gustavo A Garcia, Laurent Nahon, Bérenger Gans, Ugo Jacovella, Corentin Rossi, Henrik Cederquist, Henning T Schmidt, Henning Zettergren, Mark H Stockett</div>
+          <div class="pub-title"><span class="pub-year">2026</span>Dissociation and Cooling Dynamics of 2-cyanoindene
+            Monocations: Survival of Small PAHs in Harsh Interstellar Radiation Fields</div>
+          <div class="pub-authors">Arun Subramani, James Flotte de Pouzols, Paul Martini, José E Navarro Navarrete,
+            Eleanor K Ashworth, James N Bull, Gustavo A Garcia, Laurent Nahon, Bérenger Gans, Ugo Jacovella, Corentin
+            Rossi, Henrik Cederquist, Henning T Schmidt, Henning Zettergren, Mark H Stockett</div>
           <div class="pub-journal"><em>The Astrophysical Journal</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://iopscience.iop.org/article/10.3847/1538-4357/ae1581/meta" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://iopscience.iop.org/article/10.3847/1538-4357/ae1581/meta"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2026</span>Valence Threshold Photoionization Spectra of C 5 _5 H and C 5 _5 H 2 _2 Isomers</div>
-          <div class="pub-authors">Ugo Jacovella, Myriam Drissi, Bérenger Gans, Corentin Rossi, Gustavo A Garcia, Hai Linh Le, Mengxu Jiang, Jean‐Claude Guillemin, Séverine Boyé‐Péronne, Jean‐Christophe Loison</div>
+          <div class="pub-title"><span class="pub-year">2026</span>Valence Threshold Photoionization Spectra of C 5 _5 H
+            and C 5 _5 H 2 _2 Isomers</div>
+          <div class="pub-authors">Ugo Jacovella, Myriam Drissi, Bérenger Gans, Corentin Rossi, Gustavo A Garcia, Hai
+            Linh Le, Mengxu Jiang, Jean‐Claude Guillemin, Séverine Boyé‐Péronne, Jean‐Christophe Loison</div>
           <div class="pub-journal"><em>ChemPhysChem</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://chemistry-europe.onlinelibrary.wiley.com/doi/abs/10.1002/cphc.70367" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://chemistry-europe.onlinelibrary.wiley.com/doi/abs/10.1002/cphc.70367"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
           <div class="pub-title"><span class="pub-year">2026</span>C5H6 formation in Dense Molecular Clouds</div>
-          <div class="pub-authors">Ugo Jacovella, Jean-Christophe Loison, Corentin Rossi, Anne P Rasmussen, Roland Thissen, Nandana Pattathadathil, Christian Alcaraz</div>
+          <div class="pub-authors">Ugo Jacovella, Jean-Christophe Loison, Corentin Rossi, Anne P Rasmussen, Roland
+            Thissen, Nandana Pattathadathil, Christian Alcaraz</div>
           <div class="pub-journal"><em>Astronomy & Astrophysics</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://www.aanda.org/articles/aa/abs/2026/04/aa58985-26/aa58985-26.html" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://www.aanda.org/articles/aa/abs/2026/04/aa58985-26/aa58985-26.html"
+              target="_blank">View Paper</a>
           </div>
         </div>
-        <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2026</span>Formation of benzene and its derivatives in dense molecular clouds</div>
-          <div class="pub-authors">Jean-Christophe Loison, Ugo Jacovella, Corentin Rossi, Anne P Rasmussen, Roland Thissen, Nandana Pattathadathil, Christian Alcaraz, Valentine Wakelam</div>
+        <div class="pub" data-selected="true">
+          <div class="pub-title"><span class="pub-year">2026</span>Formation of benzene and its derivatives in dense
+            molecular clouds</div>
+          <div class="pub-authors">Jean-Christophe Loison, Ugo Jacovella, Corentin Rossi, Anne P Rasmussen, Roland
+            Thissen, Nandana Pattathadathil, Christian Alcaraz, Valentine Wakelam</div>
           <div class="pub-journal"><em></em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://www.aanda.org/articles/aa/pdf/forth/aa59618-26.pdf" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://www.aanda.org/articles/aa/pdf/forth/aa59618-26.pdf" target="_blank">View
+              Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2026</span>Hydration of Phenylium: Oxonium or Carbenium Ion Formation?</div>
-          <div class="pub-authors">Corentin Rossi, Anne P Rasmussen, Jean‐christophe Loison, Bérenger Gans, Laura Finazzi, Jos Oomens, Giel Berden, Roland Thissen, Nandana Pattathadathil, Christian Alcaraz, Ugo Jacovella</div>
+          <div class="pub-title"><span class="pub-year">2026</span>Hydration of Phenylium: Oxonium or Carbenium Ion
+            Formation?</div>
+          <div class="pub-authors">Corentin Rossi, Anne P Rasmussen, Jean‐christophe Loison, Bérenger Gans, Laura
+            Finazzi, Jos Oomens, Giel Berden, Roland Thissen, Nandana Pattathadathil, Christian Alcaraz, Ugo Jacovella
+          </div>
           <div class="pub-journal"><em>ChemistryEurope</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://chemistry-europe.onlinelibrary.wiley.com/doi/abs/10.1002/ceur.70232" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://chemistry-europe.onlinelibrary.wiley.com/doi/abs/10.1002/ceur.70232"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="true" data-manual="true" data-date="2025-01-01">
-          <div class="pub-title"><span class="pub-year">2025</span>iSELECTION: An Instrument to Study the Kinetics of Isomer-Selected Gas-Phase Ion-Molecule Reactions</div>
-          <div class="pub-authors">Corentin Rossi, Anne P. Rasmussen, Bérenger Gans, Juraj Jašík, Jan Žabka, Marc Albaret, Hugo Bauduin, Christophe Charrière, Jean-Philippe Dugal, Jérôme Guigand, Catherine Le Bris, and Ugo Jacovella</div>
+          <div class="pub-title"><span class="pub-year">2025</span>iSELECTION: An Instrument to Study the Kinetics of
+            Isomer-Selected Gas-Phase Ion-Molecule Reactions</div>
+          <div class="pub-authors">Corentin Rossi, Anne P. Rasmussen, Bérenger Gans, Juraj Jašík, Jan Žabka, Marc
+            Albaret, Hugo Bauduin, Christophe Charrière, Jean-Philippe Dugal, Jérôme Guigand, Catherine Le Bris, and Ugo
+            Jacovella</div>
           <div class="pub-journal"><em>Chem. Methods</em>, 2025, 00, e202500013</div>
           <div class="pub-links">
             <a class="pub-link" href="https://doi.org/10.1002/cmtd.202500013" target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2025</span>PDRs4All-XI. Detection of infrared CH+ and CH3+ rovibrational emission in the Orion Bar and disk d203-506: Evidence of chemical pumping</div>
-          <div class="pub-authors">Marion Zannese, Benoît Tabone, Emilie Habart, Emmanuel Dartois, Javier R Goicoechea, Laurent Coudert, Bérenger Gans, M-A Martin-Drumel, Ugo Jacovella, Alexandre Faure, Benjamin Godard, Alexander GGM Tielens, R Le Gal, John H Black, Silvia Vicente, Olivier Berné, Els Peeters, Dries Van De Putte, Ryan Chown, Ameek Sidhu, Ilane Schroetter, Amélie Canin, Olga Kannavou</div>
+          <div class="pub-title"><span class="pub-year">2025</span>PDRs4All-XI. Detection of infrared CH+ and CH3+
+            rovibrational emission in the Orion Bar and disk d203-506: Evidence of chemical pumping</div>
+          <div class="pub-authors">Marion Zannese, Benoît Tabone, Emilie Habart, Emmanuel Dartois, Javier R Goicoechea,
+            Laurent Coudert, Bérenger Gans, M-A Martin-Drumel, Ugo Jacovella, Alexandre Faure, Benjamin Godard,
+            Alexander GGM Tielens, R Le Gal, John H Black, Silvia Vicente, Olivier Berné, Els Peeters, Dries Van De
+            Putte, Ryan Chown, Ameek Sidhu, Ilane Schroetter, Amélie Canin, Olga Kannavou</div>
           <div class="pub-journal"><em>Astronomy & Astrophysics</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://www.aanda.org/articles/aa/abs/2025/04/aa53441-24/aa53441-24.html" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://www.aanda.org/articles/aa/abs/2025/04/aa53441-24/aa53441-24.html"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2025</span>Infrared cooling in an anharmonic cascade framework: 2-cyanoindene, the smallest cyano-PAH identified in Taurus Molecular Cloud-1</div>
-          <div class="pub-authors">Mark H Stockett, Vincent J Esposito, Eleanor K Ashworth, Ugo Jacovella, James N Bull</div>
+          <div class="pub-title"><span class="pub-year">2025</span>Infrared cooling in an anharmonic cascade framework:
+            2-cyanoindene, the smallest cyano-PAH identified in Taurus Molecular Cloud-1</div>
+          <div class="pub-authors">Mark H Stockett, Vincent J Esposito, Eleanor K Ashworth, Ugo Jacovella, James N Bull
+          </div>
           <div class="pub-journal"><em>ACS Earth and Space Chemistry</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acsearthspacechem.4c00381" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acsearthspacechem.4c00381"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2025</span>PDRs4All-XV. CH radical and H molecular ion in the irradiated protoplanetary disk d203-506</div>
-          <div class="pub-authors">I Schroetter, O Berné, Javier R Goicoechea, JH Black, Octavio Roncero, F Alarcon, P Amiot, O Asvany, C Boersma, S Brünken, J Cami, L Coudert, E Dartois, A Fuente, B Gans, A Gusdorf, U Jacovella, MA Martin Drumel, T Onaka, E Peeters, E Roueff, AGGM Tielens, M Zannese</div>
+          <div class="pub-title"><span class="pub-year">2025</span>PDRs4All-XV. CH radical and H molecular ion in the
+            irradiated protoplanetary disk d203-506</div>
+          <div class="pub-authors">I Schroetter, O Berné, Javier R Goicoechea, JH Black, Octavio Roncero, F Alarcon, P
+            Amiot, O Asvany, C Boersma, S Brünken, J Cami, L Coudert, E Dartois, A Fuente, B Gans, A Gusdorf, U
+            Jacovella, MA Martin Drumel, T Onaka, E Peeters, E Roueff, AGGM Tielens, M Zannese</div>
           <div class="pub-journal"><em>Astronomy & Astrophysics</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://www.aanda.org/articles/aa/abs/2025/07/aa55841-25/aa55841-25.html" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://www.aanda.org/articles/aa/abs/2025/07/aa55841-25/aa55841-25.html"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2025</span>Evidence for Phenylium Reactivity under Interstellar Relevant Conditions</div>
-          <div class="pub-authors">Jean-Christophe Loison, Corentin Rossi, Nicolas Solem, Roland Thissen, Claire Romanzin, Christian Alcaraz, Ugo Jacovella</div>
+          <div class="pub-title"><span class="pub-year">2025</span>Evidence for Phenylium Reactivity under Interstellar
+            Relevant Conditions</div>
+          <div class="pub-authors">Jean-Christophe Loison, Corentin Rossi, Nicolas Solem, Roland Thissen, Claire
+            Romanzin, Christian Alcaraz, Ugo Jacovella</div>
           <div class="pub-journal"><em>arXiv preprint arXiv:2506.13290</em></div>
           <div class="pub-links">
             <a class="pub-link" href="https://arxiv.org/abs/2506.13290" target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2025</span>Mid‐infrared Spectroscopy of Protonated Benzonitrile, 2‐Cyanonaphthalene, and 9‐Cyanoanthracene for Astrochemical Consideration</div>
-          <div class="pub-authors">Anne P Rasmussen, Corentin Rossi, Bérenger Gans, Laura Finazzi, Jos Oomens, Giel Berden, Ugo Jacovella</div>
+          <div class="pub-title"><span class="pub-year">2025</span>Mid‐infrared Spectroscopy of Protonated Benzonitrile,
+            2‐Cyanonaphthalene, and 9‐Cyanoanthracene for Astrochemical Consideration</div>
+          <div class="pub-authors">Anne P Rasmussen, Corentin Rossi, Bérenger Gans, Laura Finazzi, Jos Oomens, Giel
+            Berden, Ugo Jacovella</div>
           <div class="pub-journal"><em>ChemPhysChem</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://chemistry-europe.onlinelibrary.wiley.com/doi/abs/10.1002/cphc.202500642" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://chemistry-europe.onlinelibrary.wiley.com/doi/abs/10.1002/cphc.202500642"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2025</span>Roadmap on carbon molecular nanostructures in space</div>
-          <div class="pub-authors">Klavs Hansen, DA García-Hernández, EEB Campbell, Dogan Erbahar, Alicja Domaracka, Cornelia Jäger, C Ewels, Polona Umek, Sun Kwok, E Peeters, J Cami, Greg C Sloan, P Ehrenfreund, H Linnartz, A Manchado, Nick LJ Cox, J Bernard-Salas, EK Campbell, A Monreal-Ibero, BH Foing, J Smoker, M Elyajouri, A Ebenbichler, J Th van Loon, J Bouwman, A Farhang, F Salama, C Joblin, G Mulas, U Jacovella, MA Gómez-Muñoz, R Barzaga, T Huertas-Roldán, Hugh Mohan, Michał Bartkowski, Silvia Giordani, Gao-Lei Hou, JJ Díaz-Luis, J Alcolea, D Tafoya, V Bujarrabal, N Došlić, T Došlić, E Catalano, M Yesiltas, P Ferrari, S Brünken, G Berden, JM Bakker, J Oomens, B Redlich, A Pitanti, B Bertoni, L Vicarelli, P Lamberti, M Cojocari, G Fedorov, Yu Svirko, P Kuzhir, M Hochlaf, M Mogren Al Mogren, Alexey Potapov, Eftal Gezer, H Zettergren, HT Schmidt, Mark H Stockett, Eleanor K Ashworth, James N Bull, M Fárník, T Wakabayashi, L Ganner, M Kappe, E Gruber, C Pardanaud, J Dezalay, JA Noble, K Tőkési, Z Li, XH Zhou, JM Gong, RG Zeng, ZJ Ding, Clayton S-C Yang, Feng Jin, Sudhir Trivedi, Uwe Hommerich, Laszlo Nemes, Alan C Samuels, G Shmavonyan, L Misakyan, A Shmavonyan, I Sciriha, S Suriyaprasanth, Dhanoj Gupta, DA Kalchevski, D Trifonov, S Kolev, T Milenov, Miguel A Caro, SeyedAbdolreza Sadjadi, Quentin Andrew Parker, A Lombardi, Martin McCoustra, F Koch, I Schubert, C Trautmann, ME Toimil-Molares, B Kerkeni, D Talbi, CP Hsu, G Ouerfelli, HH Chuang, Ko-Ju Chuang, Yu-Jung Chen, E Villaver, M Manteiga</div>
+          <div class="pub-title"><span class="pub-year">2025</span>Roadmap on carbon molecular nanostructures in space
+          </div>
+          <div class="pub-authors">Klavs Hansen, DA García-Hernández, EEB Campbell, Dogan Erbahar, Alicja Domaracka,
+            Cornelia Jäger, C Ewels, Polona Umek, Sun Kwok, E Peeters, J Cami, Greg C Sloan, P Ehrenfreund, H Linnartz,
+            A Manchado, Nick LJ Cox, J Bernard-Salas, EK Campbell, A Monreal-Ibero, BH Foing, J Smoker, M Elyajouri, A
+            Ebenbichler, J Th van Loon, J Bouwman, A Farhang, F Salama, C Joblin, G Mulas, U Jacovella, MA Gómez-Muñoz,
+            R Barzaga, T Huertas-Roldán, Hugh Mohan, Michał Bartkowski, Silvia Giordani, Gao-Lei Hou, JJ Díaz-Luis, J
+            Alcolea, D Tafoya, V Bujarrabal, N Došlić, T Došlić, E Catalano, M Yesiltas, P Ferrari, S Brünken, G Berden,
+            JM Bakker, J Oomens, B Redlich, A Pitanti, B Bertoni, L Vicarelli, P Lamberti, M Cojocari, G Fedorov, Yu
+            Svirko, P Kuzhir, M Hochlaf, M Mogren Al Mogren, Alexey Potapov, Eftal Gezer, H Zettergren, HT Schmidt, Mark
+            H Stockett, Eleanor K Ashworth, James N Bull, M Fárník, T Wakabayashi, L Ganner, M Kappe, E Gruber, C
+            Pardanaud, J Dezalay, JA Noble, K Tőkési, Z Li, XH Zhou, JM Gong, RG Zeng, ZJ Ding, Clayton S-C Yang, Feng
+            Jin, Sudhir Trivedi, Uwe Hommerich, Laszlo Nemes, Alan C Samuels, G Shmavonyan, L Misakyan, A Shmavonyan, I
+            Sciriha, S Suriyaprasanth, Dhanoj Gupta, DA Kalchevski, D Trifonov, S Kolev, T Milenov, Miguel A Caro,
+            SeyedAbdolreza Sadjadi, Quentin Andrew Parker, A Lombardi, Martin McCoustra, F Koch, I Schubert, C
+            Trautmann, ME Toimil-Molares, B Kerkeni, D Talbi, CP Hsu, G Ouerfelli, HH Chuang, Ko-Ju Chuang, Yu-Jung
+            Chen, E Villaver, M Manteiga</div>
           <div class="pub-journal"><em>The European Physical Journal D 79 (8), 94, 2025</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://link.springer.com/article/10.1140/epjd/s10053-025-00984-1" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://link.springer.com/article/10.1140/epjd/s10053-025-00984-1"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2025</span>Direct Observation of a Fundamental Arylium Species Using Photoelectron Spectroscopy: Singlet–Triplet Gap in Phenylium</div>
-          <div class="pub-authors">Megan R Bentley, Ugo Jacovella, Jean-Christophe Loison, Myriam Drissi, Gustavo A Garcia, Séverine Boyé-Péronne, Peter R Franke, John F Stanton, Bérenger Gans</div>
+          <div class="pub-title"><span class="pub-year">2025</span>Direct Observation of a Fundamental Arylium Species
+            Using Photoelectron Spectroscopy: Singlet–Triplet Gap in Phenylium</div>
+          <div class="pub-authors">Megan R Bentley, Ugo Jacovella, Jean-Christophe Loison, Myriam Drissi, Gustavo A
+            Garcia, Séverine Boyé-Péronne, Peter R Franke, John F Stanton, Bérenger Gans</div>
           <div class="pub-journal"><em>Journal of the American Chemical Society</em></div>
           <div class="pub-links">
             <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/jacs.5c01851" target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2025</span>Metal‐Induced Tuning of Fullerene Reactivity: Application to Nucleophile Addition</div>
+          <div class="pub-title"><span class="pub-year">2025</span>Metal‐Induced Tuning of Fullerene Reactivity:
+            Application to Nucleophile Addition</div>
           <div class="pub-authors">Corentin Rossi, Anne P Rasmussen, Bérenger Gans, Ugo Jacovella</div>
           <div class="pub-journal"><em>ChemPhysChem</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://chemistry-europe.onlinelibrary.wiley.com/doi/abs/10.1002/cphc.202500487" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://chemistry-europe.onlinelibrary.wiley.com/doi/abs/10.1002/cphc.202500487"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2025</span>An Experimental and Theoretical Study of the Valence Shell Electronic Structure of Nitromethane</div>
-          <div class="pub-authors">Ivan Powis, Juliana Cuéllar-Zuquin, Angelo Giussani, Javier Segarra-Martí, Bérenger Gans, Ugo Jacovella, John D Bozek, Stephen T Pratt, David MP Holland</div>
+          <div class="pub-title"><span class="pub-year">2025</span>An Experimental and Theoretical Study of the Valence
+            Shell Electronic Structure of Nitromethane</div>
+          <div class="pub-authors">Ivan Powis, Juliana Cuéllar-Zuquin, Angelo Giussani, Javier Segarra-Martí, Bérenger
+            Gans, Ugo Jacovella, John D Bozek, Stephen T Pratt, David MP Holland</div>
           <div class="pub-journal"><em>The Journal of Physical Chemistry A</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acs.jpca.5c04698" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acs.jpca.5c04698" target="_blank">View
+              Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2025</span>Possible Hydrocarbon Chemical Growth Routes from l-C3H+ in Dense Molecular Clouds</div>
-          <div class="pub-authors">Corentin Rossi, Giel Muller, Nicolas Solem, Roland Thissen, Claire Romanzin, Christian Alcaraz, Jean-Christophe Loison, Ugo Jacovella</div>
+          <div class="pub-title"><span class="pub-year">2025</span>Possible Hydrocarbon Chemical Growth Routes from
+            l-C3H+ in Dense Molecular Clouds</div>
+          <div class="pub-authors">Corentin Rossi, Giel Muller, Nicolas Solem, Roland Thissen, Claire Romanzin,
+            Christian Alcaraz, Jean-Christophe Loison, Ugo Jacovella</div>
           <div class="pub-journal"><em>ACS Earth and Space Chemistry</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acsearthspacechem.4c00323" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acsearthspacechem.4c00323"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2025</span>Rotationally-resolved VUV-photoelectron spectroscopy of silylidyne radical</div>
+          <div class="pub-title"><span class="pub-year">2025</span>Rotationally-resolved VUV-photoelectron spectroscopy
+            of silylidyne radical</div>
           <div class="pub-authors">Hai Linh Le, Ilan Audoin, Ugo Jacovella, Séverine Boyé-Péronne, Bérenger Gans</div>
           <div class="pub-journal"><em>Molecular Physics</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://www.tandfonline.com/doi/abs/10.1080/00268976.2025.2550573" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://www.tandfonline.com/doi/abs/10.1080/00268976.2025.2550573"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2024</span>Ion spectroscopy in the context of the diffuse interstellar bands: a case study with the phenylacetylene cation</div>
-          <div class="pub-authors">Thomas E Douglas-Walker, Ewen K Campbell, Francis C Daly, Stéphane Douin, Bérenger Gans, Ugo Jacovella, Colombe Maurice, Robin Odant, Julianna Palotás</div>
+          <div class="pub-title"><span class="pub-year">2024</span>Ion spectroscopy in the context of the diffuse
+            interstellar bands: a case study with the phenylacetylene cation</div>
+          <div class="pub-authors">Thomas E Douglas-Walker, Ewen K Campbell, Francis C Daly, Stéphane Douin, Bérenger
+            Gans, Ugo Jacovella, Colombe Maurice, Robin Odant, Julianna Palotás</div>
           <div class="pub-journal"><em>ACS Earth and Space Chemistry</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acsearthspacechem.4c00272" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acsearthspacechem.4c00272"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2024</span>Resonant Auger decay of dissociating CH3I near the I 4d threshold</div>
+          <div class="pub-title"><span class="pub-year">2024</span>Resonant Auger decay of dissociating CH3I near the I
+            4d threshold</div>
           <div class="pub-authors">Stephen T Pratt, Ugo Jacovella, Bérenger Gans, John D Bozek, David MP Holland</div>
           <div class="pub-journal"><em>The Journal of Chemical Physics</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.aip.org/aip/jcp/article/160/7/074304/3266241" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.aip.org/aip/jcp/article/160/7/074304/3266241" target="_blank">View
+              Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2024</span>Exploring photoionization of gas-phase free radicals with a widely tunable VUV laser at moderate spectral resolution</div>
-          <div class="pub-authors">HL Le, NL Chen, M Jiang, C Le Bris, C Charrière, S Boyé-Péronne, J-C Loison, U Jacovella, B Gans</div>
+          <div class="pub-title"><span class="pub-year">2024</span>Exploring photoionization of gas-phase free radicals
+            with a widely tunable VUV laser at moderate spectral resolution</div>
+          <div class="pub-authors">HL Le, NL Chen, M Jiang, C Le Bris, C Charrière, S Boyé-Péronne, J-C Loison, U
+            Jacovella, B Gans</div>
           <div class="pub-journal"><em>Review of Scientific Instruments</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.aip.org/aip/rsi/article/95/9/093003/3313210" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.aip.org/aip/rsi/article/95/9/093003/3313210" target="_blank">View
+              Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2024</span>New light on the imbroglio surrounding the C 8 H+ 6 isomers formed from ionized azulene and naphthalene using ion–molecule reactions</div>
-          <div class="pub-authors">Corentin Rossi, Giel Muller, Roland Thissen, Claire Romanzin, Christian Alcaraz, Sandesh Gondarry, Paul M Mayer, Ugo Jacovella</div>
+          <div class="pub-title"><span class="pub-year">2024</span>New light on the imbroglio surrounding the C 8 H+ 6
+            isomers formed from ionized azulene and naphthalene using ion–molecule reactions</div>
+          <div class="pub-authors">Corentin Rossi, Giel Muller, Roland Thissen, Claire Romanzin, Christian Alcaraz,
+            Sandesh Gondarry, Paul M Mayer, Ugo Jacovella</div>
           <div class="pub-journal"><em>Chemical Science</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.rsc.org/en/content/articlehtml/2023/sc/d3sc03015f" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.rsc.org/en/content/articlehtml/2023/sc/d3sc03015f"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2023</span>Formation of the methyl cation by photochemistry in a protoplanetary disk</div>
-          <div class="pub-authors">Olivier Berné, Marie-Aline Martin-Drumel, Ilane Schroetter, Javier R Goicoechea, Ugo Jacovella, Bérenger Gans, Emmanuel Dartois, Laurent H Coudert, Edwin Bergin, Felipe Alarcon, Jan Cami, Evelyne Roueff, John H Black, Oskar Asvany, Emilie Habart, Els Peeters, Amelie Canin, Boris Trahin, Christine Joblin, Stephan Schlemmer, Sven Thorwirth, Jose Cernicharo, Maryvonne Gerin, Alexander Tielens, Marion Zannese, Alain Abergel, Jeronimo Bernard-Salas, Christiaan Boersma, Emeric Bron, Ryan Chown, Sara Cuadrado, Daniel Dicken, Meriem Elyajouri, Asunción Fuente, Karl D Gordon, Lina Issa, Olga Kannavou, Baria Khan, Ozan Lacinbala, David Languignon, Romane Le Gal, Alexandros Maragkoudakis, Raphael Meshaka, Yoko Okada, Takashi Onaka, Sofia Pasquini, Marc W Pound, Massimo Robberto, Markus Röllig, Bethany Schefter, Thiébaut Schirmer, Ameek Sidhu, Benoit Tabone, Dries Van De Putte, Sílvia Vicente, Mark G Wolfire</div>
+          <div class="pub-title"><span class="pub-year">2023</span>Formation of the methyl cation by photochemistry in a
+            protoplanetary disk</div>
+          <div class="pub-authors">Olivier Berné, Marie-Aline Martin-Drumel, Ilane Schroetter, Javier R Goicoechea, Ugo
+            Jacovella, Bérenger Gans, Emmanuel Dartois, Laurent H Coudert, Edwin Bergin, Felipe Alarcon, Jan Cami,
+            Evelyne Roueff, John H Black, Oskar Asvany, Emilie Habart, Els Peeters, Amelie Canin, Boris Trahin,
+            Christine Joblin, Stephan Schlemmer, Sven Thorwirth, Jose Cernicharo, Maryvonne Gerin, Alexander Tielens,
+            Marion Zannese, Alain Abergel, Jeronimo Bernard-Salas, Christiaan Boersma, Emeric Bron, Ryan Chown, Sara
+            Cuadrado, Daniel Dicken, Meriem Elyajouri, Asunción Fuente, Karl D Gordon, Lina Issa, Olga Kannavou, Baria
+            Khan, Ozan Lacinbala, David Languignon, Romane Le Gal, Alexandros Maragkoudakis, Raphael Meshaka, Yoko
+            Okada, Takashi Onaka, Sofia Pasquini, Marc W Pound, Massimo Robberto, Markus Röllig, Bethany Schefter,
+            Thiébaut Schirmer, Ameek Sidhu, Benoit Tabone, Dries Van De Putte, Sílvia Vicente, Mark G Wolfire</div>
           <div class="pub-journal"><em>Nature</em></div>
           <div class="pub-links">
             <a class="pub-link" href="https://www.nature.com/articles/s41586-023-06307-x" target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2023</span>Astronomical CH3+ rovibrational assignments-a combined theoretical and experimental study validating observational findings in the d203-506 UV-irradiated protoplanetary disk</div>
-          <div class="pub-authors">P Bryan Changala, Ning L Chen, Hai L Le, Bérenger Gans, Kim Steenbakkers, Thomas Salomon, Luis Bonah, Ilane Schroetter, Amélie Canin, Marie-Aline Martin-Drumel, Ugo Jacovella, Emmanuel Dartois, Séverine Boyé-Péronne, Christian Alcaraz, Oskar Asvany, Sandra Brünken, Sven Thorwirth, Stephan Schlemmer, Javier R Goicoechea, Gaël Rouillé, Ameek Sidhu, Ryan Chown, Dries Van De Putte, Boris Trahin, Felipe Alarcón, Olivier Berné, Emilie Habart, Els Peeters</div>
+          <div class="pub-title"><span class="pub-year">2023</span>Astronomical CH3+ rovibrational assignments-a
+            combined theoretical and experimental study validating observational findings in the d203-506 UV-irradiated
+            protoplanetary disk</div>
+          <div class="pub-authors">P Bryan Changala, Ning L Chen, Hai L Le, Bérenger Gans, Kim Steenbakkers, Thomas
+            Salomon, Luis Bonah, Ilane Schroetter, Amélie Canin, Marie-Aline Martin-Drumel, Ugo Jacovella, Emmanuel
+            Dartois, Séverine Boyé-Péronne, Christian Alcaraz, Oskar Asvany, Sandra Brünken, Sven Thorwirth, Stephan
+            Schlemmer, Javier R Goicoechea, Gaël Rouillé, Ameek Sidhu, Ryan Chown, Dries Van De Putte, Boris Trahin,
+            Felipe Alarcón, Olivier Berné, Emilie Habart, Els Peeters</div>
           <div class="pub-journal"><em>Astronomy & Astrophysics</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://www.aanda.org/articles/aa/abs/2023/12/aa47765-23/aa47765-23.html" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://www.aanda.org/articles/aa/abs/2023/12/aa47765-23/aa47765-23.html"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
           <div class="pub-title"><span class="pub-year">2023</span>Probing colossal carbon rings</div>
-          <div class="pub-authors">Samuel JP Marlton, Jack T Buntine, Patrick Watkins, Chang Liu, Ugo Jacovella, Eduardo Carrascosa, James N Bull, Evan J Bieske</div>
+          <div class="pub-authors">Samuel JP Marlton, Jack T Buntine, Patrick Watkins, Chang Liu, Ugo Jacovella, Eduardo
+            Carrascosa, James N Bull, Evan J Bieske</div>
           <div class="pub-journal"><em>The Journal of Physical Chemistry A</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acs.jpca.2c07068" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acs.jpca.2c07068" target="_blank">View
+              Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2023</span>Electronic spectroscopy of 1-cyanonaphthalene cation for astrochemical consideration</div>
+          <div class="pub-title"><span class="pub-year">2023</span>Electronic spectroscopy of 1-cyanonaphthalene cation
+            for astrochemical consideration</div>
           <div class="pub-authors">Francis C Daly, Julianna Palotás, Ugo Jacovella, Ewen K Campbell</div>
           <div class="pub-journal"><em>Astronomy & Astrophysics</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://www.aanda.org/articles/aa/abs/2023/09/aa47199-23/aa47199-23.html" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://www.aanda.org/articles/aa/abs/2023/09/aa47199-23/aa47199-23.html"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2023</span>Monitoring the Light‐induced Isomerisation of the Prototypical Polycyclic Aromatic Hydrocarbons C10H8+ through Ion‐Molecule Reactions</div>
-          <div class="pub-authors">Ugo Jacovella, Corentin Rossi, Claire Romanzin, Christian Alcaraz, Roland Thissen</div>
+          <div class="pub-title"><span class="pub-year">2023</span>Monitoring the Light‐induced Isomerisation of the
+            Prototypical Polycyclic Aromatic Hydrocarbons C10H8+ through Ion‐Molecule Reactions</div>
+          <div class="pub-authors">Ugo Jacovella, Corentin Rossi, Claire Romanzin, Christian Alcaraz, Roland Thissen
+          </div>
           <div class="pub-journal"><em>ChemPhysChem</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://chemistry-europe.onlinelibrary.wiley.com/doi/abs/10.1002/cphc.202200474" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://chemistry-europe.onlinelibrary.wiley.com/doi/abs/10.1002/cphc.202200474"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2023</span>Searches for bridged bicyclic molecules in space—norbornadiene and its cyano derivatives</div>
-          <div class="pub-authors">Marie-Aline Martin-Drumel, Jean-Thibaut Spaniol, Helen Hölzel, Marcelino Agúndez, Jose Cernicharo, Kasper Moth-Poulsen, Ugo Jacovella</div>
+          <div class="pub-title"><span class="pub-year">2023</span>Searches for bridged bicyclic molecules in
+            space—norbornadiene and its cyano derivatives</div>
+          <div class="pub-authors">Marie-Aline Martin-Drumel, Jean-Thibaut Spaniol, Helen Hölzel, Marcelino Agúndez,
+            Jose Cernicharo, Kasper Moth-Poulsen, Ugo Jacovella</div>
           <div class="pub-journal"><em>Faraday discussions</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.rsc.org/en/content/articlehtml/2023/fd/d3fd00016h" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.rsc.org/en/content/articlehtml/2023/fd/d3fd00016h"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2023</span>Refining the thermochemical properties of CF, SiF, and their cations by combining photoelectron spectroscopy, quantum chemical calculations, and the Active Thermochemical Tables approach</div>
-          <div class="pub-authors">Ugo Jacovella, Branko Ruscic, Ning L Chen, Hai-Linh Le, Séverine Boyé-Péronne, Sebastian Hartweg, Madhusree Roy Chowdhury, Gustavo A Garcia, Jean-Christophe Loison, Bérenger Gans</div>
+          <div class="pub-title"><span class="pub-year">2023</span>Refining the thermochemical properties of CF, SiF,
+            and their cations by combining photoelectron spectroscopy, quantum chemical calculations, and the Active
+            Thermochemical Tables approach</div>
+          <div class="pub-authors">Ugo Jacovella, Branko Ruscic, Ning L Chen, Hai-Linh Le, Séverine Boyé-Péronne,
+            Sebastian Hartweg, Madhusree Roy Chowdhury, Gustavo A Garcia, Jean-Christophe Loison, Bérenger Gans</div>
           <div class="pub-journal"><em>Physical Chemistry Chemical Physics</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.rsc.org/en/content/articlehtml/2023/cp/d3cp04244h" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.rsc.org/en/content/articlehtml/2023/cp/d3cp04244h"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2023</span>Vacuum Ultraviolet Fingerprints as a New Way of Disentangling Tropylium/Benzylium Isomers</div>
+          <div class="pub-title"><span class="pub-year">2023</span>Vacuum Ultraviolet Fingerprints as a New Way of
+            Disentangling Tropylium/Benzylium Isomers</div>
           <div class="pub-authors">Corentin Rossi, Bérenger Gans, Alexandre Giuliani, Ugo Jacovella</div>
           <div class="pub-journal"><em>The Journal of Physical Chemistry Letters</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acs.jpclett.3c01973" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acs.jpclett.3c01973" target="_blank">View
+              Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2023</span>High-resolution absorption spectroscopy of room-temperature and jet-cooled ammonia between 59,000 and 93,000 cm− 1</div>
-          <div class="pub-authors">Stephen T Pratt, Ugo Jacovella, Séverine Boyé-Péronne, Michael NR Ashfold, Denis Joyeux, Nelson De Oliveira, David MP Holland</div>
+          <div class="pub-title"><span class="pub-year">2023</span>High-resolution absorption spectroscopy of
+            room-temperature and jet-cooled ammonia between 59,000 and 93,000 cm− 1</div>
+          <div class="pub-authors">Stephen T Pratt, Ugo Jacovella, Séverine Boyé-Péronne, Michael NR Ashfold, Denis
+            Joyeux, Nelson De Oliveira, David MP Holland</div>
           <div class="pub-journal"><em>Journal of Molecular Spectroscopy</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://www.sciencedirect.com/science/article/pii/S0022285223000759" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://www.sciencedirect.com/science/article/pii/S0022285223000759"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2023</span>Tunable photoionization chemical monitoring (TPI‐CM)—A means to probe molecular ion structures and monitor unimolecular processes through bimolecular ion–molecule reactions: Past, present, and future</div>
+          <div class="pub-title"><span class="pub-year">2023</span>Tunable photoionization chemical monitoring
+            (TPI‐CM)—A means to probe molecular ion structures and monitor unimolecular processes through bimolecular
+            ion–molecule reactions: Past, present, and future</div>
           <div class="pub-authors">Corentin Rossi, Christian Alcaraz, Roland Thissen, Ugo Jacovella</div>
           <div class="pub-journal"><em>Journal of Physical Organic Chemistry</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://onlinelibrary.wiley.com/doi/abs/10.1002/poc.4489" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://onlinelibrary.wiley.com/doi/abs/10.1002/poc.4489" target="_blank">View
+              Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2023</span>Effect of protonation on the UV/VUV photostability of cyano-substituted anthracene and phenanthrene</div>
-          <div class="pub-authors">Ugo Jacovella, Alexandre Giuliani, Christopher S Hansen, Adam J Trevitt, Laurent Nahon, Giuliano Malloci, Giacomo Mulas</div>
+          <div class="pub-title"><span class="pub-year">2023</span>Effect of protonation on the UV/VUV photostability of
+            cyano-substituted anthracene and phenanthrene</div>
+          <div class="pub-authors">Ugo Jacovella, Alexandre Giuliani, Christopher S Hansen, Adam J Trevitt, Laurent
+            Nahon, Giuliano Malloci, Giacomo Mulas</div>
           <div class="pub-journal"><em>Astronomy & Astrophysics</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://www.aanda.org/articles/aa/abs/2023/02/aa45715-22/aa45715-22.html" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://www.aanda.org/articles/aa/abs/2023/02/aa45715-22/aa45715-22.html"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2022</span>An ion mobility mass spectrometer coupled with a cryogenic ion trap for recording electronic spectra of charged, isomer-selected clusters</div>
-          <div class="pub-authors">Jack T Buntine, Eduardo Carrascosa, James N Bull, Ugo Jacovella, Mariah I Cotter, Patrick Watkins, Chang Liu, Michael S Scholz, Brian D Adamson, Samuel JP Marlton, Evan J Bieske</div>
+          <div class="pub-title"><span class="pub-year">2022</span>An ion mobility mass spectrometer coupled with a
+            cryogenic ion trap for recording electronic spectra of charged, isomer-selected clusters</div>
+          <div class="pub-authors">Jack T Buntine, Eduardo Carrascosa, James N Bull, Ugo Jacovella, Mariah I Cotter,
+            Patrick Watkins, Chang Liu, Michael S Scholz, Brian D Adamson, Samuel JP Marlton, Evan J Bieske</div>
           <div class="pub-journal"><em>Review of Scientific Instruments</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.aip.org/aip/rsi/article/93/4/043201/2848723" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.aip.org/aip/rsi/article/93/4/043201/2848723" target="_blank">View
+              Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2022</span>Ultraviolet and vacuum ultraviolet photo-processing of protonated benzonitrile (C6H5CNH+)-A plausible pathway to larger interstellar aromatics</div>
-          <div class="pub-authors">Ugo Jacovella, Jennifer A Noble, Alexandre Guliani, Christopher S Hansen, Adam J Trevitt, Julie Mouzay, Isabelle Couturier-Tamburelli, Nathalie Pietri, Laurent Nahon</div>
+          <div class="pub-title"><span class="pub-year">2022</span>Ultraviolet and vacuum ultraviolet photo-processing
+            of protonated benzonitrile (C6H5CNH+)-A plausible pathway to larger interstellar aromatics</div>
+          <div class="pub-authors">Ugo Jacovella, Jennifer A Noble, Alexandre Guliani, Christopher S Hansen, Adam J
+            Trevitt, Julie Mouzay, Isabelle Couturier-Tamburelli, Nathalie Pietri, Laurent Nahon</div>
           <div class="pub-journal"><em>Astronomy & Astrophysics</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://www.aanda.org/articles/aa/abs/2022/01/aa42206-21/aa42206-21.html" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://www.aanda.org/articles/aa/abs/2022/01/aa42206-21/aa42206-21.html"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2022</span>Disentangling Electronic Spectra of Linear and Cyclic Hydrogenated Carbon Cluster Cations, C2n+1H+ (n = 3–10)</div>
-          <div class="pub-authors">Samuel JP Marlton, Jack T Buntine, Chang Liu, Patrick Watkins, Ugo Jacovella, Eduardo Carrascosa, James N Bull, Evan J Bieske</div>
+          <div class="pub-title"><span class="pub-year">2022</span>Disentangling Electronic Spectra of Linear and Cyclic
+            Hydrogenated Carbon Cluster Cations, C2n+1H+ (n = 3–10)</div>
+          <div class="pub-authors">Samuel JP Marlton, Jack T Buntine, Chang Liu, Patrick Watkins, Ugo Jacovella, Eduardo
+            Carrascosa, James N Bull, Evan J Bieske</div>
           <div class="pub-journal"><em>The Journal of Physical Chemistry A</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acs.jpca.2c05051" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acs.jpca.2c05051" target="_blank">View
+              Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2022</span>Structural Elucidation of C6H4+. Using Chemical Reaction Monitoring: Charge Transfer Versus Bond Forming Reactions</div>
-          <div class="pub-authors">Ugo Jacovella, Corentin Rossi, Claire Romanzin, Christian Alcaraz, Roland Thissen</div>
+          <div class="pub-title"><span class="pub-year">2022</span>Structural Elucidation of C6H4+. Using Chemical
+            Reaction Monitoring: Charge Transfer Versus Bond Forming Reactions</div>
+          <div class="pub-authors">Ugo Jacovella, Corentin Rossi, Claire Romanzin, Christian Alcaraz, Roland Thissen
+          </div>
           <div class="pub-journal"><em>ChemPhysChem</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://chemistry-europe.onlinelibrary.wiley.com/doi/abs/10.1002/cphc.202100871" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://chemistry-europe.onlinelibrary.wiley.com/doi/abs/10.1002/cphc.202100871"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2022</span>Photo-induced 6π-electrocyclisation and cycloreversion of isolated dithienylethene anions</div>
-          <div class="pub-authors">Jack T Buntine, Eduardo Carrascosa, James N Bull, Giel Muller, Ugo Jacovella, Christopher R Glasson, George Vamvounis, Evan J Bieske</div>
+          <div class="pub-title"><span class="pub-year">2022</span>Photo-induced 6π-electrocyclisation and
+            cycloreversion of isolated dithienylethene anions</div>
+          <div class="pub-authors">Jack T Buntine, Eduardo Carrascosa, James N Bull, Giel Muller, Ugo Jacovella,
+            Christopher R Glasson, George Vamvounis, Evan J Bieske</div>
           <div class="pub-journal"><em>Physical Chemistry Chemical Physics</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.rsc.org/en/content/articlehtml/2022/cp/d2cp01240e" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.rsc.org/en/content/articlehtml/2022/cp/d2cp01240e"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2022</span>UV/VUV photoprocessing of protonated N-hetero(poly)acenes</div>
-          <div class="pub-authors">Ugo Jacovella, Christopher S Hansen, Alexandre Giuliani, Adam J Trevitt, Laurent Nahon</div>
+          <div class="pub-title"><span class="pub-year">2022</span>UV/VUV photoprocessing of protonated
+            N-hetero(poly)acenes</div>
+          <div class="pub-authors">Ugo Jacovella, Christopher S Hansen, Alexandre Giuliani, Adam J Trevitt, Laurent
+            Nahon</div>
           <div class="pub-journal"><em>Monthly Notices of the Royal Astronomical Society</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://academic.oup.com/mnras/article-abstract/511/4/5656/6535614" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://academic.oup.com/mnras/article-abstract/511/4/5656/6535614"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2021</span>Electronic spectra of positively charged carbon clusters—C2n+ (n= 6–14)</div>
-          <div class="pub-authors">Jack T Buntine, Mariah I Cotter, Ugo Jacovella, Chang Liu, Patrick Watkins, Eduardo Carrascosa, James N Bull, Luke Weston, Giel Muller, Michael S Scholz, Evan J Bieske</div>
+          <div class="pub-title"><span class="pub-year">2021</span>Electronic spectra of positively charged carbon
+            clusters—C2n+ (n= 6–14)</div>
+          <div class="pub-authors">Jack T Buntine, Mariah I Cotter, Ugo Jacovella, Chang Liu, Patrick Watkins, Eduardo
+            Carrascosa, James N Bull, Luke Weston, Giel Muller, Michael S Scholz, Evan J Bieske</div>
           <div class="pub-journal"><em>The Journal of Chemical Physics</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.aip.org/aip/jcp/article/155/21/214302/199925" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.aip.org/aip/jcp/article/155/21/214302/199925" target="_blank">View
+              Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2020</span>Photo-and collision-induced isomerization of a charge-tagged norbornadiene–quadricyclane system</div>
-          <div class="pub-authors">Ugo Jacovella, Eduardo Carrascosa, Jack T Buntine, Nicolai Ree, Kurt V Mikkelsen, Martyn Jevric, Kasper Moth-Poulsen, Evan J Bieske</div>
+          <div class="pub-title"><span class="pub-year">2020</span>Photo-and collision-induced isomerization of a
+            charge-tagged norbornadiene–quadricyclane system</div>
+          <div class="pub-authors">Ugo Jacovella, Eduardo Carrascosa, Jack T Buntine, Nicolai Ree, Kurt V Mikkelsen,
+            Martyn Jevric, Kasper Moth-Poulsen, Evan J Bieske</div>
           <div class="pub-journal"><em>The Journal of Physical Chemistry Letters</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acs.jpclett.0c01198" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acs.jpclett.0c01198" target="_blank">View
+              Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2020</span>Electronic spectrum of the tropylium cation in the gas phase</div>
+          <div class="pub-title"><span class="pub-year">2020</span>Electronic spectrum of the tropylium cation in the
+            gas phase</div>
           <div class="pub-authors">Ugo Jacovella, Michael S Scholz, Evan J Bieske</div>
           <div class="pub-journal"><em>The Journal of Physical Chemistry Letters</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acs.jpclett.0c02430" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acs.jpclett.0c02430" target="_blank">View
+              Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2020</span>Electronic Spectrum and Photodissociation Chemistry of the 1-Butyn-3-yl Cation, H3CCHCCH+</div>
+          <div class="pub-title"><span class="pub-year">2020</span>Electronic Spectrum and Photodissociation Chemistry
+            of the 1-Butyn-3-yl Cation, H3CCHCCH+</div>
           <div class="pub-authors">Giel Muller, Ugo Jacovella, Katherine J Catani, Gabriel da Silva, Evan J Bieske</div>
           <div class="pub-journal"><em>The Journal of Physical Chemistry A</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acs.jpca.9b11810" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acs.jpca.9b11810" target="_blank">View
+              Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2019</span>Valence-Shell Photoionization of C4H5: The 2-Butyn-1-yl Radical</div>
-          <div class="pub-authors">Helgi R Hrodmarsson, J-C Loison, Ugo Jacovella, David MP Holland, Séverine Boyé-Péronne, Bérenger Gans, Gustavo A Garcia, Laurent Nahon, Stephen T Pratt</div>
+          <div class="pub-title"><span class="pub-year">2019</span>Valence-Shell Photoionization of C4H5: The
+            2-Butyn-1-yl Radical</div>
+          <div class="pub-authors">Helgi R Hrodmarsson, J-C Loison, Ugo Jacovella, David MP Holland, Séverine
+            Boyé-Péronne, Bérenger Gans, Gustavo A Garcia, Laurent Nahon, Stephen T Pratt</div>
           <div class="pub-journal"><em>The Journal of Physical Chemistry A</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acs.jpca.8b11809" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acs.jpca.8b11809" target="_blank">View
+              Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2019</span>Unveiling New Isomers and Rearrangement Routes on the C7H8+ Potential Energy Surface</div>
+          <div class="pub-title"><span class="pub-year">2019</span>Unveiling New Isomers and Rearrangement Routes on the
+            C7H8+ Potential Energy Surface</div>
           <div class="pub-authors">Ugo Jacovella, Gabriel da Silva, Evan J Bieske</div>
           <div class="pub-journal"><em>The Journal of Physical Chemistry A</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acs.jpca.8b10642" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acs.jpca.8b10642" target="_blank">View
+              Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2019</span>Electronic Spectra of Diacetylene Cations (HC4H+) Tagged with Ar and N2</div>
-          <div class="pub-authors">Giel Muller, Katherine J Catani, Michael S Scholz, Ugo Jacovella, Nastasia I Bartlett, Evan J Bieske</div>
+          <div class="pub-title"><span class="pub-year">2019</span>Electronic Spectra of Diacetylene Cations (HC4H+)
+            Tagged with Ar and N2</div>
+          <div class="pub-authors">Giel Muller, Katherine J Catani, Michael S Scholz, Ugo Jacovella, Nastasia I
+            Bartlett, Evan J Bieske</div>
           <div class="pub-journal"><em>The Journal of Physical Chemistry A</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acs.jpca.9b05996" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acs.jpca.9b05996" target="_blank">View
+              Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2019</span>Electronic Spectra of the Triacetylene Cation (HC6H+) and Protonated Triacetylene (HC6H2+) Tagged with Ar</div>
-          <div class="pub-authors">Ugo Jacovella, Giel Muller, Katherine J Catani, Nastasia I Bartlett, Evan J Bieske</div>
+          <div class="pub-title"><span class="pub-year">2019</span>Electronic Spectra of the Triacetylene Cation (HC6H+)
+            and Protonated Triacetylene (HC6H2+) Tagged with Ar</div>
+          <div class="pub-authors">Ugo Jacovella, Giel Muller, Katherine J Catani, Nastasia I Bartlett, Evan J Bieske
+          </div>
           <div class="pub-journal"><em>Australian Journal of Chemistry</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://connectsci.au/ch/article-abstract/72/4/260/100624" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://connectsci.au/ch/article-abstract/72/4/260/100624" target="_blank">View
+              Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2018</span>Structure and dynamics of the radical cation of ethane arising from the Jahn–Teller and pseudo-Jahn–Teller effects</div>
-          <div class="pub-authors">Ugo Jacovella, Christopher J Stein, Michel Grütter, Leon Freitag, Clément Lauzin, Markus Reiher, Frédéric Merkt</div>
+          <div class="pub-title"><span class="pub-year">2018</span>Structure and dynamics of the radical cation of
+            ethane arising from the Jahn–Teller and pseudo-Jahn–Teller effects</div>
+          <div class="pub-authors">Ugo Jacovella, Christopher J Stein, Michel Grütter, Leon Freitag, Clément Lauzin,
+            Markus Reiher, Frédéric Merkt</div>
           <div class="pub-journal"><em>Physical Chemistry Chemical Physics</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.rsc.org/en/content/articlehtml/2018/cp/c7cp06907c" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.rsc.org/en/content/articlehtml/2018/cp/c7cp06907c"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2018</span>Jahn-Teller effect and large-amplitude motion in CH4+ studied by high-resolution photoelectron spectroscopy of CH4</div>
+          <div class="pub-title"><span class="pub-year">2018</span>Jahn-Teller effect and large-amplitude motion in CH4+
+            studied by high-resolution photoelectron spectroscopy of CH4</div>
           <div class="pub-authors">Ugo Jacovella, Hans Jakob Wörner, Frédéric Merkt</div>
           <div class="pub-journal"><em>Journal of Molecular Spectroscopy</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://www.sciencedirect.com/science/article/pii/S0022285217302734" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://www.sciencedirect.com/science/article/pii/S0022285217302734"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2018</span>High-resolution photoelectron spectrum of the origin band of the X̃+ 2E ← X̃ 1A1 ionising transition of propyne</div>
+          <div class="pub-title"><span class="pub-year">2018</span>High-resolution photoelectron spectrum of the origin
+            band of the X̃+ 2E ← X̃ 1A1 ionising transition of propyne</div>
           <div class="pub-authors">Ugo Jacovella, Frédéric Merkt</div>
           <div class="pub-journal"><em>Molecular Physics</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://www.tandfonline.com/doi/abs/10.1080/00268976.2018.1451002" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://www.tandfonline.com/doi/abs/10.1080/00268976.2018.1451002"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2017</span>Spin–orbit interaction and Renner–Teller effect in HCCCCH+ studied by high-resolution photoelectron spectroscopy</div>
+          <div class="pub-title"><span class="pub-year">2017</span>Spin–orbit interaction and Renner–Teller effect in
+            HCCCCH+ studied by high-resolution photoelectron spectroscopy</div>
           <div class="pub-authors">Ugo Jacovella, Frédéric Merkt</div>
           <div class="pub-journal"><em>Physical Chemistry Chemical Physics</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.rsc.org/en/content/articlehtml/2017/cp/c7cp04759b" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.rsc.org/en/content/articlehtml/2017/cp/c7cp04759b"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2017</span>Photoelectron angular distributions from rotationally resolved autoionizing states of N2</div>
-          <div class="pub-authors">Alexander M Chartrand, Elizabeth F McCormack, Ugo Jacovella, David MP Holland, Berenger Gans, Xiaofeng Tang, Gustavo A García, Laurent Nahon, Stephen T Pratt</div>
+          <div class="pub-title"><span class="pub-year">2017</span>Photoelectron angular distributions from rotationally
+            resolved autoionizing states of N2</div>
+          <div class="pub-authors">Alexander M Chartrand, Elizabeth F McCormack, Ugo Jacovella, David MP Holland,
+            Berenger Gans, Xiaofeng Tang, Gustavo A García, Laurent Nahon, Stephen T Pratt</div>
           <div class="pub-journal"><em>The Journal of chemical physics</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.aip.org/aip/jcp/article/147/22/224303/970213" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.aip.org/aip/jcp/article/147/22/224303/970213" target="_blank">View
+              Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2016</span>Infrared spectroscopy of molecular ions in selected rotational and spin-orbit states</div>
-          <div class="pub-authors">Ugo Jacovella, Josef A Agner, Hansjürg Schmutz, Johannes Deiglmayr, Frédéric Merkt</div>
+          <div class="pub-title"><span class="pub-year">2016</span>Infrared spectroscopy of molecular ions in selected
+            rotational and spin-orbit states</div>
+          <div class="pub-authors">Ugo Jacovella, Josef A Agner, Hansjürg Schmutz, Johannes Deiglmayr, Frédéric Merkt
+          </div>
           <div class="pub-journal"><em>The Journal of chemical physics</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.aip.org/aip/jcp/article/145/1/014301/899013" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.aip.org/aip/jcp/article/145/1/014301/899013" target="_blank">View
+              Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2015</span>Threshold ionization spectroscopy of H2O, HDO and D2O and low-lying vibrational levels of HDO+ and D2O+</div>
+          <div class="pub-title"><span class="pub-year">2015</span>Threshold ionization spectroscopy of H2O, HDO and D2O
+            and low-lying vibrational levels of HDO+ and D2O+</div>
           <div class="pub-authors">Clément Lauzin, Ugo Jacovella, Frédéric Merkt</div>
           <div class="pub-journal"><em>Molecular physics</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://www.tandfonline.com/doi/abs/10.1080/00268976.2015.1049971" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://www.tandfonline.com/doi/abs/10.1080/00268976.2015.1049971"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2015</span>A near-threshold shape resonance in the valence-shell photoabsorption of linear alkynes</div>
-          <div class="pub-authors">Ugo Jacovella, David MP Holland, Séverine Boyé-Péronne, Bérenger Gans, N de Oliveira, K Ito, Denis Joyeux, LE Archer, Robert R Lucchese, Hong Xu, Stephen T Pratt</div>
+          <div class="pub-title"><span class="pub-year">2015</span>A near-threshold shape resonance in the valence-shell
+            photoabsorption of linear alkynes</div>
+          <div class="pub-authors">Ugo Jacovella, David MP Holland, Séverine Boyé-Péronne, Bérenger Gans, N de Oliveira,
+            K Ito, Denis Joyeux, LE Archer, Robert R Lucchese, Hong Xu, Stephen T Pratt</div>
           <div class="pub-journal"><em>The Journal of Physical Chemistry A</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acs.jpca.5b06949" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.acs.org/doi/abs/10.1021/acs.jpca.5b06949" target="_blank">View
+              Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2015</span>High-resolution vacuum-ultraviolet photoabsorption spectra of 1-butyne and 2-butyne</div>
-          <div class="pub-authors">U Jacovella, DMP Holland, S Boyé-Péronne, B Gans, N de Oliveira, D Joyeux, LE Archer, RR Lucchese, Hong Xu, ST Pratt</div>
+          <div class="pub-title"><span class="pub-year">2015</span>High-resolution vacuum-ultraviolet photoabsorption
+            spectra of 1-butyne and 2-butyne</div>
+          <div class="pub-authors">U Jacovella, DMP Holland, S Boyé-Péronne, B Gans, N de Oliveira, D Joyeux, LE Archer,
+            RR Lucchese, Hong Xu, ST Pratt</div>
           <div class="pub-journal"><em>The Journal of chemical physics</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.aip.org/aip/jcp/article/143/3/034304/193937" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.aip.org/aip/jcp/article/143/3/034304/193937" target="_blank">View
+              Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2015</span>Internal rotation, spin–orbit coupling, and low-frequency vibrations in the ground state of CH3–CC–CH+ 3 and CD3–CC–CD+ 3</div>
+          <div class="pub-title"><span class="pub-year">2015</span>Internal rotation, spin–orbit coupling, and
+            low-frequency vibrations in the ground state of CH3–CC–CH+ 3 and CD3–CC–CD+ 3</div>
           <div class="pub-authors">Ugo Jacovella, Bérenger Gans, Frédéric Merkt</div>
           <div class="pub-journal"><em>Molecular Physics</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://www.tandfonline.com/doi/abs/10.1080/00268976.2015.1005708" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://www.tandfonline.com/doi/abs/10.1080/00268976.2015.1005708"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2014</span>High-resolution photoabsorption spectrum of jet-cooled propyne</div>
-          <div class="pub-authors">U Jacovella, DMP Holland, S Boyé-Péronne, D Joyeux, LE Archer, N de Oliveira, L Nahon, RR Lucchese, Hong Xu, ST Pratt</div>
+          <div class="pub-title"><span class="pub-year">2014</span>High-resolution photoabsorption spectrum of
+            jet-cooled propyne</div>
+          <div class="pub-authors">U Jacovella, DMP Holland, S Boyé-Péronne, D Joyeux, LE Archer, N de Oliveira, L
+            Nahon, RR Lucchese, Hong Xu, ST Pratt</div>
           <div class="pub-journal"><em>The Journal of chemical physics</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.aip.org/aip/jcp/article/141/11/114303/193927" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.aip.org/aip/jcp/article/141/11/114303/193927" target="_blank">View
+              Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2013</span>On the adiabatic ionization energy of the propargyl radical</div>
+          <div class="pub-title"><span class="pub-year">2013</span>On the adiabatic ionization energy of the propargyl
+            radical</div>
           <div class="pub-authors">Ugo Jacovella, Bérenger Gans, Frédéric Merkt</div>
           <div class="pub-journal"><em>The Journal of chemical physics</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.aip.org/aip/jcp/article/139/8/084308/74534" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.aip.org/aip/jcp/article/139/8/084308/74534" target="_blank">View
+              Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2012</span>Near-threshold shape resonance in the photoionization of 2-butyne</div>
+          <div class="pub-title"><span class="pub-year">2012</span>Near-threshold shape resonance in the photoionization
+            of 2-butyne</div>
           <div class="pub-authors">Hong Xu, U Jacovella, B Ruscic, ST Pratt, RR Lucchese</div>
           <div class="pub-journal"><em>The Journal of Chemical Physics</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://pubs.aip.org/aip/jcp/article/136/15/154303/941607" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://pubs.aip.org/aip/jcp/article/136/15/154303/941607" target="_blank">View
+              Paper</a>
           </div>
         </div>
         <div class="pub" data-selected="false">
-          <div class="pub-title"><span class="pub-year">2012</span>Rydberg states of cyanoacetylene investigated by (3 + 1) REMPI spectroscopy in the 77,000–90,000 cm−1 energy range</div>
-          <div class="pub-authors">Luiz A Vieira Mendes, Séverine Boyé-Péronne, Ugo Jacovella, Jacques Liévin, Dolores Gauyacq</div>
+          <div class="pub-title"><span class="pub-year">2012</span>Rydberg states of cyanoacetylene investigated by
+            (3 + 1) REMPI spectroscopy in the 77,000–90,000 cm−1 energy range</div>
+          <div class="pub-authors">Luiz A Vieira Mendes, Séverine Boyé-Péronne, Ugo Jacovella, Jacques Liévin, Dolores
+            Gauyacq</div>
           <div class="pub-journal"><em>Molecular Physics</em></div>
           <div class="pub-links">
-            <a class="pub-link" href="https://www.tandfonline.com/doi/abs/10.1080/00268976.2012.706327" target="_blank">View Paper</a>
+            <a class="pub-link" href="https://www.tandfonline.com/doi/abs/10.1080/00268976.2012.706327"
+              target="_blank">View Paper</a>
           </div>
         </div>
         <!-- PUBLICATIONS_END -->
@@ -549,4 +895,5 @@
     </footer>
   </div>
 </body>
+
 </html>
