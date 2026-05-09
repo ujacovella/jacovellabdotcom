@@ -41,7 +41,10 @@ def fill_with_retry(pub, retries=MAX_RETRIES):
             else:
                 raise
 
-def fetch_publications():
+def fetch_publications(selected_states=None, manual_entries=None):
+    if selected_states is None: selected_states = {}
+    if manual_entries is None: manual_entries = []
+
     print(f"{ts()} Fetching author profile for Scholar ID: {AUTHOR_ID}")
     setup_proxy()
 
@@ -108,6 +111,11 @@ def fetch_publications():
         except Exception as e:
             print(f"{ts()} WARNING — Skipping publication {i}: {e}")
 
+    # ── Merge manual entries ──
+    if manual_entries:
+        parsed.extend(manual_entries)
+        print(f"{ts()} Merged {len(manual_entries)} manual entries.")
+
     if not parsed:
         print(f"{ts()} ERROR — No publications could be parsed.")
         return None
@@ -118,8 +126,17 @@ def fetch_publications():
 
     html_content = ""
     for p in parsed:
+        # Determine selected state (prefer manual value, else look up in states)
+        is_manual = p.get('manual', False)
+        if is_manual:
+            sel_val = p.get('selected', 'false')
+            manual_attr = ' data-manual="true"'
+        else:
+            sel_val = selected_states.get(p['pub_url'], 'false')
+            manual_attr = ''
+
         html_content += f"""
-        <div class="pub" data-date="{p['sort_date']}">
+        <div class="pub" data-selected="{sel_val}"{manual_attr} data-date="{p['sort_date']}">
           <div class="pub-title"><span class="pub-year">{p['pub_year']}</span>{p['title']}</div>
           <div class="pub-authors">{p['authors']}</div>
           <div class="pub-journal"><em>{p['journal']}</em></div>
@@ -130,51 +147,65 @@ def fetch_publications():
 
     return html_content
 
-def load_selected_states(html_file):
-    """Read data-selected values from existing publications.html.
-    Returns a dict keyed by canonical pub URL -> 'true' or 'false'.
+def load_existing_data(html_file):
+    """Read existing data from publications.html.
+    Returns: (selected_states, manual_entries)
+    - selected_states: dict (url -> 'true'/'false')
+    - manual_entries: list of dicts (parsed entry objects)
     """
     if not os.path.exists(html_file):
-        return {}
+        return {}, []
+
     with open(html_file, 'r', encoding='utf-8') as f:
         content = f.read()
-    # Match each pub block: capture attrs and inner HTML
-    pub_re   = re.compile(r'<div class="pub"([^>]*)>(.*?)</div>\s*</div>', re.DOTALL)
-    url_re   = re.compile(r'href="([^"]+)"')
-    sel_re   = re.compile(r'data-selected="(true|false)"')
-    states   = {}
+
+    pub_re = re.compile(r'<div class="pub"([^>]*)>(.*?)</div>\s*</div>', re.DOTALL)
+    url_re = re.compile(r'href="([^"]+)"')
+    sel_re = re.compile(r'data-selected="(true|false)"')
+    man_re = re.compile(r'data-manual="true"')
+    date_re = re.compile(r'data-date="([^"]+)"')
+    title_re = re.compile(r'<div class="pub-title"><span class="pub-year">([^<]*)</span>([^<]+)</div>')
+    auth_re = re.compile(r'<div class="pub-authors">([^<]+)</div>')
+    jour_re = re.compile(r'<div class="pub-journal"><em>([^<]*)</em></div>')
+
+    states = {}
+    manuals = []
+
     for m in pub_re.finditer(content):
         attrs, body = m.group(1), m.group(2)
         url_m = url_re.search(body)
+        url = url_m.group(1).strip() if url_m else '#'
         sel_m = sel_re.search(attrs)
-        if url_m:
-            url   = url_m.group(1).strip()
-            value = sel_m.group(1) if sel_m else 'false'
-            states[url] = value
-    selected_count = sum(1 for v in states.values() if v == 'true')
-    print(f"{ts()} Loaded {len(states)} existing selected states ({selected_count} marked true).")
-    return states
+        sel_val = sel_m.group(1) if sel_m else 'false'
+
+        if man_re.search(attrs):
+            date_m = date_re.search(attrs)
+            tit_m = title_re.search(body)
+            aut_m = auth_re.search(body)
+            jou_m = jour_re.search(body)
+
+            manuals.append({
+                'sort_date': date_m.group(1) if date_m else '0000-00-00',
+                'pub_year': tit_m.group(1) if tit_m else '',
+                'title': tit_m.group(2).strip() if tit_m else 'Unknown',
+                'authors': aut_m.group(1).strip() if aut_m else 'Unknown',
+                'journal': jou_m.group(1).strip() if jou_m else '',
+                'pub_url': url,
+                'selected': sel_val,
+                'manual': True
+            })
+        else:
+            if url != '#':
+                states[url] = sel_val
+
+    sel_count = sum(1 for v in states.values() if v == 'true') + sum(1 for m in manuals if m['selected'] == 'true')
+    print(f"{ts()} Loaded {len(states)} Scholar states and {len(manuals)} manual entries ({sel_count} total selected).")
+    return states, manuals
 
 def update_html(publications_html):
     if not os.path.exists(HTML_FILE):
         print(f"{ts()} ERROR — {HTML_FILE} not found.")
         return False
-
-    # Preserve user-set data-selected values before overwriting
-    selected_states = load_selected_states(HTML_FILE)
-
-    # Apply preserved selected states to the new HTML
-    if selected_states:
-        def apply_selected(match):
-            url = match.group(1)
-            value = selected_states.get(url, 'false')
-            return f'data-selected="{value}" href="{url}"'
-        # Replace href="URL" inside pub blocks, carrying over the selected state
-        publications_html = re.sub(
-            r'data-selected="false" href="([^"]+)"',
-            apply_selected,
-            publications_html
-        )
 
     with open(HTML_FILE, 'r', encoding='utf-8') as f:
         content = f.read()
@@ -201,7 +232,8 @@ if __name__ == "__main__":
     repo_root  = os.path.dirname(script_dir)
     os.chdir(repo_root)
 
-    pubs_html = fetch_publications()
+    selected_states, manual_entries = load_existing_data(HTML_FILE)
+    pubs_html = fetch_publications(selected_states, manual_entries)
     if pubs_html:
         update_html(pubs_html)
     else:
