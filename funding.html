@@ -49,19 +49,8 @@
       <div class="section-heading">Funding</div>
       <p style="margin-bottom: 2rem;">Our research is supported by several national and international funding agencies. We are grateful for their support.</p>
       
-      <div class="funding-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 2rem;">
-        <div style="padding: 1.5rem; border: 1px solid var(--border); border-radius: var(--radius); text-align: center;">
-          <img src="assets/logos/cnrs.svg" alt="CNRS" style="height: 60px; margin-bottom: 1rem;">
-          <p><strong>CNRS</strong><br>Centre National de la Recherche Scientifique</p>
-        </div>
-        <div style="padding: 1.5rem; border: 1px solid var(--border); border-radius: var(--radius); text-align: center;">
-          <img src="assets/logos/upsaclay.svg" alt="UPSaclay" style="height: 60px; margin-bottom: 1rem;">
-          <p><strong>Université Paris-Saclay</strong></p>
-        </div>
-        <div style="padding: 1.5rem; border: 1px solid var(--border); border-radius: var(--radius); text-align: center;">
-          <img src="assets/logos/ismo.svg" alt="ISMO" style="height: 60px; margin-bottom: 1rem;">
-          <p><strong>ISMO</strong><br>Institut des Sciences Moléculaires d'Orsay</p>
-        </div>
+      <div id="funding-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 2rem;">
+        <p style="font-size:14px; color:var(--hint);">Loading funding logos...</p>
       </div>
     </section>
 
@@ -70,5 +59,52 @@
       <span>Built with GitHub Pages</span>
     </footer>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const grid = document.getElementById('funding-grid');
+      const repo = 'ujacovella/jacovelladotcom';
+      const paths = ['assets/logos', 'assets/fundings'];
+      const skipLogos = ['JacovelLab.svg']; // Don't show lab logo in funding
+
+      try {
+        let allFiles = [];
+        for (const path of paths) {
+          const response = await fetch(`https://api.github.com/repos/${repo}/contents/${path}?t=${new Date().getTime()}`);
+          const files = await response.json();
+          if (Array.isArray(files)) {
+            allFiles = allFiles.concat(files);
+          }
+        }
+
+        const logos = allFiles.filter(f => 
+          f.name.match(/\.(png|jpg|jpeg|webp|svg)$/i) && !skipLogos.includes(f.name)
+        );
+
+        if (logos.length === 0) {
+          grid.innerHTML = '<p>No logos found.</p>';
+          return;
+        }
+
+        grid.innerHTML = '';
+        logos.forEach(logo => {
+          const card = document.createElement('div');
+          card.style.cssText = 'padding: 2rem; border: 1px solid var(--border); border-radius: var(--radius); text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--surface); transition: transform 0.2s;';
+          
+          const img = document.createElement('img');
+          img.src = logo.path;
+          img.alt = logo.name.split('.')[0].replace(/[-_]/g, ' ');
+          img.style.cssText = 'height: 70px; width: auto; max-width: 100%; object-fit: contain;';
+          
+          card.appendChild(img);
+          grid.appendChild(card);
+        });
+
+      } catch (err) {
+        console.error('Failed to load funding logos:', err);
+        grid.innerHTML = '<p>Error loading logos.</p>';
+      }
+    });
+  </script>
 </body>
 </html>
