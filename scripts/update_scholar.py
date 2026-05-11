@@ -81,7 +81,7 @@ def fetch_publications(selected_states=None, manual_entries=None):
 
             # Build a full sortable date: prefer pub_date (can be 'YYYY/MM/DD'),
             # fall back to pub_year only.
-            raw_date = bib.get('pub_date', '') or bib.get('pub_year', '')
+            raw_date = str(bib.get('pub_date', '') or bib.get('pub_year', ''))
             # Normalise YYYY/MM/DD  or  YYYY/MM  or  YYYY  → YYYY-MM-DD
             parts = [p.zfill(2) for p in raw_date.replace('/', '-').split('-')]
             if len(parts) == 3:
@@ -93,8 +93,8 @@ def fetch_publications(selected_states=None, manual_entries=None):
             else:
                 sort_date = '0000-00-00'
 
-            title   = bib.get('title', 'Unknown Title')
-            authors = bib.get('author', 'Unknown Authors').replace(' and ', ', ')
+            title   = str(bib.get('title', 'Unknown Title'))
+            authors = str(bib.get('author', 'Unknown Authors')).replace(' and ', ', ')
             journal = bib.get('journal', '') or bib.get('citation', '')
             pub_url = pub.get('pub_url', '#')
 

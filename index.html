@@ -1,669 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jacovella Group</title>
-  <meta name="description" content="Personal academic website of Dr. Ugo Jacovalla." />
+  <meta name="description" content="Personal academic website of Dr. Ugo Jacovella." />
+  <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <style>
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --bg: #f5f5f7;
-      --surface: #ffffff;
-      --text: #1d1d1f;
-      --muted: #515154;
-      --hint: #86868b;
-      --border: rgba(0, 0, 0, 0.08);
-      --border-strong: rgba(0, 0, 0, 0.15);
-      --accent: #0066cc;
-      --radius: 8px;
-      --radius-lg: 12px;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #151516;
-        --surface: #222224;
-        --text: #f5f5f7;
-        --muted: #a1a1a6;
-        --hint: #86868b;
-        --border: rgba(255, 255, 255, 0.08);
-        --border-strong: rgba(255, 255, 255, 0.15);
-        --accent: #2997ff;
-      }
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      font-size: 16px;
-      line-height: 1.7;
-    }
-
-    .container {
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 0 1.5rem 5rem;
-    }
-
-    /* ── NAV ── */
-    nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.4rem 0;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 3rem;
-    }
-
-    .nav-logo {
-      font-family: 'Inter', sans-serif;
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--text);
-      text-decoration: none;
-      letter-spacing: -0.02em;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 1.5rem;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-size: 12px;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      text-decoration: none;
-      color: var(--muted);
-      transition: color 0.15s;
-    }
-
-    .nav-links a:hover {
-      color: var(--text);
-    }
-
-    /* ── HERO ── */
-    .hero {
-      display: grid;
-      grid-template-columns: 1fr 190px;
-      gap: 3rem;
-      align-items: start;
-      margin-bottom: 4rem;
-    }
-
-    .hero h1 {
-      font-family: 'Inter', sans-serif;
-      font-size: 42px;
-      font-weight: 700;
-      line-height: 1.1;
-      margin-bottom: 0.3rem;
-      letter-spacing: -0.03em;
-    }
-
-    .hero .subtitle {
-      font-size: 12px;
-      letter-spacing: 0.09em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 1.3rem;
-    }
-
-    .hero .bio {
-      font-size: 15px;
-      color: var(--muted);
-      max-width: 520px;
-      margin-bottom: 1.4rem;
-    }
-
-    .affil {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-      color: var(--muted);
-      margin-bottom: 0.4rem;
-    }
-
-    .affil svg {
-      width: 15px;
-      height: 15px;
-      flex-shrink: 0;
-      stroke: var(--muted);
-      fill: none;
-      stroke-width: 1.8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .cta-links {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 1.4rem;
-    }
-
-    .cta-links a {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      text-decoration: none;
-      padding: 6px 14px;
-      border: 1px solid var(--border-strong);
-      border-radius: var(--radius);
-      color: var(--muted);
-      transition: background 0.15s, color 0.15s;
-    }
-
-    .cta-links a:hover {
-      background: var(--surface);
-      color: var(--text);
-    }
-
-    .carousel-container {
-      width: 190px;
-      aspect-ratio: 1;
-      position: relative;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-    }
-
-    .carousel {
-      width: 100%;
-      height: 100%;
-      position: relative;
-    }
-
-    .carousel-slide {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      transition: opacity 0.5s ease-in-out;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: var(--hint);
-      background: var(--surface);
-    }
-
-    .carousel-slide.active {
-      opacity: 1;
-      z-index: 1;
-    }
-
-    .carousel-slide img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-
-    .placeholder-text {
-      font-size: 11px;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      margin-top: 8px;
-      z-index: 2;
-    }
-
-    .placeholder-icon {
-      z-index: 2;
-    }
-
-    .carousel-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(0, 0, 0, 0.3);
-      color: white;
-      border: none;
-      padding: 6px 10px;
-      cursor: pointer;
-      z-index: 10;
-      border-radius: 4px;
-      font-size: 14px;
-      transition: background 0.2s;
-    }
-
-    .carousel-btn:hover {
-      background: rgba(0, 0, 0, 0.6);
-    }
-
-    .carousel-btn.prev {
-      left: 4px;
-    }
-
-    .carousel-btn.next {
-      right: 4px;
-    }
-
-    .carousel-dots {
-      position: absolute;
-      bottom: 8px;
-      left: 0;
-      right: 0;
-      text-align: center;
-      z-index: 10;
-    }
-
-    .dot {
-      display: inline-block;
-      width: 6px;
-      height: 6px;
-      margin: 0 3px;
-      background: rgba(150, 150, 150, 0.5);
-      border-radius: 50%;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .dot.active {
-      background: rgba(100, 100, 100, 0.9);
-    }
-
-    @media (prefers-color-scheme: dark) {
-      .dot {
-        background: rgba(255, 255, 255, 0.3);
-      }
-
-      .dot.active {
-        background: rgba(255, 255, 255, 0.8);
-      }
-    }
-
-    /* ── SECTION ── */
-    section {
-      margin-bottom: 3.5rem;
-    }
-
-    .section-heading {
-      font-family: 'Inter', sans-serif;
-      font-size: 22px;
-      font-weight: 600;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 0.5rem;
-      margin-bottom: 1.6rem;
-      letter-spacing: -0.02em;
-    }
-
-    /* ── PUBLICATIONS ── */
-    .pub {
-      padding: 1rem 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .pub:last-of-type {
-      border-bottom: none;
-    }
-
-    .pub-year {
-      display: inline-block;
-      font-size: 11px;
-      letter-spacing: 0.07em;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      padding: 1px 7px;
-      color: var(--hint);
-      margin-right: 6px;
-      vertical-align: middle;
-    }
-
-    .pub-title {
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-    }
-
-    .pub-authors {
-      font-size: 13px;
-      font-style: italic;
-      color: var(--muted);
-      margin-bottom: 0.2rem;
-    }
-
-    .pub-journal {
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .pub-journal em {
-      font-style: normal;
-      color: var(--text);
-    }
-
-    .pub-links {
-      display: flex;
-      gap: 6px;
-      margin-top: 0.5rem;
-    }
-
-    .pub-link {
-      font-size: 11px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      text-decoration: none;
-      padding: 3px 10px;
-      border: 1px solid var(--border-strong);
-      border-radius: var(--radius);
-      color: var(--muted);
-      transition: background 0.12s;
-    }
-
-    .pub-link:hover {
-      background: var(--surface);
-    }
-
-    .all-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 13px;
-      color: var(--muted);
-      text-decoration: none;
-      margin-top: 1rem;
-    }
-
-    .all-link:hover {
-      color: var(--text);
-    }
-
-    /* ── PROJECTS ── */
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
-    }
-
-    .project-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1.25rem;
-    }
-
-    .project-icon {
-      font-size: 20px;
-      margin-bottom: 0.8rem;
-      color: var(--muted);
-    }
-
-    .project-card h3 {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 0.4rem;
-    }
-
-    .project-card p {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    /* ── GROUP ── */
-    .group-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 1rem;
-    }
-
-    .member-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1rem;
-      text-align: center;
-    }
-
-    .member-avatar {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: #dce8f8;
-      color: #1a4080;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      font-weight: 600;
-      margin: 0 auto 0.6rem;
-    }
-
-    .member-name {
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .member-role {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    /* ── BLOG ── */
-    .blog-item {
-      display: flex;
-      gap: 1.2rem;
-      padding: 0.9rem 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .blog-item:last-child {
-      border-bottom: none;
-    }
-
-    .blog-date {
-      font-size: 11px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--hint);
-      min-width: 68px;
-      padding-top: 3px;
-    }
-
-    .blog-body .blog-title {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 2px;
-    }
-
-    .blog-body .blog-excerpt {
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    /* ── CONTACT ── */
-    .contact-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2.5rem;
-    }
-
-    .contact-intro {
-      font-size: 14px;
-      color: var(--muted);
-      margin-bottom: 1rem;
-    }
-
-    .contact-row {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      font-size: 14px;
-      color: var(--muted);
-      margin-bottom: 0.55rem;
-    }
-
-    .contact-row svg {
-      width: 16px;
-      height: 16px;
-      flex-shrink: 0;
-      stroke: var(--hint);
-      fill: none;
-      stroke-width: 1.8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .address-label {
-      font-size: 12px;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      color: var(--hint);
-      margin-bottom: 0.6rem;
-    }
-
-    .address-body {
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.85;
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding-top: 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      color: var(--hint);
-    }
-
-    @media (max-width: 640px) {
-      .hero {
-        grid-template-columns: 1fr;
-      }
-
-      .carousel-container {
-        width: 140px;
-      }
-
-      .contact-grid {
-        grid-template-columns: 1fr;
-      }
-
-      nav {
-        flex-direction: column;
-        gap: 0.8rem;
-      }
-
-      .nav-links {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 1rem;
-      }
-    }
-  </style>
 </head>
-
 <body>
-  <div class="container">
-
-    <nav>
-      <a class="nav-logo" href="#">Jacovella Group</a>
+  <nav class="main-nav">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <img src="assets/logos/JacovelLab.svg" alt="JacovelLab Logo" />
+      </a>
       <ul class="nav-links">
-        <li><a href="index.html" style="color: var(--text);">Home</a></li>
-        <li><a href="research.html">Research</a></li>
-        <li><a href="publications.html">Publications</a></li>
-        <li><a href="group.html">Group</a></li>
+        <li><a href="index.html#news">News</a></li>
+        <li class="has-dropdown">
+          <a href="group.html">Group</a>
+          <div class="dropdown">
+            <div class="dropdown-content">
+              <a href="group.html#pi">Principal Investigator</a>
+              <a href="group.html#members">Group members</a>
+              <a href="group.html#alumni">Alumni</a>
+            </div>
+          </div>
+        </li>
+        <li class="has-dropdown">
+          <a href="research.html">Research</a>
+          <div class="dropdown">
+            <div class="dropdown-content">
+              <a href="research.html">Research topics</a>
+              <a href="publications.html">Publications</a>
+              <a href="theses.html">PhD theses</a>
+              <a href="funding.html">Funding</a>
+            </div>
+          </div>
+        </li>
+        <li><a href="positions.html">Open positions</a></li>
+        <li><a href="contact.html">Contact</a></li>
       </ul>
-    </nav>
+    </div>
+  </nav>
 
-    <!-- ── HERO ── -->
-    <div class="hero">
-      <div>
+  <div class="container">
+    <header class="hero">
+      <div class="hero-content">
+        <p class="subtitle">Astrochemistry & Molecular Physics</p>
         <h1>Jacovella Group</h1>
-        <div class="subtitle">Laboratory Gas-Phase Astrochemistry</div>
         <p class="bio">
-          Description
+          We use high-resolution spectroscopy and mass spectrometry to study molecular ions of astrochemical interest.
         </p>
         <div class="affil">
-          <svg viewBox="0 0 24 24">
-            <path d="M3 21h18M6 21V7l6-4 6 4v14M9 21V12h6v9" />
-          </svg>
+          <svg viewBox="0 0 24 24"><path d="M3 21h18M6 21V7l6-4 6 4v14M9 21V12h6v9" /></svg>
           Institut des Sciences Moléculaires d'Orsay
         </div>
         <div class="affil">
-          <svg viewBox="0 0 24 24">
-            <path d="M12 21c-4-4-7-7.5-7-11a7 7 0 0 1 14 0c0 3.5-3 7-7 11z" />
-            <circle cx="12" cy="10" r="2" />
-          </svg>
+          <svg viewBox="0 0 24 24"><path d="M12 21c-4-4-7-7.5-7-11a7 7 0 0 1 14 0c0 3.5-3 7-7 11z" /><circle cx="12" cy="10" r="2" /></svg>
           Orsay, France
         </div>
         <div class="cta-links">
-          <a href="mailto:ugo.jacovella@cnrs.fr">&#9993; Contact Us</a>
-          <a href="#research">&#128269; Our Research</a>
-          <a href="https://scholar.google.com/citations?user=bvbpeyUAAAAJ&hl=fr&oi=ao" target="_blank"
-            rel="noopener">Scholar</a>
+          <a href="contact.html">&#9993; Contact Us</a>
+          <a href="research.html">&#128269; Our Research</a>
+          <a href="https://scholar.google.com/citations?user=bvbpeyUAAAAJ&hl=fr&oi=ao" target="_blank" rel="noopener">Scholar</a>
         </div>
       </div>
       <div class="carousel-container">
         <div class="carousel">
           <div class="carousel-slide active">
-            <!-- Replace with <img src="image1.jpg" alt="Slide 1" /> -->
-            <svg class="placeholder-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#bbb"
-              stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-              <circle cx="8.5" cy="8.5" r="1.5"></circle>
-              <polyline points="21 15 16 10 5 21"></polyline>
-            </svg>
-            <span class="placeholder-text">Image 1</span>
-          </div>
-          <div class="carousel-slide">
-            <!-- Replace with <img src="image2.jpg" alt="Slide 2" /> -->
-            <svg class="placeholder-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#bbb"
-              stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-              <circle cx="8.5" cy="8.5" r="1.5"></circle>
-              <polyline points="21 15 16 10 5 21"></polyline>
-            </svg>
-            <span class="placeholder-text">Image 2</span>
-          </div>
-          <div class="carousel-slide">
-            <!-- Replace with <img src="image3.jpg" alt="Slide 3" /> -->
-            <svg class="placeholder-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#bbb"
-              stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-              <circle cx="8.5" cy="8.5" r="1.5"></circle>
-              <polyline points="21 15 16 10 5 21"></polyline>
-            </svg>
-            <span class="placeholder-text">Image 3</span>
+            <img src="assets/homepage/TuningReactivity.png" alt="Tuning Reactivity" />
           </div>
         </div>
         <button class="carousel-btn prev" aria-label="Previous image">&#10094;</button>
         <button class="carousel-btn next" aria-label="Next image">&#10095;</button>
         <div class="carousel-dots">
           <span class="dot active"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
         </div>
       </div>
-    </div>
+    </header>
 
-    <!-- ── PUBLICATIONS ── -->
+    <section id="news">
+      <div class="section-heading">News &amp; notes</div>
+      <div class="blog-item">
+        <div class="blog-date">Apr 2025</div>
+        <div class="blog-body">
+          <div class="blog-title">New paper accepted in XX</div>
+          <div class="blog-excerpt">Our latest study on isomer-specific reactivity has been accepted for publication.</div>
+        </div>
+      </div>
+    </section>
+
     <section id="publications">
       <div class="section-heading">Selected publications</div>
       <div id="selected-pubs-container">
@@ -672,96 +100,35 @@
       <a class="all-link" href="publications.html">All publications →</a>
     </section>
 
-    <!-- ── RESEARCH ── -->
     <section id="research">
       <div class="section-heading">Main Research Topics</div>
       <div class="projects-grid" id="research-topics-container">
         <p style="font-size:14px;color:var(--muted);">Loading research topics...</p>
       </div>
+      <a class="all-link" href="research.html">View Research Details →</a>
     </section>
 
-    <section id="group">
-      <div class="section-heading">The group</div>
-      <div class="group-grid" id="group-members-container">
-        <p style="font-size:14px;color:var(--muted);">Loading group members...</p>
-      </div>
-      <a class="all-link" href="group.html"
-        style="margin-top:1.2rem;display:inline-flex;align-items:center;gap:4px;font-size:13px;color:var(--muted);text-decoration:none;">Full
-        group page →</a>
-    </section>
-
-    <!-- ── NEWS ── -->
-    <section id="news">
-      <div class="section-heading">News &amp; notes</div>
-
-      <div class="blog-item">
-        <div class="blog-date">Apr 2025</div>
-        <div class="blog-body">
-          <div class="blog-title">New paper accepted in XX</div>
-          <div class="blog-excerpt">Description</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── CONTACT ── -->
-    <section id="contact">
-      <div class="section-heading">Contact</div>
-      <div class="contact-grid">
-        <div>
-          <p class="contact-intro">Contact details.</p>
-          <div class="contact-row">
-            <svg viewBox="0 0 24 24">
-              <rect x="2" y="4" width="20" height="16" rx="2" />
-              <path d="m2 7 10 7 10-7" />
-            </svg>
-            <a href="mailto:ugo.jacovella@cnrs.fr"
-              style="color:var(--muted);text-decoration:none;">ugo.jacovella@cnrs.fr</a>
-          </div>
-          <div class="contact-row">
-            <svg viewBox="0 0 24 24">
-              <path d="M3 21h18M6 21V7l6-4 6 4v14M9 21V12h6v9" />
-            </svg>
-            Room 1.27, Bâtiment 520
-          </div>
-          <div class="contact-row">
-            <svg viewBox="0 0 24 24">
-              <path
-                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 12 19.79 19.79 0 0 1 1.07 3.4 2 2 0 0 1 3.05 1.2h3a2 2 0 0 1 2 1.72c.127.96.36 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.9a16 16 0 0 0 5.61 5.61l1.27-1.27a2 2 0 0 1 2.11-.45c.907.34 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
-            </svg>
-            +1 (000) 000-0000
-          </div>
-        </div>
-        <div>
-          <p class="address-label">Mailing address</p>
-          <p class="address-body">
-            Institut des Sciences Moléculaires d'Orsay<br>
-            Université Paris-Saclay, CNRS<br>
-            Bâtiment 520 Rue André Rivière<br>
-            91405 Orsay
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── INSTITUTIONS ── -->
-    <div class="institutions"
-      style="display: flex; justify-content: center; gap: 4rem; align-items: center; padding: 2rem 0 1rem; border-top: 1px solid var(--border);">
-      <img src="assets/logos/ismo.svg" alt="ISMO Logo" style="height: 120px; width: auto;" />
-      <img src="assets/logos/upsaclay.svg" alt="Université Paris-Saclay" style="height: 120px; width: auto;" />
-      <img src="assets/logos/cnrs.svg" alt="CNRS" style="height: 120px; width: auto;" />
+    <div class="institutions" style="display: flex; justify-content: center; gap: 4rem; align-items: center; padding: 4rem 0 1rem; border-top: 1px solid var(--border); margin-top: 5rem;">
+      <img src="assets/logos/ismo.svg" alt="ISMO Logo" style="height: 100px; width: auto;" />
+      <img src="assets/logos/upsaclay.svg" alt="Université Paris-Saclay" style="height: 100px; width: auto;" />
+      <img src="assets/logos/cnrs.svg" alt="CNRS" style="height: 100px; width: auto;" />
     </div>
 
     <footer>
       <span>&copy; 2026 Ugo Jacovella</span>
       <span>Built with GitHub Pages</span>
     </footer>
-
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const slides = document.querySelectorAll('.carousel-slide');
-      if (slides.length === 0) return;
+      if (slides.length <= 1) {
+        document.querySelector('.carousel-btn.prev').style.display = 'none';
+        document.querySelector('.carousel-btn.next').style.display = 'none';
+        document.querySelector('.carousel-dots').style.display = 'none';
+        if (slides.length === 0) return;
+      }
       const dots = document.querySelectorAll('.dot');
       const prevBtn = document.querySelector('.carousel-btn.prev');
       const nextBtn = document.querySelector('.carousel-btn.next');
@@ -791,10 +158,8 @@
       }
       resetInterval();
     });
-  </script>
 
-  <script>
-    // Load selected publications from publications.html
+    // Load dynamic content
     fetch('publications.html')
       .then(r => r.text())
       .then(html => {
@@ -807,12 +172,8 @@
         } else {
           container.innerHTML = selected.map(el => el.outerHTML).join('\n');
         }
-      })
-      .catch(() => {
-        document.getElementById('selected-pubs-container').innerHTML =
-          '<p style="font-size:14px;color:var(--muted);">Could not load publications.</p>';
       });
-    // Load research topics from research.html
+
     fetch('research.html')
       .then(r => r.text())
       .then(html => {
@@ -820,63 +181,21 @@
         const doc = parser.parseFromString(html, 'text/html');
         const topics = [...doc.querySelectorAll('.research-topic')];
         const container = document.getElementById('research-topics-container');
-        
-        if (topics.length === 0) {
-          container.innerHTML = '<p style="font-size:14px;color:var(--muted);">No research topics found.</p>';
-        } else {
+        if (topics.length > 0) {
           container.innerHTML = topics.map(topic => {
             const title = topic.querySelector('h2').innerText;
             const id = topic.id;
-            // Get the first paragraph of the description
             const firstPara = topic.querySelector('.topic-description p').innerText;
-            
             return `
               <div class="project-card">
                 <h3>${title}</h3>
-                <p>${firstPara.substring(0, 150)}${firstPara.length > 150 ? '...' : ''}</p>
-                <a href="research.html#${id}" class="pub-link" style="margin-top:1rem; display:inline-block; width:fit-content;">Learn more →</a>
+                <p>${firstPara.substring(0, 150)}...</p>
+                <a href="research.html#${id}" class="pub-link" style="margin-top:1rem; display:inline-block;">Learn more →</a>
               </div>
             `;
           }).join('\n');
         }
-      })
-      .catch(() => {
-        document.getElementById('research-topics-container').innerHTML =
-          '<p style="font-size:14px;color:var(--muted);">Could not load research topics.</p>';
-      });
-
-    // Load group members from group.html
-    fetch('group.html')
-      .then(r => r.text())
-      .then(html => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        const allCards = [...doc.querySelectorAll('.member-card')];
-        
-        // Filter: Keep only current members (not alumni)
-        const currentMembers = allCards.filter(c => c.getAttribute('data-alumni') === 'false');
-        
-        // Sort: PI first
-        currentMembers.sort((a, b) => {
-          const aPi = a.getAttribute('data-pi') === 'true';
-          const bPi = b.getAttribute('data-pi') === 'true';
-          if (aPi && !bPi) return -1;
-          if (!aPi && bPi) return 1;
-          return 0;
-        });
-
-        const container = document.getElementById('group-members-container');
-        if (currentMembers.length === 0) {
-          container.innerHTML = '<p style="font-size:14px;color:var(--muted);">No current members found.</p>';
-        } else {
-          container.innerHTML = currentMembers.map(el => el.outerHTML).join('\n');
-        }
-      })
-      .catch(() => {
-        document.getElementById('group-members-container').innerHTML =
-          '<p style="font-size:14px;color:var(--muted);">Could not load group members.</p>';
       });
   </script>
 </body>
-
 </html>
