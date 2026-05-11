@@ -122,10 +122,11 @@ def fetch_publications(selected_states=None, manual_entries=None):
 
     # ── Sort by full date descending (most recent first) ──
     parsed.sort(key=lambda p: p['sort_date'], reverse=True)
-    print(f"{ts()} Sorted {len(parsed)} publications by date, newest first.")
+    total_pubs = len(parsed)
+    print(f"{ts()} Sorted {total_pubs} publications by date, newest first.")
 
     html_content = ""
-    for p in parsed:
+    for i, p in enumerate(parsed):
         # Determine selected state (prefer manual value, else look up in states)
         is_manual = p.get('manual', False)
         if is_manual:
@@ -135,8 +136,9 @@ def fetch_publications(selected_states=None, manual_entries=None):
             sel_val = selected_states.get(p['pub_url'], 'false')
             manual_attr = ''
 
+        pub_num = total_pubs - i
         html_content += f"""
-        <div class="pub" data-selected="{sel_val}"{manual_attr} data-date="{p['sort_date']}">
+        <div class="pub" data-selected="{sel_val}"{manual_attr} data-date="{p['sort_date']}" data-num="{pub_num}">
           <div class="pub-title"><span class="pub-year">{p['pub_year']}</span>{p['title']}</div>
           <div class="pub-authors">{p['authors']}</div>
           <div class="pub-journal"><em>{p['journal']}</em></div>

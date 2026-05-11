@@ -96,26 +96,21 @@ body {
   align-items: center;
   padding: 0 1.2rem;
   height: 100%;
-  font-family: 'Inter', serif; /* Basel uses serif for top level */
-  font-size: 17px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   text-decoration: none;
   color: var(--text);
   transition: background 0.2s, color 0.2s;
 }
 
-/* Serif font for top level items as in Basel screenshots */
-.nav-links > li > a {
-  font-family: 'Georgia', serif;
-}
-
-.nav-links > li:hover > a,
-.nav-links > li > a.active-category {
+.nav-links > li:hover > a {
   background: #eee;
 }
 
 @media (prefers-color-scheme: dark) {
-  .nav-links > li:hover > a,
-  .nav-links > li > a.active-category {
+  .nav-links > li:hover > a {
     background: #333;
   }
 }
@@ -134,8 +129,7 @@ body {
   padding: 0.5rem 0;
 }
 
-.nav-links > li:hover .dropdown,
-.nav-links > li:focus-within .dropdown {
+.nav-links > li:hover .dropdown {
   opacity: 1;
   visibility: visible;
 }
@@ -348,10 +342,6 @@ footer {
 .dot.active { background: rgba(100, 100, 100, 0.9); }
 
 /* ── PUBLICATIONS ── */
-#publications-list {
-  counter-reset: pub-counter;
-}
-
 .pub {
   padding: 1.5rem 0;
   border-bottom: 1px solid var(--border);
@@ -364,8 +354,7 @@ footer {
 }
 
 #publications-list .pub::before {
-  counter-increment: pub-counter;
-  content: "[" counter(pub-counter) "]";
+  content: "[" attr(data-num) "]";
   font-family: 'Inter', sans-serif;
   font-size: 13px;
   font-weight: 600;
