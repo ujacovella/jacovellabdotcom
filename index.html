@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jacovella Group</title>
   <meta name="description" content="Personal academic website of Dr. Ugo Jacovella." />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=1.1" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
+
 <body>
   <nav class="main-nav">
     <div class="nav-container">
@@ -48,23 +50,29 @@
   <div class="container">
     <header class="hero">
       <div class="hero-content">
-        <p class="subtitle">Astrochemistry & Molecular Physics</p>
+        <p class="subtitle">Laboratory Gas-Phase Astrochemistry</p>
         <h1>Jacovella Group</h1>
         <p class="bio">
-          We use high-resolution spectroscopy and mass spectrometry to study molecular ions of astrochemical interest.
+          Description
         </p>
         <div class="affil">
-          <svg viewBox="0 0 24 24"><path d="M3 21h18M6 21V7l6-4 6 4v14M9 21V12h6v9" /></svg>
+          <svg viewBox="0 0 24 24">
+            <path d="M3 21h18M6 21V7l6-4 6 4v14M9 21V12h6v9" />
+          </svg>
           Institut des Sciences Moléculaires d'Orsay
         </div>
         <div class="affil">
-          <svg viewBox="0 0 24 24"><path d="M12 21c-4-4-7-7.5-7-11a7 7 0 0 1 14 0c0 3.5-3 7-7 11z" /><circle cx="12" cy="10" r="2" /></svg>
+          <svg viewBox="0 0 24 24">
+            <path d="M12 21c-4-4-7-7.5-7-11a7 7 0 0 1 14 0c0 3.5-3 7-7 11z" />
+            <circle cx="12" cy="10" r="2" />
+          </svg>
           Orsay, France
         </div>
         <div class="cta-links">
           <a href="contact.html">&#9993; Contact Us</a>
           <a href="research.html">&#128269; Our Research</a>
-          <a href="https://scholar.google.com/citations?user=bvbpeyUAAAAJ&hl=fr&oi=ao" target="_blank" rel="noopener">Scholar</a>
+          <a href="https://scholar.google.com/citations?user=bvbpeyUAAAAJ&hl=fr&oi=ao" target="_blank"
+            rel="noopener">Scholar</a>
         </div>
       </div>
       <div class="carousel-container">
@@ -85,7 +93,8 @@
         <div class="blog-date">Apr 2025</div>
         <div class="blog-body">
           <div class="blog-title">New paper accepted in XX</div>
-          <div class="blog-excerpt">Our latest study on isomer-specific reactivity has been accepted for publication.</div>
+          <div class="blog-excerpt">Our latest study on isomer-specific reactivity has been accepted for publication.
+          </div>
         </div>
       </div>
     </section>
@@ -106,7 +115,8 @@
       <a class="all-link" href="research.html">View Research Details →</a>
     </section>
 
-    <div class="institutions" style="display: flex; justify-content: center; gap: 4rem; align-items: center; padding: 4rem 0 1rem; border-top: 1px solid var(--border); margin-top: 5rem;">
+    <div class="institutions"
+      style="display: flex; justify-content: center; gap: 4rem; align-items: center; padding: 4rem 0 1rem; border-top: 1px solid var(--border); margin-top: 5rem;">
       <img src="assets/logos/ismo.svg" alt="ISMO Logo" style="height: 100px; width: auto;" />
       <img src="assets/logos/upsaclay.svg" alt="Université Paris-Saclay" style="height: 100px; width: auto;" />
       <img src="assets/logos/cnrs.svg" alt="CNRS" style="height: 100px; width: auto;" />
@@ -131,8 +141,8 @@
           const ts = new Date().getTime();
           const response = await fetch(`https://api.github.com/repos/${repo}/contents/${path}?t=${ts}`);
           const files = await response.json();
-          
-          const images = files.filter(f => 
+
+          const images = files.filter(f =>
             f.name.match(/\.(png|jpg|jpeg|webp|gif)$/i)
           );
 
@@ -148,11 +158,11 @@
             const slide = document.createElement('div');
             slide.classList.add('carousel-slide');
             if (i === 0) slide.classList.add('active');
-            
+
             const image = document.createElement('img');
             image.src = img.path; // Local path works on GH Pages
             image.alt = img.name.split('.')[0].replace(/_/g, ' ');
-            
+
             slide.appendChild(image);
             carouselInner.appendChild(slide);
 
@@ -250,4 +260,5 @@
       });
   </script>
 </body>
+
 </html>
