@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Funding - Jacovella Group</title>
-  <link rel="stylesheet" href="style.css?v=1.1" />
+  <link rel="stylesheet" href="style.css?v=1.2" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -92,12 +92,12 @@
         grid.innerHTML = '';
         logos.forEach(logo => {
           const card = document.createElement('div');
-          card.style.css?v=1.1Text = 'padding: 2rem; border: 1px solid var(--border); border-radius: var(--radius); text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--surface); transition: transform 0.2s;';
+          card.style.cssText = 'padding: 2rem; border: 1px solid var(--border); border-radius: var(--radius); text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--surface); transition: transform 0.2s;';
           
           const img = document.createElement('img');
           img.src = logo.path;
           img.alt = logo.name.split('.')[0].replace(/[-_]/g, ' ');
-          img.style.css?v=1.1Text = 'height: 70px; width: auto; max-width: 100%; object-fit: contain;';
+          img.style.cssText = 'height: 70px; width: auto; max-width: 100%; object-fit: contain;';
           
           card.appendChild(img);
           grid.appendChild(card);
