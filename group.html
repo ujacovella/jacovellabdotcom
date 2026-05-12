@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
+
 <body>
   <nav class="main-nav">
     <div class="nav-container">
@@ -22,9 +24,9 @@
         <li><a href="index.html#news">News</a></li>
         <li class="has-dropdown">
           <a href="group.html" class="active-category">Group</a>
-          <div class="dropdown" >
+          <div class="dropdown">
             <div class="dropdown-content">
-              <a href="group.html#pi" >Principal Investigator</a>
+              <a href="pi.html">Principal Investigator</a>
               <a href="group.html#members">Group members</a>
               <a href="group.html#alumni">Alumni</a>
             </div>
@@ -48,16 +50,7 @@
   </nav>
 
   <div class="container">
-    <section id="pi">
-      <div class="section-heading">Principal Investigator</div>
-      <div class="group-grid">
-        <div class="member-card" data-pi="true" data-alumni="false">
-          <div class="member-avatar" style="background:#dce8f8;color:#1a4080">UJ</div>
-          <div class="member-name">Dr. Ugo Jacovella</div>
-          <div class="member-role">Principal Investigator</div>
-        </div>
-      </div>
-    </section>
+
 
     <section id="members" style="margin-top: 4rem;">
       <div class="section-heading">Group Members</div>
@@ -72,17 +65,50 @@
           <div class="member-name">C. Rossi</div>
           <div class="member-role">PhD Student</div>
         </div>
-      </div>
-    </section>
-
-    <section id="alumni" style="margin-top: 4rem;">
-      <div class="section-heading">Alumni</div>
-      <div class="group-grid">
         <div class="member-card" data-pi="false" data-alumni="true" style="opacity: 0.7;">
           <div class="member-avatar" style="background:#f5f5f7;color:#86868b">PA</div>
           <div class="member-name">Previous Alumnus</div>
           <div class="member-role">Former Master Student</div>
         </div>
+        <!-- MEMBER START: Given Middle Name -->
+        <div class="member-card" data-pi="false" data-alumni="false" style="opacity: 1.0;">
+          <img src="assets/group/20250629_160616.jpg" alt="Given Middle Name" class="member-avatar"
+            style="object-fit: cover;">
+          <div class="member-name">Given Middle Name</div>
+          <div class="member-role">PhD Student</div>
+          <a href="adum.fr" class="member-thesis"
+            style="display: block; font-size: 13px; margin-top: 0.5rem; text-decoration: none; color: var(--accent);">Test</a>
+        </div>
+        <!-- MEMBER END: Given Middle Name -->
+        <!-- MEMBER START: Downy D. Wood -->
+        <div class="member-card" data-pi="false" data-alumni="false">
+          <img src="assets/group/downy_d_wood.jpg" alt="Downy D. Wood" class="member-avatar" style="object-fit: cover;">
+          <div class="member-name">Downy D. Wood</div>
+          <div class="member-role">PhD Student</div>
+          <a href="adum?fr" class="member-thesis"
+            style="display: block; font-size: 13px; margin-top: 0.5rem; text-decoration: none; color: var(--accent);">Title</a>
+        </div>
+        <!-- MEMBER END: Downy D. Wood -->
+        <!-- MEMBER START: Who Who -->
+        <div class="member-card" data-pi="false" data-alumni="true" style="opacity: 0.7;">
+          <div class="member-avatar" style="background:#f5f5f7;color:#86868b">WW</div>
+          <div class="member-name">Who Who</div>
+          <div class="member-role">Postdoctoral Fellow</div>
+        </div>
+        <!-- MEMBER END: Who Who -->
+        <!-- MEMBER START: Who2 Who2 -->
+        <div class="member-card" data-pi="false" data-alumni="false">
+          <div class="member-avatar" style="background:#ffebee;color:#b71c1c">WW</div>
+          <div class="member-name">Who2 Who2</div>
+          <div class="member-role">Other</div>
+        </div>
+        <!-- MEMBER END: Who2 Who2 -->
+      </div>
+    </section>
+
+    <section id="alumni" style="margin-top: 4rem; display: none;">
+      <div class="section-heading">Alumni</div>
+      <div class="group-grid">
       </div>
     </section>
 
@@ -91,5 +117,22 @@
       <span>Built with GitHub Pages</span>
     </footer>
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const membersGrid = document.querySelector('#members .group-grid');
+      const alumniSection = document.querySelector('#alumni');
+      const alumniGrid = document.querySelector('#alumni .group-grid');
+
+      if (membersGrid && alumniSection && alumniGrid) {
+        const alumniCards = membersGrid.querySelectorAll('.member-card[data-alumni="true"]');
+        if (alumniCards.length > 0) {
+          alumniSection.style.display = 'block';
+          alumniCards.forEach(card => alumniGrid.appendChild(card));
+        }
+      }
+    });
+  </script>
 </body>
+
 </html>
