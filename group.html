@@ -59,17 +59,48 @@
           <div class="member-avatar" style="background:#d8f0e4;color:#1a5c38">APR</div>
           <div class="member-name">A.P. Rasmussen</div>
           <div class="member-role">Postdoctoral Fellow</div>
+          <div class="member-details">
+            <p class="detail-email">apr@phys.au.dk</p>
+            <p class="detail-master">Master at Aarhus University</p>
+            <p class="detail-phd">PhD at Aarhus University</p>
+            <p class="detail-project">Developing new high-resolution ion mobility methods for interstellar molecule identification.</p>
+          </div>
         </div>
         <div class="member-card" data-pi="false" data-alumni="false">
           <div class="member-avatar" style="background:#fef0d4;color:#7a4a0a">CR</div>
           <div class="member-name">C. Rossi</div>
           <div class="member-role">PhD Student</div>
+          <div class="member-details">
+            <p class="detail-email">corentin.rossi@universite-paris-saclay.fr</p>
+            <p class="detail-master">Master at Université de Paris-Sud</p>
+            <p class="detail-phd">PhD at Université Paris-Saclay</p>
+            <p class="detail-project">Setup of a new cryogenic ion trap for high-resolution laser spectroscopy.</p>
+          </div>
         </div>
         <div class="member-card" data-pi="false" data-alumni="true" style="opacity: 0.7;">
           <div class="member-avatar" style="background:#f5f5f7;color:#86868b">PA</div>
           <div class="member-name">Previous Alumnus</div>
           <div class="member-role">Former Master Student</div>
+          <div class="member-details">
+            <p class="detail-email">alumnus@email.fr</p>
+            <p class="detail-master">Master at Université Paris-Saclay</p>
+            <p class="detail-phd"></p>
+            <p class="detail-project">Analysis of dissociation pathways of protonated polycyclic aromatic hydrocarbons.</p>
+          </div>
         </div>
+        <!-- MEMBER START: Hello M Untel -->
+        <div class="member-card" data-pi="false" data-alumni="false">
+          <div class="member-avatar" style="background:#f3e5f5;color:#4a148c">HMU</div>
+          <div class="member-name">Dr. Hello M Untel</div>
+          <div class="member-role">Postdoctoral Fellow</div>
+          <div class="member-details">
+            <p class="detail-email">email@email.com</p>
+            <p class="detail-master">Uni</p>
+            <p class="detail-phd">Unio</p>
+            <p class="detail-project">Blbabla</p>
+          </div>
+        </div>
+        <!-- MEMBER END: Hello M Untel -->
       </div>
     </section>
 
@@ -85,8 +116,33 @@
     </footer>
   </div>
 
+  <!-- Member Details Modal -->
+  <div class="modal-overlay" id="memberModal">
+    <div class="modal-content">
+      <button class="modal-close">&times;</button>
+      <div class="modal-header">
+        <div class="modal-avatar" id="modalAvatar"></div>
+        <div class="modal-name" id="modalName"></div>
+        <div class="modal-role" id="modalRole"></div>
+      </div>
+      <div class="modal-section" id="sectionEmail">
+        <div class="modal-section-title">Email</div>
+        <div class="modal-text" id="modalEmail"></div>
+      </div>
+      <div class="modal-section" id="sectionTraining">
+        <div class="modal-section-title">Training</div>
+        <div class="modal-text" id="modalTraining"></div>
+      </div>
+      <div class="modal-section" id="sectionProject">
+        <div class="modal-section-title">Current Project</div>
+        <div class="modal-text" id="modalProject"></div>
+      </div>
+    </div>
+  </div>
+
   <script>
     document.addEventListener("DOMContentLoaded", () => {
+      // 1. Handle Alumni Sorting
       const membersGrid = document.querySelector('#members .group-grid');
       const alumniSection = document.querySelector('#alumni');
       const alumniGrid = document.querySelector('#alumni .group-grid');
@@ -98,6 +154,68 @@
           alumniCards.forEach(card => alumniGrid.appendChild(card));
         }
       }
+
+      // 2. Handle Modal Logic
+      const modal = document.getElementById('memberModal');
+      const closeBtn = document.querySelector('.modal-close');
+      const allCards = document.querySelectorAll('.member-card');
+
+      allCards.forEach(card => {
+        card.addEventListener('click', () => {
+          const details = card.querySelector('.member-details');
+          
+          // Basic Info
+          document.getElementById('modalName').innerText = card.querySelector('.member-name').innerText;
+          document.getElementById('modalRole').innerText = card.querySelector('.member-role').innerText;
+          
+          const avatar = card.querySelector('.member-avatar');
+          const modalAvatar = document.getElementById('modalAvatar');
+          modalAvatar.innerText = avatar.innerText;
+          modalAvatar.style.background = avatar.style.background;
+          modalAvatar.style.color = avatar.style.color;
+
+          // Email
+          const emailEl = details.querySelector('.detail-email');
+          const email = emailEl ? emailEl.innerText : '';
+          document.getElementById('modalEmail').innerText = email;
+          document.getElementById('sectionEmail').style.display = email ? 'block' : 'none';
+
+          // Training
+          const masterEl = details.querySelector('.detail-master');
+          const phdEl = details.querySelector('.detail-phd');
+          const master = masterEl ? masterEl.innerText : '';
+          const phd = phdEl ? phdEl.innerText : '';
+          
+          let trainingHtml = '';
+          if (master) trainingHtml += `${master}<br>`;
+          if (phd) trainingHtml += `${phd}`;
+          
+          document.getElementById('modalTraining').innerHTML = trainingHtml;
+          document.getElementById('sectionTraining').style.display = trainingHtml ? 'block' : 'none';
+
+          // Project
+          const projectEl = details.querySelector('.detail-project');
+          const project = projectEl ? projectEl.innerText : '';
+          document.getElementById('modalProject').innerText = project;
+          document.getElementById('sectionProject').style.display = project ? 'block' : 'none';
+
+          modal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+
+      const closeModal = () => {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      };
+
+      closeBtn.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+      });
     });
   </script>
 </body>
