@@ -63,7 +63,8 @@
             <p class="detail-email">apr@phys.au.dk</p>
             <p class="detail-master">Master at Aarhus University</p>
             <p class="detail-phd">PhD at Aarhus University</p>
-            <p class="detail-project">Developing new high-resolution ion mobility methods for interstellar molecule identification.</p>
+            <p class="detail-project">Developing new high-resolution ion mobility methods for interstellar molecule
+              identification.</p>
           </div>
         </div>
         <div class="member-card" data-pi="false" data-alumni="false">
@@ -85,22 +86,23 @@
             <p class="detail-email">alumnus@email.fr</p>
             <p class="detail-master">Master at Université Paris-Saclay</p>
             <p class="detail-phd"></p>
-            <p class="detail-project">Analysis of dissociation pathways of protonated polycyclic aromatic hydrocarbons.</p>
+            <p class="detail-project">Analysis of dissociation pathways of protonated polycyclic aromatic hydrocarbons.
+            </p>
           </div>
         </div>
-        <!-- MEMBER START: Hello M Untel -->
+        <!-- MEMBER START: Test T Test -->
         <div class="member-card" data-pi="false" data-alumni="false">
-          <div class="member-avatar" style="background:#f3e5f5;color:#4a148c">HMU</div>
-          <div class="member-name">Dr. Hello M Untel</div>
-          <div class="member-role">Postdoctoral Fellow</div>
+          <div class="member-avatar" style="background:#d8f0e4;color:#1a5c38">TTT</div>
+          <div class="member-name">Dr. Test T Test</div>
+          <div class="member-role">Bachelor Student</div>
           <div class="member-details">
-            <p class="detail-email">email@email.com</p>
-            <p class="detail-master">Uni</p>
-            <p class="detail-phd">Unio</p>
-            <p class="detail-project">Blbabla</p>
+            <p class="detail-email">email@cnrs.fr</p>
+            <p class="detail-master">Bachelor at UPSaclay</p>
+            <p class="detail-phd"></p>
+            <p class="detail-project">Spectroscopy of hydrogenated carbon clusters</p>
           </div>
         </div>
-        <!-- MEMBER END: Hello M Untel -->
+        <!-- MEMBER END: Test T Test -->
       </div>
     </section>
 
@@ -163,11 +165,11 @@
       allCards.forEach(card => {
         card.addEventListener('click', () => {
           const details = card.querySelector('.member-details');
-          
+
           // Basic Info
           document.getElementById('modalName').innerText = card.querySelector('.member-name').innerText;
           document.getElementById('modalRole').innerText = card.querySelector('.member-role').innerText;
-          
+
           const avatar = card.querySelector('.member-avatar');
           const modalAvatar = document.getElementById('modalAvatar');
           modalAvatar.innerText = avatar.innerText;
@@ -185,11 +187,11 @@
           const phdEl = details.querySelector('.detail-phd');
           const master = masterEl ? masterEl.innerText : '';
           const phd = phdEl ? phdEl.innerText : '';
-          
+
           let trainingHtml = '';
           if (master) trainingHtml += `${master}<br>`;
           if (phd) trainingHtml += `${phd}`;
-          
+
           document.getElementById('modalTraining').innerHTML = trainingHtml;
           document.getElementById('sectionTraining').style.display = trainingHtml ? 'block' : 'none';
 
