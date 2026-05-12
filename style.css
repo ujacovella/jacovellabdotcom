@@ -206,11 +206,13 @@ footer {
   margin-bottom: 1.5rem;
 }
 
-.hero .bio {
+.hero .bio,
+.pi-cv p {
   font-size: 16px;
   color: var(--muted);
   max-width: 560px;
   margin-bottom: 1.5rem;
+  text-align: justify;
 }
 
 .affil {
@@ -613,6 +615,7 @@ footer {
   font-size: 17px;
   color: var(--muted);
   line-height: 1.7;
+  text-align: justify;
 }
 
 .topic-description p {
