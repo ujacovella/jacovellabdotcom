@@ -168,6 +168,19 @@ section {
   scroll-margin-top: 100px;
 }
 
+/* Global overflow fix */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+  touch-action: pan-y; /* Further prevent horizontal swiping gestures */
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
 .section-heading {
   font-size: 24px;
   font-weight: 600;
@@ -182,20 +195,23 @@ footer {
   border-top: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: 11px; /* Smaller copyright info */
   color: var(--hint);
+  opacity: 0.7; /* Make it more subtle */
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .institutions {
   display: flex;
+  flex-direction: row; /* Desktop: same line */
   justify-content: center;
   gap: 4rem;
   align-items: center;
   padding: 4rem 0 1rem;
   border-top: 1px solid var(--border);
   margin-top: 5rem;
+  flex-wrap: wrap; /* Ensure they don't push out on smaller desktop screens */
 }
 
 /* PI Profile */
@@ -841,31 +857,42 @@ footer {
     gap: 2rem;
   }
 
+  .main-nav {
+    position: relative; /* Disable sticky on mobile to prevent overlapping page content */
+  }
+
   .nav-container {
     height: auto;
-    padding: 0.8rem 0;
+    padding: 1rem 1.5rem;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1rem;
   }
 
   .nav-links {
-    flex-wrap: wrap;
-    justify-content: center;
-    height: auto;
+    flex-direction: column;
     width: 100%;
+    height: auto;
+    padding: 0;
+    gap: 0;
   }
 
   .nav-links>li {
-    height: auto;
+    width: 100%;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-links>li:last-child {
+    border-bottom: none;
   }
 
   .nav-links>li>a {
-    padding: 0.4rem 0.6rem;
-    font-size: 11px;
+    padding: 1rem;
+    font-size: 13px;
+    justify-content: center;
+    width: 100%;
     height: auto;
   }
 
-  /* Prevent dropdown overlap on mobile */
   .dropdown {
     position: static;
     opacity: 1;
@@ -873,8 +900,9 @@ footer {
     display: none;
     box-shadow: none;
     min-width: 100%;
-    background: rgba(0, 0, 0, 0.03);
+    background: rgba(0, 0, 0, 0.05); /* Slightly darker for contrast */
     padding: 0;
+    width: 100%;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -889,10 +917,12 @@ footer {
   }
 
   .dropdown-content a {
-    padding: 0.6rem 1.2rem;
+    padding: 0.8rem 1.2rem;
     color: var(--text);
     border-bottom: 1px solid var(--border);
-    font-size: 12px;
+    font-size: 13px;
+    text-align: center;
+    display: block;
   }
 
   section {
