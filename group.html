@@ -4,8 +4,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>Group Members - Jacovella Group</title>
-  <link rel="stylesheet" href="style.css?v=1.1" />
+  <link rel="stylesheet" href="style.css?v=1.2" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -54,62 +57,56 @@
 
     <section id="members" style="margin-top: 4rem;">
       <div class="section-heading">Group Members</div>
+      <p style="margin-bottom: 2rem; color: var(--hint); text-align: center; font-size: 14px;">Click for more information.</p>
       <div class="group-grid">
         <div class="member-card" data-pi="false" data-alumni="false">
           <div class="member-avatar" style="background:#d8f0e4;color:#1a5c38">APR</div>
           <div class="member-name">A.P. Rasmussen</div>
           <div class="member-role">Postdoctoral Fellow</div>
+          <div class="member-details">
+            <p class="detail-email">apr@phys.au.dk</p>
+            <p class="detail-master">Master at Aarhus University</p>
+            <p class="detail-phd">PhD at Aarhus University</p>
+            <p class="detail-project">Developing new high-resolution ion mobility methods for interstellar molecule
+              identification.</p>
+          </div>
         </div>
         <div class="member-card" data-pi="false" data-alumni="false">
           <div class="member-avatar" style="background:#fef0d4;color:#7a4a0a">CR</div>
           <div class="member-name">C. Rossi</div>
           <div class="member-role">PhD Student</div>
+          <div class="member-details">
+            <p class="detail-email">corentin.rossi@universite-paris-saclay.fr</p>
+            <p class="detail-master">Master at Université de Paris-Sud</p>
+            <p class="detail-phd">PhD at Université Paris-Saclay</p>
+            <p class="detail-project">Setup of a new cryogenic ion trap for high-resolution laser spectroscopy.</p>
+          </div>
         </div>
         <div class="member-card" data-pi="false" data-alumni="true" style="opacity: 0.7;">
           <div class="member-avatar" style="background:#f5f5f7;color:#86868b">PA</div>
           <div class="member-name">Previous Alumnus</div>
           <div class="member-role">Former Master Student</div>
+          <div class="member-details">
+            <p class="detail-email">alumnus@email.fr</p>
+            <p class="detail-master">Master at Université Paris-Saclay</p>
+            <p class="detail-phd"></p>
+            <p class="detail-project">Analysis of dissociation pathways of protonated polycyclic aromatic hydrocarbons.
+            </p>
+          </div>
         </div>
-        <!-- MEMBER START: Given Middle Name -->
-        <div class="member-card" data-pi="false" data-alumni="false" style="opacity: 1.0;">
-          <img src="assets/group/20250629_160616.jpg" alt="Given Middle Name" class="member-avatar"
-            style="object-fit: cover;">
-          <div class="member-name">Given Middle Name</div>
-          <div class="member-role">PhD Student</div>
-          <a href="adum.fr" class="member-thesis"
-            style="display: block; font-size: 13px; margin-top: 0.5rem; text-decoration: none; color: var(--accent);">Test</a>
-        </div>
-        <!-- MEMBER END: Given Middle Name -->
-        <!-- MEMBER START: Downy D. Wood -->
+        <!-- MEMBER START: Test T Test -->
         <div class="member-card" data-pi="false" data-alumni="false">
-          <img src="assets/group/downy_d_wood.jpg" alt="Downy D. Wood" class="member-avatar" style="object-fit: cover;">
-          <div class="member-name">Downy D. Wood</div>
-          <div class="member-role">PhD Student</div>
-          <a href="adum?fr" class="member-thesis"
-            style="display: block; font-size: 13px; margin-top: 0.5rem; text-decoration: none; color: var(--accent);">Title</a>
+          <div class="member-avatar" style="background:#d8f0e4;color:#1a5c38">TTT</div>
+          <div class="member-name">Dr. Test T Test</div>
+          <div class="member-role">Bachelor Student</div>
+          <div class="member-details">
+            <p class="detail-email">email@cnrs.fr</p>
+            <p class="detail-master">Bachelor at UPSaclay</p>
+            <p class="detail-phd"></p>
+            <p class="detail-project">Spectroscopy of hydrogenated carbon clusters</p>
+          </div>
         </div>
-        <!-- MEMBER END: Downy D. Wood -->
-        <!-- MEMBER START: Who Who -->
-        <div class="member-card" data-pi="false" data-alumni="true" style="opacity: 0.7;">
-          <div class="member-avatar" style="background:#f5f5f7;color:#86868b">WW</div>
-          <div class="member-name">Who Who</div>
-          <div class="member-role">Postdoctoral Fellow</div>
-        </div>
-        <!-- MEMBER END: Who Who -->
-        <!-- MEMBER START: Who2 Who2 -->
-        <div class="member-card" data-pi="false" data-alumni="false">
-          <div class="member-avatar" style="background:#ffebee;color:#b71c1c">WW</div>
-          <div class="member-name">Who2 Who2</div>
-          <div class="member-role">Other</div>
-        </div>
-        <!-- MEMBER END: Who2 Who2 -->
-        <!-- MEMBER START: Uma N. Namangalath -->
-        <div class="member-card" data-pi="false" data-alumni="false">
-          <div class="member-avatar" style="background:#f3e5f5;color:#4a148c">UNN</div>
-          <div class="member-name">Dr. Uma N. Namangalath</div>
-          <div class="member-role">Postdoctoral Fellow</div>
-        </div>
-        <!-- MEMBER END: Uma N. Namangalath -->
+        <!-- MEMBER END: Test T Test -->
       </div>
     </section>
 
@@ -125,8 +122,33 @@
     </footer>
   </div>
 
+  <!-- Member Details Modal -->
+  <div class="modal-overlay" id="memberModal">
+    <div class="modal-content">
+      <button class="modal-close">&times;</button>
+      <div class="modal-header">
+        <div class="modal-avatar" id="modalAvatar"></div>
+        <div class="modal-name" id="modalName"></div>
+        <div class="modal-role" id="modalRole"></div>
+      </div>
+      <div class="modal-section" id="sectionEmail">
+        <div class="modal-section-title">Email</div>
+        <div class="modal-text" id="modalEmail"></div>
+      </div>
+      <div class="modal-section" id="sectionTraining">
+        <div class="modal-section-title">Training</div>
+        <div class="modal-text" id="modalTraining"></div>
+      </div>
+      <div class="modal-section" id="sectionProject">
+        <div class="modal-section-title">Current Project</div>
+        <div class="modal-text" id="modalProject"></div>
+      </div>
+    </div>
+  </div>
+
   <script>
     document.addEventListener("DOMContentLoaded", () => {
+      // 1. Handle Alumni Sorting
       const membersGrid = document.querySelector('#members .group-grid');
       const alumniSection = document.querySelector('#alumni');
       const alumniGrid = document.querySelector('#alumni .group-grid');
@@ -138,6 +160,68 @@
           alumniCards.forEach(card => alumniGrid.appendChild(card));
         }
       }
+
+      // 2. Handle Modal Logic
+      const modal = document.getElementById('memberModal');
+      const closeBtn = document.querySelector('.modal-close');
+      const allCards = document.querySelectorAll('.member-card');
+
+      allCards.forEach(card => {
+        card.addEventListener('click', () => {
+          const details = card.querySelector('.member-details');
+
+          // Basic Info
+          document.getElementById('modalName').innerText = card.querySelector('.member-name').innerText;
+          document.getElementById('modalRole').innerText = card.querySelector('.member-role').innerText;
+
+          const avatar = card.querySelector('.member-avatar');
+          const modalAvatar = document.getElementById('modalAvatar');
+          modalAvatar.innerText = avatar.innerText;
+          modalAvatar.style.background = avatar.style.background;
+          modalAvatar.style.color = avatar.style.color;
+
+          // Email
+          const emailEl = details.querySelector('.detail-email');
+          const email = emailEl ? emailEl.innerText : '';
+          document.getElementById('modalEmail').innerText = email;
+          document.getElementById('sectionEmail').style.display = email ? 'block' : 'none';
+
+          // Training
+          const masterEl = details.querySelector('.detail-master');
+          const phdEl = details.querySelector('.detail-phd');
+          const master = masterEl ? masterEl.innerText : '';
+          const phd = phdEl ? phdEl.innerText : '';
+
+          let trainingHtml = '';
+          if (master) trainingHtml += `${master}<br>`;
+          if (phd) trainingHtml += `${phd}`;
+
+          document.getElementById('modalTraining').innerHTML = trainingHtml;
+          document.getElementById('sectionTraining').style.display = trainingHtml ? 'block' : 'none';
+
+          // Project
+          const projectEl = details.querySelector('.detail-project');
+          const project = projectEl ? projectEl.innerText : '';
+          document.getElementById('modalProject').innerText = project;
+          document.getElementById('sectionProject').style.display = project ? 'block' : 'none';
+
+          modal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+
+      const closeModal = () => {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      };
+
+      closeBtn.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+      });
     });
   </script>
 </body>
