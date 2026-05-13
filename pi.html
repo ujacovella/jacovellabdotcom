@@ -105,9 +105,33 @@
 
     <footer>
       <span>&copy; 2026 Ugo Jacovella</span>
+      <span>Last updated: <span id="last-updated">Loading...</span></span>
       <span>Built with GitHub Pages</span>
     </footer>
   </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const repo = 'ujacovella/jacovelladotcom';
+      const lastUpdatedEl = document.getElementById('last-updated');
+      if (lastUpdatedEl) {
+        fetch(`https://api.github.com/repos/${repo}/commits/main`)
+          .then(r => r.json())
+          .then(data => {
+            if (data && data.commit && data.commit.author && data.commit.author.date) {
+              const date = new Date(data.commit.author.date);
+              lastUpdatedEl.innerText = date.toLocaleString('en-GB', { 
+                day: '2-digit', month: '2-digit', year: 'numeric', 
+                hour: '2-digit', minute: '2-digit' 
+              });
+            }
+          })
+          .catch(err => {
+            console.error('Failed to fetch last commit:', err);
+            lastUpdatedEl.innerText = 'N/A';
+          });
+      }
+    });
+  </script>
 </body>
 
 </html>

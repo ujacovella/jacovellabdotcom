@@ -176,7 +176,16 @@ section {
   margin-bottom: 2rem;
 }
 
+footer {
+  margin-top: 5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
   color: var(--hint);
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .institutions {
