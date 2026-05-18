@@ -87,6 +87,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // ── Close menu when tapping overlay or menu whitespace (not on a link or toggle) ──
+  if (nav) {
+    nav.addEventListener('click', function (e) {
+      if (!isMobile()) return;
+      if (!nav.classList.contains('menu-open')) return;
+      if (e.target.closest('a') || e.target.closest('.mobile-menu-toggle')) return;
+      closeMenu();
+    });
+  }
+
   // ── Dropdown toggle (touchstart for mobile, click fallback) ──
   var dropdownParents = document.querySelectorAll('.has-dropdown > a');
   for (var i = 0; i < dropdownParents.length; i++) {
