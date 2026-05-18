@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
   var toggle = document.querySelector('.mobile-menu-toggle');
   var navLinks = document.querySelector('.nav-links');
   var scrollPosition = 0;
-  var touchFired = false;
 
   function lockBodyScroll() {
     scrollPosition = window.scrollY;
@@ -40,6 +39,16 @@ document.addEventListener('DOMContentLoaded', function () {
     return window.innerWidth <= 768;
   }
 
+  function toggleDropdown(el) {
+    var dd = el.parentNode.querySelector('.dropdown');
+    if (!dd) return;
+    var openDds = document.querySelectorAll('.dropdown.dropdown-open');
+    for (var j = 0; j < openDds.length; j++) {
+      if (openDds[j] !== dd) openDds[j].classList.remove('dropdown-open');
+    }
+    dd.classList.toggle('dropdown-open');
+  }
+
   // ── Hamburger toggle ──
   if (toggle && nav) {
     toggle.addEventListener('click', function (e) {
@@ -53,45 +62,27 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // ── Dropdown toggle (touchstart for iOS reliability, click for desktop) ──
-  function setupDropdownToggle(el) {
-    // Touchstart: fires reliably on iOS inside position:fixed containers
-    el.addEventListener('touchstart', function (e) {
-      if (!isMobile()) return;
-      var dd = this.parentNode.querySelector('.dropdown');
-      if (dd) {
-        touchFired = true;
-        e.preventDefault();
-        var openDds = document.querySelectorAll('.dropdown.dropdown-open');
-        for (var j = 0; j < openDds.length; j++) {
-          if (openDds[j] !== dd) openDds[j].classList.remove('dropdown-open');
-        }
-        dd.classList.toggle('dropdown-open');
-      }
-    }, { passive: false });
-
-    // Click: for desktop / non-touch devices
-    el.addEventListener('click', function (e) {
-      if (touchFired) {
-        touchFired = false;
-        return;
-      }
-      if (!isMobile()) return;
-      var dd = this.parentNode.querySelector('.dropdown');
-      if (dd) {
-        e.preventDefault();
-        var openDds = document.querySelectorAll('.dropdown.dropdown-open');
-        for (var j = 0; j < openDds.length; j++) {
-          if (openDds[j] !== dd) openDds[j].classList.remove('dropdown-open');
-        }
-        dd.classList.toggle('dropdown-open');
-      }
-    });
-  }
-
+  // ── Dropdown toggle (touchstart for mobile, click fallback) ──
   var dropdownParents = document.querySelectorAll('.has-dropdown > a');
   for (var i = 0; i < dropdownParents.length; i++) {
-    setupDropdownToggle(dropdownParents[i]);
+    (function (el) {
+      el.addEventListener('touchstart', function (e) {
+        if (!isMobile()) return;
+        el._touchFired = true;
+        e.preventDefault();
+        toggleDropdown(el);
+      }, { passive: false });
+
+      el.addEventListener('click', function (e) {
+        if (!isMobile()) return;
+        if (el._touchFired) {
+          el._touchFired = false;
+          return;
+        }
+        e.preventDefault();
+        toggleDropdown(el);
+      });
+    })(dropdownParents[i]);
   }
 
   // ── Close menu after submenu link click (delegated) ──
