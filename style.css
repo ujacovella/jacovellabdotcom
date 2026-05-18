@@ -1148,6 +1148,7 @@ footer {
     transform: translateX(100%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     z-index: 1500;
     gap: 0;
   }
@@ -1211,7 +1212,7 @@ footer {
   }
 
   .dropdown {
-    display: none !important;
+    display: none;
     position: static;
     width: 100%;
     background: var(--bg);
@@ -1224,7 +1225,7 @@ footer {
   }
 
   .dropdown.dropdown-open {
-    display: block !important;
+    display: block;
   }
 
   .dropdown-content a {

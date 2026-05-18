@@ -1,8 +1,9 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const nav = document.querySelector('.main-nav');
-  const toggle = document.querySelector('.mobile-menu-toggle');
-  const navLinks = document.querySelector('.nav-links');
-  let scrollPosition = 0;
+document.addEventListener('DOMContentLoaded', function () {
+  var nav = document.querySelector('.main-nav');
+  var toggle = document.querySelector('.mobile-menu-toggle');
+  var navLinks = document.querySelector('.nav-links');
+  var scrollPosition = 0;
+  var touchFired = false;
 
   function lockBodyScroll() {
     scrollPosition = window.scrollY;
@@ -10,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.top = '-' + scrollPosition + 'px';
     document.body.style.left = '0';
     document.body.style.right = '0';
+    document.body.style.width = '100%';
   }
 
   function unlockBodyScroll() {
@@ -17,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.top = '';
     document.body.style.left = '';
     document.body.style.right = '';
+    document.body.style.width = '';
     window.scrollTo(0, scrollPosition);
   }
 
@@ -33,7 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
     closeAllDropdowns();
   }
 
-  // Hamburger toggle
+  function isMobile() {
+    return window.innerWidth <= 768;
+  }
+
+  // ── Hamburger toggle ──
   if (toggle && nav) {
     toggle.addEventListener('click', function (e) {
       e.stopPropagation();
@@ -46,42 +53,60 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Direct click handlers on dropdown parent links for mobile
-  var dropdownParents = document.querySelectorAll('.has-dropdown > a');
-  for (var i = 0; i < dropdownParents.length; i++) {
-    dropdownParents[i].addEventListener('click', function (e) {
-      if (window.innerWidth <= 768) {
+  // ── Dropdown toggle (touchstart for iOS reliability, click for desktop) ──
+  function setupDropdownToggle(el) {
+    // Touchstart: fires reliably on iOS inside position:fixed containers
+    el.addEventListener('touchstart', function (e) {
+      if (!isMobile()) return;
+      var dd = this.parentNode.querySelector('.dropdown');
+      if (dd) {
+        touchFired = true;
         e.preventDefault();
-        var dd = this.parentNode.querySelector('.dropdown');
-        if (dd) {
-          // Close other open dropdowns
-          var openDds = document.querySelectorAll('.dropdown.dropdown-open');
-          for (var j = 0; j < openDds.length; j++) {
-            if (openDds[j] !== dd) {
-              openDds[j].classList.remove('dropdown-open');
-            }
-          }
-          dd.classList.toggle('dropdown-open');
+        var openDds = document.querySelectorAll('.dropdown.dropdown-open');
+        for (var j = 0; j < openDds.length; j++) {
+          if (openDds[j] !== dd) openDds[j].classList.remove('dropdown-open');
         }
+        dd.classList.toggle('dropdown-open');
+      }
+    }, { passive: false });
+
+    // Click: for desktop / non-touch devices
+    el.addEventListener('click', function (e) {
+      if (touchFired) {
+        touchFired = false;
+        return;
+      }
+      if (!isMobile()) return;
+      var dd = this.parentNode.querySelector('.dropdown');
+      if (dd) {
+        e.preventDefault();
+        var openDds = document.querySelectorAll('.dropdown.dropdown-open');
+        for (var j = 0; j < openDds.length; j++) {
+          if (openDds[j] !== dd) openDds[j].classList.remove('dropdown-open');
+        }
+        dd.classList.toggle('dropdown-open');
       }
     });
   }
 
-  // Close menu after submenu link click
+  var dropdownParents = document.querySelectorAll('.has-dropdown > a');
+  for (var i = 0; i < dropdownParents.length; i++) {
+    setupDropdownToggle(dropdownParents[i]);
+  }
+
+  // ── Close menu after submenu link click (delegated) ──
   if (navLinks) {
     navLinks.addEventListener('click', function (e) {
       var link = e.target.closest('a');
       if (!link) return;
-      if (window.innerWidth > 768) return;
-
-      // Only close if clicking a link inside a dropdown (submenu item)
+      if (!isMobile()) return;
       if (link.closest('.dropdown-content')) {
         closeMenu();
       }
     });
   }
 
-  // Close menu when clicking outside
+  // ── Close menu when tapping outside ──
   document.addEventListener('click', function (e) {
     if (nav && nav.classList.contains('menu-open') && !nav.contains(e.target)) {
       closeMenu();
