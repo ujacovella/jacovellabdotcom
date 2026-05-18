@@ -2,7 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const nav = document.querySelector('.main-nav');
   const toggle = document.querySelector('.mobile-menu-toggle');
   const navLinks = document.querySelector('.nav-links');
+  const isMobile = () => window.innerWidth <= 768;
   let scrollPosition = 0;
+  let touchHandled = false;
 
   function lockBodyScroll() {
     scrollPosition = window.scrollY;
@@ -32,6 +34,50 @@ document.addEventListener('DOMContentLoaded', () => {
     closeAllDropdowns();
   }
 
+  function toggleDropdown(link) {
+    const li = link.closest('li');
+    if (li && li.classList.contains('has-dropdown') && !link.closest('.dropdown')) {
+      const dropdown = li.querySelector('.dropdown');
+      if (dropdown) {
+        dropdown.classList.toggle('dropdown-open');
+      }
+      return true;
+    }
+    return false;
+  }
+
+  if (navLinks) {
+    navLinks.addEventListener('touchstart', (e) => {
+      if (!isMobile()) return;
+      const link = e.target.closest('a');
+      if (!link) return;
+      if (toggleDropdown(link)) {
+        e.preventDefault();
+        touchHandled = true;
+      }
+    }, { passive: false });
+
+    navLinks.addEventListener('click', (e) => {
+      if (touchHandled) {
+        touchHandled = false;
+        return;
+      }
+
+      const link = e.target.closest('a');
+      if (!link) return;
+
+      if (isMobile() && toggleDropdown(link)) {
+        e.preventDefault();
+        return;
+      }
+
+      if (nav && nav.classList.contains('menu-open') &&
+          (!link.closest('.has-dropdown') || link.closest('.dropdown-content'))) {
+        closeMenu();
+      }
+    });
+  }
+
   if (toggle && nav) {
     toggle.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -40,30 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
         lockBodyScroll();
       } else {
         unlockBodyScroll();
-      }
-    });
-  }
-
-  if (navLinks) {
-    navLinks.addEventListener('click', (e) => {
-      const link = e.target.closest('a');
-      if (!link) return;
-
-      if (window.innerWidth <= 768) {
-        const li = link.closest('li');
-        if (li && li.classList.contains('has-dropdown') && !link.closest('.dropdown')) {
-          e.preventDefault();
-          const dropdown = li.querySelector('.dropdown');
-          if (dropdown) {
-            dropdown.classList.toggle('dropdown-open');
-          }
-          return;
-        }
-      }
-
-      if (nav && nav.classList.contains('menu-open') &&
-          (!link.closest('.has-dropdown') || link.closest('.dropdown-content'))) {
-        closeMenu();
       }
     });
   }

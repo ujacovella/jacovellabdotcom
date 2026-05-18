@@ -1214,11 +1214,14 @@ footer {
     position: static;
     display: none;
     width: 100%;
-    background: rgba(0, 0, 0, 0.03);
-    padding-left: 1rem;
+    background: var(--bg);
+    padding-left: 0;
     opacity: 1;
+    visibility: visible;
     pointer-events: auto;
     box-shadow: none;
+    transition: none;
+    border-top: 1px solid var(--border);
   }
 
   .dropdown.dropdown-open {
