@@ -736,9 +736,22 @@ section {
 }
 
 a.member-card {
-  text-decoration: none;
-  color: inherit;
+  text-decoration: none !important;
+  color: inherit !important;
   display: block;
+}
+
+a.member-card:visited,
+a.member-card:link,
+a.member-card:hover,
+a.member-card:active {
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+a.member-card .member-name,
+a.member-card .member-role {
+  color: inherit;
 }
 
 .member-avatar {
