@@ -1,0 +1,31 @@
+#!/bin/sh
+# Pre-commit hook: auto-bump cache-busting version for changed static assets
+
+changed=$(git diff --cached --name-only)
+
+for file in style.css nav.js motion.js; do
+  echo "$changed" | grep -Fxq "$file" || continue
+
+  echo "Bumping $file..."
+
+  ver=""
+  for h in *.html; do
+    ver=$(grep -o "$file?v=[0-9.]*" "$h" | sed 's/.*v=//')
+    [ -n "$ver" ] && break
+  done
+  [ -z "$ver" ] && echo "  no version found" && continue
+
+  base="${ver%.*}"
+  last="${ver##*.}"
+  if [ "$base" = "$last" ]; then
+    new=$((last + 1))
+  else
+    new="${base}.$((last + 1))"
+  fi
+
+  for h in *.html; do
+    sed "s/$file?v=$ver/$file?v=$new/g" "$h" > "$h.tmp" && mv "$h.tmp" "$h"
+    git add "$h"
+  done
+  echo "  $ver -> $new"
+done
