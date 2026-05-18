@@ -1211,21 +1211,20 @@ footer {
   }
 
   .dropdown {
+    display: none !important;
     position: static;
-    display: none;
     width: 100%;
     background: var(--bg);
     padding-left: 0;
+    box-shadow: none;
+    border-top: 1px solid var(--border);
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    box-shadow: none;
-    transition: none;
-    border-top: 1px solid var(--border);
   }
 
   .dropdown.dropdown-open {
-    display: block;
+    display: block !important;
   }
 
   .dropdown-content a {
