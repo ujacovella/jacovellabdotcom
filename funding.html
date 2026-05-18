@@ -49,11 +49,11 @@
   </nav>
 
   <div class="container">
-    <section>
+    <section class="reveal">
       <div class="section-heading">Funding</div>
-      <p style="margin-bottom: 2rem;">Our research is supported by several national and international funding agencies. We are grateful for their support.</p>
+      <p style="margin-bottom: 2rem; max-width: 60ch; color: var(--muted);">Our research is supported by several national and international funding agencies. We are grateful for their support.</p>
       
-      <div id="funding-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 2rem;">
+      <div id="funding-grid" class="funding-grid">
         <p style="font-size:14px; color:var(--hint);">Loading funding logos...</p>
       </div>
     </section>
@@ -99,7 +99,7 @@
         grid.innerHTML = '';
         logos.forEach(logo => {
           const card = document.createElement('div');
-          card.style.cssText = 'padding: 2rem; border: 1px solid var(--border); border-radius: var(--radius); text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--surface); transition: transform 0.2s;';
+          card.className = 'funding-card';
           
           const img = document.createElement('img');
           img.src = logo.path;
@@ -136,6 +136,7 @@
       }
     });
   </script>
+<script src="motion.js"></script>
 <script src="nav.js"></script>
 </body>
 </html>

@@ -89,7 +89,7 @@
       </div>
     </header>
 
-    <section id="news">
+    <section id="news" class="reveal">
       <div class="section-heading">News &amp; notes</div>
       <div class="blog-item">
         <div class="blog-date">Apr 2025</div>
@@ -101,7 +101,7 @@
       </div>
     </section>
 
-    <section id="publications">
+    <section id="publications" class="reveal">
       <div class="section-heading">Selected publications</div>
       <div id="selected-pubs-container">
         <p style="font-size:14px;color:var(--muted);">Loading...</p>
@@ -109,12 +109,12 @@
       <a class="all-link" href="publications.html">All publications →</a>
     </section>
 
-    <section id="research">
-      <div class="section-heading">Main Research Topics</div>
+    <section id="research" class="reveal">
+      <div class="section-heading">Main research topics</div>
       <div class="projects-grid" id="research-topics-container">
         <p style="font-size:14px;color:var(--muted);">Loading research topics...</p>
       </div>
-      <a class="all-link" href="research.html">View Research Details →</a>
+      <a class="all-link" href="research.html">View research details →</a>
     </section>
 
     <div class="institutions">
@@ -130,6 +130,7 @@
     </footer>
   </div>
 
+  <script src="motion.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const carouselInner = document.getElementById('carousel-inner');
