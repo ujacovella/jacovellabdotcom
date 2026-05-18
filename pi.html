@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Principal Investigator - Jacovella Group</title>
-  <link rel="stylesheet" href="style.css?v=1.2" />
+  <link rel="stylesheet" href="style.css?v=1.1" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -51,52 +51,40 @@
   </nav>
 
   <div class="container">
-    <section id="pi-profile">
+    <section id="pi-profile" style="margin-top: 4rem;">
       <div class="section-heading">Principal Investigator</div>
-      <div class="hero pi-profile-grid">
-        <div class="pi-image">
-          <img src="assets/pi/ugo_jacovella.jpeg" alt="Ugo Jacovella" class="member-avatar">
-          <div class="placeholder-text" style="display: none;">
-            <svg viewBox="0 0 24 24"
-              style="width: 64px; height: 64px; margin-bottom: 1rem; fill: none; stroke: currentColor; stroke-width: 1; stroke-linecap: round; stroke-linejoin: round;">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-            <br>PI Photo Placeholder
-          </div>
+      <div class="hero" style="grid-template-columns: 1fr 2fr; gap: 4rem; align-items: start;">
+        <div class="pi-image" style="width: 100%; aspect-ratio: 3/4; background: var(--surface); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
+          <img src="assets/pi/ugo_jacovella.jpeg" alt="Dr. Ugo Jacovella">
         </div>
         <div class="pi-cv">
-          <h2>Dr. Ugo Jacovella</h2>
-          <p class="subtitle">Principal Investigator</p>
-
-          <h3>Short CV</h3>
-          <p>
-            My research interests lie in the spectroscopy and chemistry of molecular ions with multiple isomeric forms,
-            relevant to astrochemistry and complex chemical environments. I specialize in laser spectroscopy, ion
-            manipulation, and mass spectrometry to investigate reactive ions and identify spectral fingerprints of novel
-            interstellar molecules
+          <h2 style="font-size: 36px; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -0.03em;">Dr. Ugo Jacovella</h2>
+          <p class="subtitle" style="margin-bottom: 2rem; color: var(--muted); font-size: 16px; letter-spacing: 0.05em; text-transform: uppercase;">Principal Investigator</p>
+          
+          <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">Short CV</h3>
+          <p style="color: var(--text); margin-bottom: 1.5rem; line-height: 1.8;">
+            My research interests lie in the spectroscopy and chemistry of molecular ions with multiple isomeric forms, relevant to astrochemistry and complex chemical environments. I specialize in laser spectroscopy, ion manipulation, and mass spectrometry to investigate reactive ions and identify spectral fingerprints of novel interstellar molecules
           </p>
-
-          <h4>Education</h4>
-          <ul>
+          
+          <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 0.5rem;">Education</h4>
+          <ul style="color: var(--muted); margin-bottom: 1.5rem; padding-left: 1.2rem; line-height: 1.8;">
             <li>[2023] - Habilitation à diriger des Recherches, Université Paris-Saclay</li>
-            <li>[2017] - Ph.D. Physical Chemistry, ETH Zurich (supervisor Prof. F. Merkt)</li>
-            <li>[2012] - M.S. Physics, Université Paris-Sud</li>
-            <li>[2010] - B.S. Chemistry, Université Paris-Sud</li>
+            <li>[2017] -  Ph.D. Physical Chemistry, ETH Zurich (supervisor Prof. F. Merkt)</li>
+            <li>[2012] -  M.S. Physics, Université Paris-Sud</li>
+            <li>[2010] -  B.S. Chemistry, Université Paris-Sud</li>
           </ul>
 
-          <h4>Research positions</h4>
-          <ul>
+          <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 0.5rem;">Research positions</h4>
+          <ul style="color: var(--muted); margin-bottom: 1.5rem; padding-left: 1.2rem; line-height: 1.8;">
             <li>[Since 2020] CNRS reseracher, Université Paris-Saclay</li>
-            <li>[2018-2020] Postoctoral Fellow with Prof. E. J. Biekse (SNSF Early Postdoc Mobility Fellowship), The
-              University of Melbourne</li>
+            <li>[2018-2020] Postoctoral Fellow with Prof. E. J. Biekse (SNSF Early Postdoc Mobility Fellowship), The University of Melbourne</li>
             <li>[2012-2017] Ph.D. candidate with Prof. F. Merkt, ETH Zurich</li>
             <li>[2017 (6 months)] Research assistant with Prof. F. Merkt, ETH Zurich</li>
             <li>[2016 (4 months)] Research assistant with Dr. S.T. Pratt, Argonne National Laboratory</li>
             <li>[2015 (2 months)] Research assistant with Prof. D. Gauyacq, Université Paris-Sud</li>
           </ul>
-
-          <div class="cta-links">
+          
+          <div class="cta-links" style="margin-top: 2.5rem;">
             <a href="contact.html">&#9993; Contact</a>
             <a href="publications.html">&#128269; Publications</a>
           </div>
@@ -104,41 +92,13 @@
       </div>
     </section>
 
-    <div class="institutions">
-      <img src="assets/logos/ismo.svg" alt="ISMO Logo" style="height: 100px; width: auto;" />
-      <img src="assets/logos/upsaclay.svg" alt="Université Paris-Saclay" style="height: 100px; width: auto;" />
-      <img src="assets/logos/cnrs.svg" alt="CNRS" style="height: 100px; width: auto;" />
-    </div>
     <footer>
       <span>&copy; 2026 Ugo Jacovella</span>
-      <span>Last updated: <span id="last-updated">Loading...</span></span>
       <span>Built with GitHub Pages</span>
     </footer>
   </div>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const repo = 'ujacovella/jacovelladotcom';
-      const lastUpdatedEl = document.getElementById('last-updated');
-      if (lastUpdatedEl) {
-        fetch(`https://api.github.com/repos/${repo}/commits/main`)
-          .then(r => r.json())
-          .then(data => {
-            if (data && data.commit && data.commit.author && data.commit.author.date) {
-              const date = new Date(data.commit.author.date);
-              lastUpdatedEl.innerText = date.toLocaleString('en-GB', { 
-                day: '2-digit', month: '2-digit', year: 'numeric', 
-                hour: '2-digit', minute: '2-digit' 
-              });
-            }
-          })
-          .catch(err => {
-            console.error('Failed to fetch last commit:', err);
-            lastUpdatedEl.innerText = 'N/A';
-          });
-      }
-    });
-  </script>
 <script src="nav.js"></script>
 </body>
 
 </html>
+

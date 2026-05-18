@@ -230,7 +230,6 @@ footer {
   aspect-ratio: 3/4;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -914,6 +913,7 @@ footer {
     transform: translateX(100%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     z-index: 1500;
     gap: 0;
   }
@@ -935,6 +935,7 @@ footer {
 
   .nav-links>li {
     width: 100%;
+    height: auto;
     border-bottom: 1px solid var(--border);
   }
 
@@ -943,6 +944,7 @@ footer {
     font-size: 15px;
     justify-content: flex-start;
     width: 100%;
+    touch-action: manipulation;
   }
 
   .dropdown {
@@ -951,10 +953,12 @@ footer {
     width: 100%;
     background: rgba(0, 0, 0, 0.03);
     padding-left: 1rem;
+    opacity: 1;
+    visibility: visible;
   }
 
-  .nav-links>li.menu-item-open .dropdown {
-    display: block;
+  .dropdown.dropdown-open {
+    display: block !important;
   }
 
   .dropdown-content a {
@@ -962,6 +966,7 @@ footer {
     font-size: 14px;
     border-bottom: none;
     display: block;
+    touch-action: manipulation;
   }
 
   section {
