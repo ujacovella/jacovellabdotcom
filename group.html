@@ -56,6 +56,19 @@
   <div class="container">
 
 
+    <section id="pi" class="reveal" style="margin-top: 3rem;">
+      <div class="section-heading">Principal investigator</div>
+      <div class="group-grid" style="grid-template-columns: 1fr;">
+        <a href="pi.html" class="member-card" data-pi="true" style="text-align: left; display: flex; gap: 1rem; align-items: center; max-width: 400px;">
+          <img src="assets/pi/ugo_jacovella.jpeg" alt="Dr. Ugo Jacovella" class="member-avatar" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin: 0; flex-shrink: 0;">
+          <div>
+            <div class="member-name">Dr. Ugo Jacovella</div>
+            <div class="member-role">Principal Investigator</div>
+          </div>
+        </a>
+      </div>
+    </section>
+
     <section id="members" class="reveal">
       <div class="section-heading">Group members</div>
       <p style="margin-bottom: 2rem; color: var(--hint); text-align: center; font-size: 14px;">Click for more information.</p>
@@ -174,6 +187,7 @@
       const allCards = document.querySelectorAll('.member-card');
 
       allCards.forEach(card => {
+        if (card.dataset.pi === 'true') return; // Skip PI card — it's a nav link
         card.addEventListener('click', () => {
           const details = card.querySelector('.member-details');
 

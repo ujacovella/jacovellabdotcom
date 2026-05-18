@@ -735,6 +735,12 @@ section {
   border-color: var(--border-strong);
 }
 
+a.member-card {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
 .member-avatar {
   width: 80px;
   height: 80px;
