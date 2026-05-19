@@ -464,6 +464,10 @@ section {
   counter-increment: pub-counter;
 }
 
+.pub > div {
+  grid-column: 2;
+}
+
 .pub:last-of-type {
   border-bottom: none;
 }
@@ -476,6 +480,10 @@ section {
   color: var(--hint);
   padding-top: 3px;
   text-align: right;
+}
+
+.pub[data-num]::before {
+  content: "[" attr(data-num) "]";
 }
 
 .pub-year {
@@ -503,8 +511,10 @@ section {
   font-size: 13px;
   color: var(--muted);
   margin-bottom: 0.2rem;
-  line-height: 1.5;
+  line-height: 1.6;
   text-align: justify;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .pub-journal {
