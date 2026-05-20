@@ -36,6 +36,12 @@ def delete_position_file(filename):
     path = os.path.join(POSITIONS_DIR, filename)
     if os.path.exists(path):
         os.remove(path)
+    # Remove associated image and attachment files
+    base = os.path.splitext(path)[0]
+    for ext in ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.pdf', '.doc', '.docx']:
+        associated = base + ext
+        if os.path.exists(associated):
+            os.remove(associated)
 
 
 def list_positions():
@@ -94,6 +100,7 @@ def generate_card_html(data, filename):
     status = escape_html(data.get("status", ""))
     desc = escape_html(data.get("description", ""))
     image = data.get("image", "")
+    attachment = data.get("attachment", "")
 
     bg, fg = STATUS_COLORS.get(data.get("status", ""), (DEFAULT_BG, DEFAULT_FG))
 
@@ -111,6 +118,11 @@ def generate_card_html(data, filename):
         lines.append(f'            <p class="detail-image">{web_path}</p>')
     else:
         lines.append(f'            <p class="detail-image"></p>')
+    if attachment:
+        att_path = attachment.replace("\\", "/")
+        lines.append(f'            <p class="detail-attachment">{att_path}</p>')
+    else:
+        lines.append(f'            <p class="detail-attachment"></p>')
     lines.append(f'          </div>')
     lines.append(f'        </div>')
     lines.append(f'        <!-- POSITION END: {filename} -->')
@@ -151,6 +163,7 @@ class ManagePositionsGUI:
         self.root.title("Manage Open Positions")
         self.root.geometry("640x840")
         self.selected_image_path = ""
+        self.selected_attachment_path = ""
         self.editing_filename = None
 
         os.makedirs(POSITIONS_DIR, exist_ok=True)
@@ -195,20 +208,27 @@ class ManagePositionsGUI:
         self.image_label = ttk.Label(img_frame, text="No image selected", font=("Arial", 8), foreground="gray")
         self.image_label.pack(side=tk.LEFT, padx=(5, 0))
 
-        ttk.Label(det_frame, text="Public:").grid(row=4, column=0, sticky="w", pady=2)
-        self.public_var = tk.BooleanVar(value=True)
-        ttk.Checkbutton(det_frame, text="Show on website", variable=self.public_var).grid(row=4, column=1, sticky="w", pady=2)
+        ttk.Label(det_frame, text="Attachment:").grid(row=4, column=0, sticky="w", pady=2)
+        att_frame = ttk.Frame(det_frame)
+        att_frame.grid(row=4, column=1, sticky="w", pady=2)
+        ttk.Button(att_frame, text="Select File...", command=self.select_attachment).pack(side=tk.LEFT)
+        self.attachment_label = ttk.Label(att_frame, text="No file selected", font=("Arial", 8), foreground="gray")
+        self.attachment_label.pack(side=tk.LEFT, padx=(5, 0))
 
-        ttk.Label(det_frame, text="Day limit:").grid(row=5, column=0, sticky="w", pady=2)
+        ttk.Label(det_frame, text="Public:").grid(row=5, column=0, sticky="w", pady=2)
+        self.public_var = tk.BooleanVar(value=True)
+        ttk.Checkbutton(det_frame, text="Show on website", variable=self.public_var).grid(row=5, column=1, sticky="w", pady=2)
+
+        ttk.Label(det_frame, text="Day limit:").grid(row=6, column=0, sticky="w", pady=2)
         lim_frame = ttk.Frame(det_frame)
-        lim_frame.grid(row=5, column=1, sticky="w", pady=2)
+        lim_frame.grid(row=6, column=1, sticky="w", pady=2)
         self.limit_spin = ttk.Spinbox(lim_frame, from_=0, to=9999, width=8)
         self.limit_spin.set(90)
         self.limit_spin.pack(side=tk.LEFT)
         ttk.Label(lim_frame, text="days (0 = no limit)").pack(side=tk.LEFT, padx=(5, 0))
 
         btn_frame = ttk.Frame(det_frame)
-        btn_frame.grid(row=6, column=0, columnspan=2, pady=(10, 0))
+        btn_frame.grid(row=7, column=0, columnspan=2, pady=(10, 0))
         self.save_btn = ttk.Button(btn_frame, text="Save Position", command=self.save_position)
         self.save_btn.pack(side=tk.LEFT, padx=5)
         ttk.Button(btn_frame, text="Clear Form", command=self.clear_form).pack(side=tk.LEFT, padx=5)
@@ -272,6 +292,19 @@ class ManagePositionsGUI:
             self.selected_image_path = ""
             self.image_label.config(text="No image selected")
 
+        att = data.get("attachment", "")
+        if att:
+            abs_att = os.path.join(BASE_DIR, att)
+            if os.path.exists(abs_att):
+                self.selected_attachment_path = abs_att
+                self.attachment_label.config(text=os.path.basename(att))
+            else:
+                self.selected_attachment_path = ""
+                self.attachment_label.config(text="Attachment file missing")
+        else:
+            self.selected_attachment_path = ""
+            self.attachment_label.config(text="No file selected")
+
     def delete_position(self):
         sel = self.listbox.curselection()
         if not sel:
@@ -299,6 +332,15 @@ class ManagePositionsGUI:
             self.selected_image_path = file_path
             self.image_label.config(text=os.path.basename(file_path))
 
+    def select_attachment(self):
+        file_path = filedialog.askopenfilename(
+            title="Select Attachment",
+            filetypes=(("Documents", "*.pdf *.doc *.docx"), ("All files", "*.*"))
+        )
+        if file_path:
+            self.selected_attachment_path = file_path
+            self.attachment_label.config(text=os.path.basename(file_path))
+
     def save_position(self):
         title = self.title_entry.get().strip()
         status = self.status_combo.get().strip()
@@ -323,10 +365,12 @@ class ManagePositionsGUI:
                 filename = f"{slug}_{i}.json"
 
         old_image = ""
+        old_attachment = ""
         if self.editing_filename:
             try:
                 old_data = load_position(self.editing_filename)
                 old_image = old_data.get("image", "")
+                old_attachment = old_data.get("attachment", "")
             except:
                 pass
 
@@ -344,11 +388,26 @@ class ManagePositionsGUI:
                     return
             image_web_path = f"assets/positions/{new_img_name}"
 
+        attachment_web_path = old_attachment if old_attachment else ""
+        if self.selected_attachment_path and self.attachment_label.cget("text") != "Attachment file missing":
+            abs_selected = os.path.abspath(self.selected_attachment_path)
+            ext = os.path.splitext(self.selected_attachment_path)[1].lower()
+            new_att_name = slugify(title) + ext
+            dest_path = os.path.join(POSITIONS_DIR, new_att_name)
+            if abs_selected != os.path.abspath(dest_path):
+                try:
+                    shutil.copy(self.selected_attachment_path, dest_path)
+                except Exception as e:
+                    messagebox.showerror("Error", f"Failed to copy attachment: {e}")
+                    return
+            attachment_web_path = f"assets/positions/{new_att_name}"
+
         data = {
             "title": title,
             "status": status,
             "description": description,
             "image": image_web_path,
+            "attachment": attachment_web_path,
             "public": self.public_var.get(),
             "day_limit": int(self.limit_spin.get()),
             "created_at": datetime.now().strftime("%Y-%m-%d")
@@ -375,6 +434,8 @@ class ManagePositionsGUI:
         self.desc_text.delete("1.0", tk.END)
         self.selected_image_path = ""
         self.image_label.config(text="No image selected")
+        self.selected_attachment_path = ""
+        self.attachment_label.config(text="No file selected")
         self.public_var.set(True)
         self.limit_spin.set(90)
         self.editing_filename = None
@@ -385,7 +446,7 @@ class ManagePositionsGUI:
             git_msg = ""
             try:
                 subprocess.run(
-                    ["git", "add", HTML_FILE],
+                    ["git", "add", HTML_FILE, POSITIONS_DIR],
                     check=True, cwd=BASE_DIR, capture_output=True, text=True
                 )
                 subprocess.run(
