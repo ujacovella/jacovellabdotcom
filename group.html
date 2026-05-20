@@ -73,22 +73,26 @@
       <div class="section-heading">Group members</div>
       <p style="margin-bottom: 2rem; color: var(--hint); text-align: center; font-size: 14px;">Click for more information.</p>
       <div class="group-grid">
+        <!-- MEMBER_CARDS_START -->
+        <!-- MEMBER START: A.P. Rasmussen -->
         <div class="member-card" data-pi="false" data-alumni="false">
-          <div class="member-avatar" style="background:#d8f0e4;color:#1a5c38">APR</div>
+          <div class="member-avatar" style="background:#ffebee;color:#b71c1c">AR</div>
           <div class="member-name">A.P. Rasmussen</div>
           <div class="member-role">Postdoctoral Fellow</div>
           <div class="member-details">
             <p class="detail-email">apr@phys.au.dk</p>
             <p class="detail-master">Master at Aarhus University</p>
             <p class="detail-phd">PhD at Aarhus University</p>
-            <p class="detail-project">Developing new high-resolution ion mobility methods for interstellar molecule
-              identification.</p>
+            <p class="detail-project">Developing new high-resolution ion mobility methods for interstellar molecule identification.</p>
           </div>
         </div>
+        <!-- MEMBER END: A.P. Rasmussen -->
+        <!-- MEMBER START: C. Rossi -->
         <div class="member-card" data-pi="false" data-alumni="false">
-          <div class="member-avatar" style="background:#fef0d4;color:#7a4a0a">CR</div>
+          <div class="member-avatar" style="background:#f3e5f5;color:#4a148c">CR</div>
           <div class="member-name">C. Rossi</div>
           <div class="member-role">PhD Student</div>
+          <a href="theses.html" class="member-thesis" style="display: block; font-size: 13px; margin-top: 0.5rem; text-decoration: none; color: var(--accent);">Development of an instrument for spectroscopy of isomer-selected molecular ions in the context of the diffuse interstellar bands</a>
           <div class="member-details">
             <p class="detail-email">corentin.rossi@universite-paris-saclay.fr</p>
             <p class="detail-master">Master at Université de Paris-Sud</p>
@@ -96,18 +100,7 @@
             <p class="detail-project">Setup of a new cryogenic ion trap for high-resolution laser spectroscopy.</p>
           </div>
         </div>
-        <div class="member-card" data-pi="false" data-alumni="true" style="opacity: 0.7;">
-          <div class="member-avatar" style="background:#f5f5f7;color:#86868b">PA</div>
-          <div class="member-name">Previous Alumnus</div>
-          <div class="member-role">Former Master Student</div>
-          <div class="member-details">
-            <p class="detail-email">alumnus@email.fr</p>
-            <p class="detail-master">Master at Université Paris-Saclay</p>
-            <p class="detail-phd"></p>
-            <p class="detail-project">Analysis of dissociation pathways of protonated polycyclic aromatic hydrocarbons.
-            </p>
-          </div>
-        </div>
+        <!-- MEMBER END: C. Rossi -->
         <!-- MEMBER START: Test T Test -->
         <div class="member-card" data-pi="false" data-alumni="false">
           <div class="member-avatar" style="background:#d8f0e4;color:#1a5c38">TTT</div>
@@ -121,12 +114,28 @@
           </div>
         </div>
         <!-- MEMBER END: Test T Test -->
+      <!-- MEMBER_CARDS_END -->
       </div>
     </section>
 
     <section id="alumni" style="display: none;">
       <div class="section-heading">Alumni</div>
       <div class="group-grid">
+        <!-- ALUMNI_CARDS_START -->
+        <!-- MEMBER START: Previous Alumnus -->
+        <div class="member-card" data-pi="false" data-alumni="true" style="opacity: 0.7;">
+          <div class="member-avatar" style="background:#f5f5f7;color:#86868b">PA</div>
+          <div class="member-name">Previous Alumnus</div>
+          <div class="member-role">Former Master Student</div>
+          <div class="member-details">
+            <p class="detail-email">alumnus@email.fr</p>
+            <p class="detail-master">Master at Université Paris-Saclay</p>
+            <p class="detail-phd"></p>
+            <p class="detail-project">Analysis of dissociation pathways of protonated polycyclic aromatic hydrocarbons.</p>
+          </div>
+        </div>
+        <!-- MEMBER END: Previous Alumnus -->
+      <!-- ALUMNI_CARDS_END -->
       </div>
     </section>
 
@@ -168,16 +177,14 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // 1. Handle Alumni Sorting
-      const membersGrid = document.querySelector('#members .group-grid');
+      // 1. Handle Alumni Section Visibility
       const alumniSection = document.querySelector('#alumni');
       const alumniGrid = document.querySelector('#alumni .group-grid');
 
-      if (membersGrid && alumniSection && alumniGrid) {
-        const alumniCards = membersGrid.querySelectorAll('.member-card[data-alumni="true"]');
+      if (alumniSection && alumniGrid) {
+        const alumniCards = alumniGrid.querySelectorAll('.member-card');
         if (alumniCards.length > 0) {
           alumniSection.style.display = 'block';
-          alumniCards.forEach(card => alumniGrid.appendChild(card));
         }
       }
 
