@@ -1,0 +1,9 @@
+{
+  "title": "Bachelor position",
+  "status": "Bachelor internship",
+  "description": "This is a bachelor position",
+  "image": "assets/positions/bachelor-position.png",
+  "public": true,
+  "day_limit": 1,
+  "created_at": "2026-05-20"
+}
