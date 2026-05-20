@@ -53,7 +53,7 @@
       <div class="section-heading">Open positions</div>
       <p style="margin-bottom: 2rem; max-width: 60ch; color: var(--muted);">We are always looking for motivated PhD students and Postdoctoral fellows to join our group. If you are interested in our research, please contact Dr. Ugo Jacovella with your CV and a brief description of your research interests.</p>
       
-                      <!-- POSITION START: bachelor-position.json -->
+                                              <!-- POSITION START: bachelor-position.json -->
         <div class="position-card" data-pos="bachelor-position.json">
           <span class="position-badge" style="background:#e8f5e9;color:#2e7d32">Bachelor internship</span>
           <img src="assets/positions/bachelor-position.png" alt="Bachelor position" class="position-thumb" loading="lazy">
@@ -61,9 +61,13 @@
           <div class="position-details" style="display:none">
             <p class="detail-description">This is a bachelor position</p>
             <p class="detail-image">assets/positions/bachelor-position.png</p>
+            <p class="detail-attachment"></p>
           </div>
         </div>
         <!-- POSITION END: bachelor-position.json -->
+      
+      
+      
       
       
     </section>
@@ -122,6 +126,10 @@
       <div class="modal-section-title">Image</div>
       <img id="posModalImage" class="modal-image">
     </div>
+    <div class="modal-section" id="posModalAttachmentSection" style="display:none">
+      <div class="modal-section-title">Attachment</div>
+      <a id="posModalAttachmentLink" class="modal-attachment-btn" href="#" download>Download Attachment</a>
+    </div>
   </div>
 </div>
 
@@ -141,6 +149,8 @@
         const description = descEl ? descEl.innerText : '';
         const imgEl = details ? details.querySelector('.detail-image') : null;
         const imageSrc = imgEl ? imgEl.innerText : '';
+        const attEl = details ? details.querySelector('.detail-attachment') : null;
+        const attachmentSrc = attEl ? attEl.innerText : '';
 
         document.getElementById('posModalTitle').innerText = title;
         document.getElementById('posModalStatus').innerText = status;
@@ -157,6 +167,15 @@
           imgSection.style.display = 'block';
         } else {
           imgSection.style.display = 'none';
+        }
+
+        const attSection = document.getElementById('posModalAttachmentSection');
+        const attLink = document.getElementById('posModalAttachmentLink');
+        if (attachmentSrc) {
+          attLink.href = attachmentSrc;
+          attSection.style.display = 'block';
+        } else {
+          attSection.style.display = 'none';
         }
 
         modal.classList.add('active');
