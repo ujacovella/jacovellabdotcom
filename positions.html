@@ -53,10 +53,17 @@
       <div class="section-heading">Open positions</div>
       <p style="margin-bottom: 2rem; max-width: 60ch; color: var(--muted);">We are always looking for motivated PhD students and Postdoctoral fellows to join our group. If you are interested in our research, please contact Dr. Ugo Jacovella with your CV and a brief description of your research interests.</p>
       
-      <div class="position-card">
-        <h3>No specific open positions at the moment</h3>
-        <p>Spontaneous applications are always welcome.</p>
-      </div>
+              <!-- POSITION START: a-bachelor-position.json -->
+        <div class="position-card" data-pos="a-bachelor-position.json">
+          <span class="position-badge" style="background:#e8f5e9;color:#2e7d32">Bachelor internship</span>
+          <h3>A bachelor position</h3>
+          <div class="position-details" style="display:none">
+            <p class="detail-description">This is an open internship position</p>
+            <p class="detail-image"></p>
+          </div>
+        </div>
+        <!-- POSITION END: a-bachelor-position.json -->
+      
     </section>
 
     <div class="institutions">
@@ -96,6 +103,79 @@
   </script>
 <script src="motion.js?v=1"></script>
 <script src="nav.js?v=4"></script>
+
+<!-- Position Details Modal -->
+<div class="modal-overlay" id="positionModal">
+  <div class="modal-content">
+    <button class="modal-close">&times;</button>
+    <div class="modal-header">
+      <div class="modal-name" id="posModalTitle"></div>
+      <div class="modal-role" id="posModalStatus"></div>
+    </div>
+    <div class="modal-section" id="posModalDescSection">
+      <div class="modal-section-title">Description</div>
+      <div class="modal-text" id="posModalDescription"></div>
+    </div>
+    <div class="modal-section" id="posModalImageSection" style="display:none">
+      <div class="modal-section-title">Image</div>
+      <img id="posModalImage" class="modal-image">
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById('positionModal');
+    const closeBtn = modal.querySelector('.modal-close');
+    const cards = document.querySelectorAll('.position-card');
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        const details = card.querySelector('.position-details');
+        const title = card.querySelector('h3').innerText;
+        const badge = card.querySelector('.position-badge');
+        const status = badge ? badge.innerText : '';
+        const descEl = details ? details.querySelector('.detail-description') : null;
+        const description = descEl ? descEl.innerText : '';
+        const imgEl = details ? details.querySelector('.detail-image') : null;
+        const imageSrc = imgEl ? imgEl.innerText : '';
+
+        document.getElementById('posModalTitle').innerText = title;
+        document.getElementById('posModalStatus').innerText = status;
+
+        const descSection = document.getElementById('posModalDescription');
+        descSection.innerText = description;
+        document.getElementById('posModalDescSection').style.display = description ? 'block' : 'none';
+
+        const imgSection = document.getElementById('posModalImageSection');
+        const imgTag = document.getElementById('posModalImage');
+        if (imageSrc) {
+          imgTag.src = imageSrc;
+          imgTag.alt = title;
+          imgSection.style.display = 'block';
+        } else {
+          imgSection.style.display = 'none';
+        }
+
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    const closeModal = () => {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+  });
+</script>
 </body>
 </html>
 
