@@ -1,0 +1,10 @@
+{
+  "title": "New position",
+  "status": "PhD",
+  "description": "Description of a new position with image and attachments.",
+  "image": "assets/positions/new-position.png",
+  "attachment": "assets/positions/new-position.pdf",
+  "public": true,
+  "day_limit": 90,
+  "created_at": "2026-05-20"
+}
