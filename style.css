@@ -469,12 +469,15 @@ section {
 }
 
 #news-container .blog-image {
-  max-width: 70px;
+  max-width: 100px;
   align-self: center;
 }
 
 #news-container .blog-excerpt {
-  display: none;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* ── Publications (Swiss: structured list, not cards) ── */
