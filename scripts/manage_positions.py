@@ -14,7 +14,8 @@ from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QGridLayout, QLabel, QLineEdit, QTextEdit, QPushButton,
     QComboBox, QCheckBox, QListWidget, QListWidgetItem, QScrollArea,
-    QGroupBox, QFrame, QMessageBox, QFileDialog, QSizePolicy
+    QGroupBox, QFrame, QMessageBox, QFileDialog, QSizePolicy,
+    QSpinBox
 )
 from PyQt6.QtCore import Qt
 
@@ -114,7 +115,9 @@ def generate_card_html(data, filename):
     bg, fg = STATUS_COLORS.get(data.get("status", ""), (DEFAULT_BG, DEFAULT_FG))
     lines = []
     lines.append(f'        <!-- POSITION START: {filename} -->')
-    lines.append(f'        <div class="position-card" data-pos="{filename}">')
+    created = data.get("created_at", "")
+    limit = data.get("day_limit", 0)
+    lines.append(f'        <div class="position-card" data-pos="{filename}" data-created="{created}" data-limit="{limit}">')
     lines.append(f'          <span class="position-badge" style="background:{bg};color:{fg}">{status}</span>')
     if image:
         web_path = image.replace("\\", "/")
@@ -308,6 +311,8 @@ class ManagePositionsGUI(QMainWindow):
             padded_status = status[:22].ljust(22)
             display = f"  {padded_status}  {title}"
             item = QListWidgetItem(display)
+            if not active:
+                item.setForeground(Qt.GlobalColor.gray)
             item.setData(Qt.ItemDataRole.UserRole, f)
             self.listbox.addItem(item)
 
