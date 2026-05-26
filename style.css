@@ -420,10 +420,15 @@ section {
   gap: 1.5rem;
   padding: 1.25rem 0;
   border-bottom: 1px solid var(--border);
+  align-items: start;
 }
 
 .blog-item:last-of-type {
   border-bottom: none;
+}
+
+.blog-item.has-image {
+  grid-template-columns: 80px 1fr 260px;
 }
 
 .blog-date {
@@ -446,6 +451,30 @@ section {
   color: var(--muted);
   line-height: 1.6;
   text-align: justify;
+}
+
+.blog-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* ── Home page news ── */
+#news-container .blog-item {
+  align-items: center;
+}
+
+#news-container .blog-item.has-image {
+  grid-template-columns: 80px 1fr auto;
+}
+
+#news-container .blog-image {
+  max-width: 70px;
+  align-self: center;
+}
+
+#news-container .blog-excerpt {
+  display: none;
 }
 
 /* ── Publications (Swiss: structured list, not cards) ── */

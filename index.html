@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Jacovella Group</title>
   <meta name="description" content="Personal academic website of Dr. Ugo Jacovella." />
-  <link rel="stylesheet" href="style.css?v=1.7" />
+  <link rel="stylesheet" href="style.css?v=1.8" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -23,7 +23,7 @@
         </picture>
       </a>
       <ul class="nav-links">
-        <li><a href="index.html#news">News</a></li>
+        <li><a href="news.html">News</a></li>
         <li class="has-dropdown">
           <a href="group.html">Group</a>
           <div class="dropdown">
@@ -91,14 +91,10 @@
 
     <section id="news" class="reveal">
       <div class="section-heading">News &amp; notes</div>
-      <div class="blog-item">
-        <div class="blog-date">Apr 2025</div>
-        <div class="blog-body">
-          <div class="blog-title">New paper accepted in XX</div>
-          <div class="blog-excerpt">Our latest study on isomer-specific reactivity has been accepted for publication.
-          </div>
-        </div>
+      <div id="news-container">
+        <p style="font-size:14px;color:var(--muted);">Loading...</p>
       </div>
+      <a class="all-link" href="news.html">All news →</a>
     </section>
 
     <section id="publications" class="reveal">
@@ -256,6 +252,20 @@
           container.innerHTML = '<p style="font-size:14px;color:var(--muted);">No publications marked as selected yet.</p>';
         } else {
           container.innerHTML = selected.map(el => el.outerHTML).join('\n');
+        }
+      });
+
+    fetch('news.html')
+      .then(r => r.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const items = [...doc.querySelectorAll('.blog-item')];
+        const container = document.getElementById('news-container');
+        if (items.length === 0) {
+          container.innerHTML = '<p style="font-size:14px;color:var(--muted);">No news items yet.</p>';
+        } else {
+          container.innerHTML = items.slice(0, 3).map(el => el.outerHTML).join('\n');
         }
       });
 
