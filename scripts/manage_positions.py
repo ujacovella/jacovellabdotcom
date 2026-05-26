@@ -112,17 +112,23 @@ def generate_card_html(data, filename):
     desc = escape_html(data.get("description", ""))
     image = data.get("image", "")
     attachment = data.get("attachment", "")
+    created = data.get("created_at", "")
+    limit = data.get("day_limit", 0)
     bg, fg = STATUS_COLORS.get(data.get("status", ""), (DEFAULT_BG, DEFAULT_FG))
     lines = []
     lines.append(f'        <!-- POSITION START: {filename} -->')
-    created = data.get("created_at", "")
-    limit = data.get("day_limit", 0)
     lines.append(f'        <div class="position-card" data-pos="{filename}" data-created="{created}" data-limit="{limit}">')
-    lines.append(f'          <span class="position-badge" style="background:{bg};color:{fg}">{status}</span>')
+    lines.append(f'          <div class="position-card-body">')
+    lines.append(f'            <span class="position-badge" style="background:{bg};color:{fg}">{status}</span>')
+    lines.append(f'            <h3>{title}</h3>')
+    if created:
+        lines.append(f'            <p class="position-date">Added: {created}</p>')
+    if desc:
+        lines.append(f'            <p class="position-preview">{desc}</p>')
+    lines.append(f'          </div>')
     if image:
         web_path = image.replace("\\", "/")
         lines.append(f'          <img src="{web_path}" alt="{title}" class="position-thumb" loading="lazy">')
-    lines.append(f'          <h3>{title}</h3>')
     lines.append(f'          <div class="position-details" style="display:none">')
     lines.append(f'            <p class="detail-description">{desc}</p>')
     if image:
