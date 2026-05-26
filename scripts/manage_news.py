@@ -106,7 +106,8 @@ def generate_item_html(data, filename):
     cls = "has-image" if image else ""
     lines = []
     lines.append(f'        <!-- NEWS START: {filename} -->')
-    lines.append(f'        <div class="blog-item {cls}" data-news="{filename}">')
+    item_id = filename.replace(".json", "")
+    lines.append(f'        <div class="blog-item {cls}" id="news-{item_id}" data-news="{filename}">')
     lines.append(f'          <div class="blog-date">{display_date}</div>')
     lines.append(f'          <div class="blog-body">')
     lines.append(f'            <div class="blog-title">{title}</div>')

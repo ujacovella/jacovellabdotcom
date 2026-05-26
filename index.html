@@ -266,6 +266,12 @@
           container.innerHTML = '<p style="font-size:14px;color:var(--muted);">No news items yet.</p>';
         } else {
           container.innerHTML = items.slice(0, 3).map(el => el.outerHTML).join('\n');
+          container.querySelectorAll('.blog-item').forEach(el => {
+            el.style.cursor = 'pointer';
+            el.addEventListener('click', () => {
+              window.location.href = 'news.html#' + el.id;
+            });
+          });
         }
       });
 
