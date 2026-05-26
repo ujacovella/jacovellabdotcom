@@ -1,11 +1,22 @@
-import tkinter as tk
-from tkinter import ttk, filedialog, messagebox
-import shutil
+"""
+Manage Open Positions — PyQt6 GUI editor for position items.
+Generates positions.html from JSON data in assets/positions/.
+"""
+
+import sys
 import os
 import re
 import json
+import shutil
 import subprocess
 from datetime import datetime, date
+from PyQt6.QtWidgets import (
+    QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
+    QGridLayout, QLabel, QLineEdit, QTextEdit, QPushButton,
+    QComboBox, QCheckBox, QListWidget, QListWidgetItem, QScrollArea,
+    QGroupBox, QFrame, QMessageBox, QFileDialog, QSizePolicy
+)
+from PyQt6.QtCore import Qt
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HTML_FILE = os.path.join(BASE_DIR, "positions.html")
@@ -36,7 +47,6 @@ def delete_position_file(filename):
     path = os.path.join(POSITIONS_DIR, filename)
     if os.path.exists(path):
         os.remove(path)
-    # Remove associated image and attachment files
     base = os.path.splitext(path)[0]
     for ext in ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.pdf', '.doc', '.docx']:
         associated = base + ext
@@ -101,9 +111,7 @@ def generate_card_html(data, filename):
     desc = escape_html(data.get("description", ""))
     image = data.get("image", "")
     attachment = data.get("attachment", "")
-
     bg, fg = STATUS_COLORS.get(data.get("status", ""), (DEFAULT_BG, DEFAULT_FG))
-
     lines = []
     lines.append(f'        <!-- POSITION START: {filename} -->')
     lines.append(f'        <div class="position-card" data-pos="{filename}">')
@@ -133,119 +141,165 @@ def regenerate_html(html_file, positions_dir):
     all_pos = list_positions()
     active = [(f, d) for f, d in all_pos if is_active(d)]
     cards = "\n".join(generate_card_html(d, f) for f, d in active)
-
     placeholder = '''      <div class="position-card">
         <h3>No specific open positions at the moment</h3>
         <p>Spontaneous applications are always welcome.</p>
       </div>'''
     if not cards:
         cards = placeholder
-
     with open(html_file, 'r', encoding='utf-8') as f:
         content = f.read()
-
     pattern = r'(<p style="margin-bottom: 2rem; max-width: 60ch; color: var\(--muted\);">.*?</p>\s*)(.*?)(\s*</section>)'
     match = re.search(pattern, content, re.DOTALL)
     if not match:
-        raise ValueError("Could not find positions section pattern in HTML. Has the intro <p> changed?")
-
-    new_content = content[:match.start()] + match.group(1) + cards + "\n      " + match.group(3) + content[match.end():]
-
+        raise ValueError(
+            "Could not find positions section pattern in HTML. "
+            "Has the intro <p> changed?"
+        )
+    new_content = (
+        content[:match.start()] +
+        match.group(1) + cards + "\n      " + match.group(3) +
+        content[match.end():]
+    )
     with open(html_file, 'w', encoding='utf-8') as f:
         f.write(new_content)
-
     return len(active)
 
 
-class ManagePositionsGUI:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Manage Open Positions")
-        self.root.geometry("640x840")
+class ManagePositionsGUI(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Manage Open Positions")
+        self.setMinimumSize(640, 840)
+        self.resize(640, 840)
         self.selected_image_path = ""
         self.selected_attachment_path = ""
         self.editing_filename = None
 
         os.makedirs(POSITIONS_DIR, exist_ok=True)
 
-        main_frame = ttk.Frame(root, padding="10")
-        main_frame.pack(fill=tk.BOTH, expand=True)
+        central = QWidget()
+        self.setCentralWidget(central)
+        main_layout = QVBoxLayout(central)
+        main_layout.setContentsMargins(10, 10, 10, 10)
 
         # --- Position List ---
-        list_frame = ttk.LabelFrame(main_frame, text="Existing Positions", padding="5")
-        list_frame.pack(fill=tk.BOTH, pady=(0, 5))
+        list_group = QGroupBox("Existing Positions")
+        main_layout.addWidget(list_group)
+        list_vlay = QVBoxLayout(list_group)
 
-        list_btn_frame = ttk.Frame(list_frame)
-        list_btn_frame.pack(fill=tk.X, pady=(0, 5))
-        ttk.Button(list_btn_frame, text="Add New", command=self.add_position).pack(side=tk.LEFT, padx=(0, 4))
-        ttk.Button(list_btn_frame, text="Edit Selected", command=self.edit_position).pack(side=tk.LEFT, padx=(0, 4))
-        ttk.Button(list_btn_frame, text="Delete Selected", command=self.delete_position).pack(side=tk.LEFT)
+        list_btn_row = QHBoxLayout()
+        list_vlay.addLayout(list_btn_row)
+        self.btn_add = QPushButton("Add New")
+        self.btn_add.clicked.connect(self.add_position)
+        list_btn_row.addWidget(self.btn_add)
+        self.btn_edit = QPushButton("Edit Selected")
+        self.btn_edit.clicked.connect(self.edit_position)
+        list_btn_row.addWidget(self.btn_edit)
+        self.btn_delete = QPushButton("Delete Selected")
+        self.btn_delete.clicked.connect(self.delete_position)
+        list_btn_row.addWidget(self.btn_delete)
 
-        self.listbox = tk.Listbox(list_frame, height=6, font=("Consolas", 10))
-        self.listbox.pack(fill=tk.BOTH, expand=True)
+        self.listbox = QListWidget()
+        self.listbox.setMinimumHeight(150)
+        list_vlay.addWidget(self.listbox)
 
         # --- Position Details ---
-        det_frame = ttk.LabelFrame(main_frame, text="Position Details", padding="10")
-        det_frame.pack(fill=tk.BOTH, expand=True, pady=(5, 5))
+        det_group = QGroupBox("Position Details")
+        main_layout.addWidget(det_group, stretch=1)
+        det_grid = QGridLayout(det_group)
 
-        ttk.Label(det_frame, text="Title:").grid(row=0, column=0, sticky="w", pady=2)
-        self.title_entry = ttk.Entry(det_frame, width=42)
-        self.title_entry.grid(row=0, column=1, pady=2, sticky="w")
+        # Row 0: Title
+        det_grid.addWidget(QLabel("Title:"), 0, 0, Qt.AlignmentFlag.AlignRight)
+        self.title_entry = QLineEdit()
+        self.title_entry.setMinimumWidth(280)
+        det_grid.addWidget(self.title_entry, 0, 1)
 
-        ttk.Label(det_frame, text="Status:").grid(row=1, column=0, sticky="w", pady=2)
-        self.status_combo = ttk.Combobox(det_frame, values=STATUS_OPTIONS, width=39, state="readonly")
-        self.status_combo.grid(row=1, column=1, pady=2, sticky="w")
-        self.status_combo.current(0)
+        # Row 1: Status
+        det_grid.addWidget(QLabel("Status:"), 1, 0, Qt.AlignmentFlag.AlignRight)
+        self.status_combo = QComboBox()
+        self.status_combo.addItems(STATUS_OPTIONS)
+        self.status_combo.setCurrentIndex(0)
+        self.status_combo.setMinimumWidth(280)
+        det_grid.addWidget(self.status_combo, 1, 1)
 
-        ttk.Label(det_frame, text="Description:").grid(row=2, column=0, sticky="nw", pady=2)
-        self.desc_text = tk.Text(det_frame, width=40, height=5)
-        self.desc_text.grid(row=2, column=1, pady=2, sticky="w")
+        # Row 2: Description
+        det_grid.addWidget(QLabel("Description:"), 2, 0, Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignTop)
+        self.desc_text = QTextEdit()
+        self.desc_text.setMinimumWidth(280)
+        self.desc_text.setMaximumHeight(120)
+        det_grid.addWidget(self.desc_text, 2, 1)
 
-        ttk.Label(det_frame, text="Image:").grid(row=3, column=0, sticky="w", pady=2)
-        img_frame = ttk.Frame(det_frame)
-        img_frame.grid(row=3, column=1, sticky="w", pady=2)
-        ttk.Button(img_frame, text="Select Image...", command=self.select_image).pack(side=tk.LEFT)
-        self.image_label = ttk.Label(img_frame, text="No image selected", font=("Arial", 8), foreground="gray")
-        self.image_label.pack(side=tk.LEFT, padx=(5, 0))
+        # Row 3: Image
+        det_grid.addWidget(QLabel("Image:"), 3, 0, Qt.AlignmentFlag.AlignRight)
+        img_widget = QWidget()
+        img_hbox = QHBoxLayout(img_widget)
+        img_hbox.setContentsMargins(0, 0, 0, 0)
+        self.btn_select_image = QPushButton("Select Image...")
+        self.btn_select_image.clicked.connect(self.select_image)
+        img_hbox.addWidget(self.btn_select_image)
+        self.image_label = QLabel("No image selected")
+        self.image_label.setStyleSheet("color: gray; font-size: 11px;")
+        img_hbox.addWidget(self.image_label)
+        det_grid.addWidget(img_widget, 3, 1)
 
-        ttk.Label(det_frame, text="Attachment:").grid(row=4, column=0, sticky="w", pady=2)
-        att_frame = ttk.Frame(det_frame)
-        att_frame.grid(row=4, column=1, sticky="w", pady=2)
-        ttk.Button(att_frame, text="Select File...", command=self.select_attachment).pack(side=tk.LEFT)
-        self.attachment_label = ttk.Label(att_frame, text="No file selected", font=("Arial", 8), foreground="gray")
-        self.attachment_label.pack(side=tk.LEFT, padx=(5, 0))
+        # Row 4: Attachment
+        det_grid.addWidget(QLabel("Attachment:"), 4, 0, Qt.AlignmentFlag.AlignRight)
+        att_widget = QWidget()
+        att_hbox = QHBoxLayout(att_widget)
+        att_hbox.setContentsMargins(0, 0, 0, 0)
+        self.btn_select_attachment = QPushButton("Select File...")
+        self.btn_select_attachment.clicked.connect(self.select_attachment)
+        att_hbox.addWidget(self.btn_select_attachment)
+        self.attachment_label = QLabel("No file selected")
+        self.attachment_label.setStyleSheet("color: gray; font-size: 11px;")
+        att_hbox.addWidget(self.attachment_label)
+        det_grid.addWidget(att_widget, 4, 1)
 
-        ttk.Label(det_frame, text="Public:").grid(row=5, column=0, sticky="w", pady=2)
-        self.public_var = tk.BooleanVar(value=True)
-        ttk.Checkbutton(det_frame, text="Show on website", variable=self.public_var).grid(row=5, column=1, sticky="w", pady=2)
+        # Row 5: Public
+        det_grid.addWidget(QLabel("Public:"), 5, 0, Qt.AlignmentFlag.AlignRight)
+        self.public_cb = QCheckBox("Show on website")
+        self.public_cb.setChecked(True)
+        det_grid.addWidget(self.public_cb, 5, 1)
 
-        ttk.Label(det_frame, text="Day limit:").grid(row=6, column=0, sticky="w", pady=2)
-        lim_frame = ttk.Frame(det_frame)
-        lim_frame.grid(row=6, column=1, sticky="w", pady=2)
-        self.limit_spin = ttk.Spinbox(lim_frame, from_=0, to=9999, width=8)
-        self.limit_spin.set(90)
-        self.limit_spin.pack(side=tk.LEFT)
-        ttk.Label(lim_frame, text="days (0 = no limit)").pack(side=tk.LEFT, padx=(5, 0))
+        # Row 6: Day limit
+        det_grid.addWidget(QLabel("Day limit:"), 6, 0, Qt.AlignmentFlag.AlignRight)
+        lim_widget = QWidget()
+        lim_hbox = QHBoxLayout(lim_widget)
+        lim_hbox.setContentsMargins(0, 0, 0, 0)
+        self.limit_spin = QSpinBox()
+        self.limit_spin.setRange(0, 9999)
+        self.limit_spin.setValue(90)
+        lim_hbox.addWidget(self.limit_spin)
+        lim_hbox.addWidget(QLabel("days (0 = no limit)"))
+        det_grid.addWidget(lim_widget, 6, 1)
 
-        btn_frame = ttk.Frame(det_frame)
-        btn_frame.grid(row=7, column=0, columnspan=2, pady=(10, 0))
-        self.save_btn = ttk.Button(btn_frame, text="Save Position", command=self.save_position)
-        self.save_btn.pack(side=tk.LEFT, padx=5)
-        ttk.Button(btn_frame, text="Clear Form", command=self.clear_form).pack(side=tk.LEFT, padx=5)
+        # Buttons
+        btn_row = QHBoxLayout()
+        self.save_btn = QPushButton("Save Position")
+        self.save_btn.clicked.connect(self.save_position)
+        btn_row.addWidget(self.save_btn)
+        self.clear_btn = QPushButton("Clear Form")
+        self.clear_btn.clicked.connect(self.clear_form)
+        btn_row.addWidget(self.clear_btn)
+        det_grid.addLayout(btn_row, 7, 0, 1, 2)
 
         # --- Generate ---
-        gen_frame = ttk.LabelFrame(main_frame, text="Generate Webpage", padding="5")
-        gen_frame.pack(fill=tk.X, pady=(5, 0))
+        gen_group = QGroupBox("Generate Webpage")
+        main_layout.addWidget(gen_group)
+        gen_vlay = QVBoxLayout(gen_group)
 
-        self.gen_status = ttk.Label(gen_frame, text="", font=("Arial", 9))
-        self.gen_status.pack(anchor="w", pady=(0, 5))
+        self.gen_status = QLabel("")
+        gen_vlay.addWidget(self.gen_status)
 
-        ttk.Button(gen_frame, text="Generate positions.html", command=self.generate_page).pack()
+        self.gen_btn = QPushButton("Generate positions.html")
+        self.gen_btn.clicked.connect(self.generate_page)
+        gen_vlay.addWidget(self.gen_btn)
 
         self.refresh_list()
 
     def refresh_list(self):
-        self.listbox.delete(0, tk.END)
+        self.listbox.clear()
         self.positions = list_positions()
         for f, d in self.positions:
             title = d.get("title", "[error]")
@@ -253,104 +307,107 @@ class ManagePositionsGUI:
             active = is_active(d)
             padded_status = status[:22].ljust(22)
             display = f"  {padded_status}  {title}"
-            self.listbox.insert(tk.END, display)
+            item = QListWidgetItem(display)
+            item.setData(Qt.ItemDataRole.UserRole, f)
+            self.listbox.addItem(item)
 
     def add_position(self):
         self.editing_filename = None
         self.clear_form()
-        self.title_entry.focus()
+        self.title_entry.setFocus()
 
     def edit_position(self):
-        sel = self.listbox.curselection()
-        if not sel:
-            messagebox.showinfo("No Selection", "Select a position to edit.")
+        sel = self.listbox.currentRow()
+        if sel < 0:
+            QMessageBox.information(self, "No Selection", "Select a position to edit.")
             return
-        idx = sel[0]
-        filename, data = self.positions[idx]
+        filename, data = self.positions[sel]
         self.editing_filename = filename
-        self.title_entry.delete(0, tk.END)
-        self.title_entry.insert(0, data.get("title", ""))
+        self.title_entry.setText(data.get("title", ""))
         status = data.get("status", "")
         if status in STATUS_OPTIONS:
-            self.status_combo.set(status)
+            self.status_combo.setCurrentText(status)
         else:
-            self.status_combo.current(0)
-        self.desc_text.delete("1.0", tk.END)
-        self.desc_text.insert("1.0", data.get("description", ""))
-        self.public_var.set(data.get("public", True))
-        self.limit_spin.set(data.get("day_limit", 90))
+            self.status_combo.setCurrentIndex(0)
+        self.desc_text.setPlainText(data.get("description", ""))
+        self.public_cb.setChecked(data.get("public", True))
+        self.limit_spin.setValue(data.get("day_limit", 90))
+
         img = data.get("image", "")
         if img:
             abs_img = os.path.join(BASE_DIR, img)
             if os.path.exists(abs_img):
                 self.selected_image_path = abs_img
-                self.image_label.config(text=os.path.basename(img))
+                self.image_label.setText(os.path.basename(img))
             else:
                 self.selected_image_path = ""
-                self.image_label.config(text="Image file missing")
+                self.image_label.setText("Image file missing")
         else:
             self.selected_image_path = ""
-            self.image_label.config(text="No image selected")
+            self.image_label.setText("No image selected")
 
         att = data.get("attachment", "")
         if att:
             abs_att = os.path.join(BASE_DIR, att)
             if os.path.exists(abs_att):
                 self.selected_attachment_path = abs_att
-                self.attachment_label.config(text=os.path.basename(att))
+                self.attachment_label.setText(os.path.basename(att))
             else:
                 self.selected_attachment_path = ""
-                self.attachment_label.config(text="Attachment file missing")
+                self.attachment_label.setText("Attachment file missing")
         else:
             self.selected_attachment_path = ""
-            self.attachment_label.config(text="No file selected")
+            self.attachment_label.setText("No file selected")
 
     def delete_position(self):
-        sel = self.listbox.curselection()
-        if not sel:
-            messagebox.showinfo("No Selection", "Select a position to delete.")
+        sel = self.listbox.currentRow()
+        if sel < 0:
+            QMessageBox.information(self, "No Selection", "Select a position to delete.")
             return
-        idx = sel[0]
-        filename, data = self.positions[idx]
+        filename, data = self.positions[sel]
         title = data.get("title", filename)
-        if not messagebox.askyesno("Confirm Delete", f"Delete position \"{title}\"?"):
+        reply = QMessageBox.question(
+            self, "Confirm Delete", f'Delete position "{title}"?',
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+        if reply != QMessageBox.StandardButton.Yes:
             return
         try:
             delete_position_file(filename)
             self.refresh_list()
             self.clear_form()
-            messagebox.showinfo("Deleted", f"\"{title}\" deleted.")
+            QMessageBox.information(self, "Deleted", f'"{title}" deleted.')
         except Exception as e:
-            messagebox.showerror("Error", f"Failed to delete: {e}")
+            QMessageBox.critical(self, "Error", f"Failed to delete: {e}")
 
     def select_image(self):
-        file_path = filedialog.askopenfilename(
-            title="Select Image",
-            filetypes=(("Image files", "*.jpg *.jpeg *.png *.gif *.webp"), ("All files", "*.*"))
+        file_path, _ = QFileDialog.getOpenFileName(
+            self, "Select Image", "",
+            "Image files (*.jpg *.jpeg *.png *.gif *.webp);;All files (*.*)"
         )
         if file_path:
             self.selected_image_path = file_path
-            self.image_label.config(text=os.path.basename(file_path))
+            self.image_label.setText(os.path.basename(file_path))
 
     def select_attachment(self):
-        file_path = filedialog.askopenfilename(
-            title="Select Attachment",
-            filetypes=(("Documents", "*.pdf *.doc *.docx"), ("All files", "*.*"))
+        file_path, _ = QFileDialog.getOpenFileName(
+            self, "Select Attachment", "",
+            "Documents (*.pdf *.doc *.docx);;All files (*.*)"
         )
         if file_path:
             self.selected_attachment_path = file_path
-            self.attachment_label.config(text=os.path.basename(file_path))
+            self.attachment_label.setText(os.path.basename(file_path))
 
     def save_position(self):
-        title = self.title_entry.get().strip()
-        status = self.status_combo.get().strip()
-        description = self.desc_text.get("1.0", tk.END).strip()
+        title = self.title_entry.text().strip()
+        status = self.status_combo.currentText().strip()
+        description = self.desc_text.toPlainText().strip()
 
         if not title:
-            messagebox.showwarning("Validation", "Title is required.")
+            QMessageBox.warning(self, "Validation", "Title is required.")
             return
         if not status:
-            messagebox.showwarning("Validation", "Status is required.")
+            QMessageBox.warning(self, "Validation", "Status is required.")
             return
 
         if self.editing_filename:
@@ -375,7 +432,7 @@ class ManagePositionsGUI:
                 pass
 
         image_web_path = old_image if old_image else ""
-        if self.selected_image_path and self.image_label.cget("text") != "Image file missing":
+        if self.selected_image_path and self.image_label.text() != "Image file missing":
             abs_selected = os.path.abspath(self.selected_image_path)
             ext = os.path.splitext(self.selected_image_path)[1].lower()
             new_img_name = slugify(title) + ext
@@ -384,12 +441,12 @@ class ManagePositionsGUI:
                 try:
                     shutil.copy(self.selected_image_path, dest_path)
                 except Exception as e:
-                    messagebox.showerror("Error", f"Failed to copy image: {e}")
+                    QMessageBox.critical(self, "Error", f"Failed to copy image: {e}")
                     return
             image_web_path = f"assets/positions/{new_img_name}"
 
         attachment_web_path = old_attachment if old_attachment else ""
-        if self.selected_attachment_path and self.attachment_label.cget("text") != "Attachment file missing":
+        if self.selected_attachment_path and self.attachment_label.text() != "Attachment file missing":
             abs_selected = os.path.abspath(self.selected_attachment_path)
             ext = os.path.splitext(self.selected_attachment_path)[1].lower()
             new_att_name = slugify(title) + ext
@@ -398,7 +455,7 @@ class ManagePositionsGUI:
                 try:
                     shutil.copy(self.selected_attachment_path, dest_path)
                 except Exception as e:
-                    messagebox.showerror("Error", f"Failed to copy attachment: {e}")
+                    QMessageBox.critical(self, "Error", f"Failed to copy attachment: {e}")
                     return
             attachment_web_path = f"assets/positions/{new_att_name}"
 
@@ -408,8 +465,8 @@ class ManagePositionsGUI:
             "description": description,
             "image": image_web_path,
             "attachment": attachment_web_path,
-            "public": self.public_var.get(),
-            "day_limit": int(self.limit_spin.get()),
+            "public": self.public_cb.isChecked(),
+            "day_limit": int(self.limit_spin.value()),
             "created_at": datetime.now().strftime("%Y-%m-%d")
         }
 
@@ -424,20 +481,20 @@ class ManagePositionsGUI:
             save_position(filename, data)
             self.editing_filename = filename
             self.refresh_list()
-            messagebox.showinfo("Saved", f"\"{title}\" saved.")
+            QMessageBox.information(self, "Saved", f'"{title}" saved.')
         except Exception as e:
-            messagebox.showerror("Error", f"Failed to save: {e}")
+            QMessageBox.critical(self, "Error", f"Failed to save: {e}")
 
     def clear_form(self):
-        self.title_entry.delete(0, tk.END)
-        self.status_combo.current(0)
-        self.desc_text.delete("1.0", tk.END)
+        self.title_entry.clear()
+        self.status_combo.setCurrentIndex(0)
+        self.desc_text.clear()
         self.selected_image_path = ""
-        self.image_label.config(text="No image selected")
+        self.image_label.setText("No image selected")
         self.selected_attachment_path = ""
-        self.attachment_label.config(text="No file selected")
-        self.public_var.set(True)
-        self.limit_spin.set(90)
+        self.attachment_label.setText("No file selected")
+        self.public_cb.setChecked(True)
+        self.limit_spin.setValue(90)
         self.editing_filename = None
 
     def generate_page(self):
@@ -453,21 +510,31 @@ class ManagePositionsGUI:
                     ["git", "commit", "-m", f"Update open positions page ({count} active)"],
                     check=True, cwd=BASE_DIR, capture_output=True, text=True
                 )
-                git_msg = " (committed to Git)"
+                subprocess.run(
+                    ["git", "push"],
+                    check=True, cwd=BASE_DIR, capture_output=True, text=True
+                )
+                git_msg = " (committed and pushed to Git)"
             except Exception as e:
                 git_msg = f" (Git: {e})"
 
-            self.gen_status.config(text=f"OK — {count} active position(s){git_msg}", foreground="green")
-            messagebox.showinfo("Success", f"Generated positions.html with {count} active position(s).{git_msg}")
+            self.gen_status.setText(f"OK \u2014 {count} active position(s){git_msg}")
+            self.gen_status.setStyleSheet("color: green;")
+            QMessageBox.information(
+                self, "Success",
+                f"Generated positions.html with {count} active position(s).{git_msg}"
+            )
         except Exception as e:
-            self.gen_status.config(text=f"Error: {e}", foreground="red")
-            messagebox.showerror("Error", f"Failed to generate page: {e}")
+            self.gen_status.setText(f"Error: {e}")
+            self.gen_status.setStyleSheet("color: red;")
+            QMessageBox.critical(self, "Error", f"Failed to generate page: {e}")
 
 
 if __name__ == "__main__":
     if not os.path.exists(HTML_FILE):
         print(f"Error: {HTML_FILE} not found.")
     else:
-        root = tk.Tk()
-        app = ManagePositionsGUI(root)
-        root.mainloop()
+        app = QApplication(sys.argv)
+        window = ManagePositionsGUI()
+        window.show()
+        sys.exit(app.exec())

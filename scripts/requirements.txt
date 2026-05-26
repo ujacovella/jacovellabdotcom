@@ -1,1 +1,4 @@
+# GUI scripts need PyQt6; install with: pip install PyQt6
+PyQt6>=6.4
+
 # generate_publications.py is self-contained (stdlib only); no external deps needed.
