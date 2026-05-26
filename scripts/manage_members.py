@@ -606,7 +606,7 @@ class ManageMembersGUI:
             git_msg = ""
             try:
                 subprocess.run(
-                    ["git", "add", HTML_FILE, THESES_FILE],
+                    ["git", "add", HTML_FILE, THESES_FILE, PHOTOS_DIR],
                     check=True, cwd=BASE_DIR, capture_output=True, text=True
                 )
                 subprocess.run(
