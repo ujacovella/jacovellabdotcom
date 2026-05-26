@@ -53,20 +53,8 @@
       <div class="section-heading">Open positions</div>
       <p style="margin-bottom: 2rem; max-width: 60ch; color: var(--muted);">We are always looking for motivated PhD students and Postdoctoral fellows to join our group. If you are interested in our research, please contact Dr. Ugo Jacovella with your CV and a brief description of your research interests.</p>
       
-                                                      <!-- POSITION START: bachelor-position.json -->
-        <div class="position-card" data-pos="bachelor-position.json">
-          <span class="position-badge" style="background:#e8f5e9;color:#2e7d32">Bachelor internship</span>
-          <img src="assets/positions/bachelor-position.png" alt="Bachelor position" class="position-thumb" loading="lazy">
-          <h3>Bachelor position</h3>
-          <div class="position-details" style="display:none">
-            <p class="detail-description">This is a bachelor position</p>
-            <p class="detail-image">assets/positions/bachelor-position.png</p>
-            <p class="detail-attachment"></p>
-          </div>
-        </div>
-        <!-- POSITION END: bachelor-position.json -->
-        <!-- POSITION START: new-position.json -->
-        <div class="position-card" data-pos="new-position.json">
+                                                              <!-- POSITION START: new-position.json -->
+        <div class="position-card" data-pos="new-position.json" data-created="2026-05-20" data-limit="90">
           <span class="position-badge" style="background:#fce4ec;color:#c62828">PhD</span>
           <img src="assets/positions/new-position.png" alt="New position" class="position-thumb" loading="lazy">
           <h3>New position</h3>
@@ -77,6 +65,18 @@
           </div>
         </div>
         <!-- POSITION END: new-position.json -->
+        <!-- POSITION START: position-created-on-may-26.json -->
+        <div class="position-card" data-pos="position-created-on-may-26.json" data-created="2026-05-26" data-limit="1">
+          <span class="position-badge" style="background:#e3f2fd;color:#1565c0">Master internship</span>
+          <h3>Position created on May 26</h3>
+          <div class="position-details" style="display:none">
+            <p class="detail-description">Position created on May 26Position created on May 26Position created on May 26Position created on May 26Position created on May 26Position created on May 26Position created on May 26Position created on May 26Position created on May 26Position created on May 26Position created on May 26Position created on May 26Position created on May 26Position created on May 26Position created on May 26Position created on May 26Position created on May 26Position created on May 26Position created on May 26Position created on May 26Position created on May 26</p>
+            <p class="detail-image"></p>
+            <p class="detail-attachment"></p>
+          </div>
+        </div>
+        <!-- POSITION END: position-created-on-may-26.json -->
+      
       
       
       
@@ -152,7 +152,23 @@
     const closeBtn = modal.querySelector('.modal-close');
     const cards = document.querySelectorAll('.position-card');
 
+    let anyVisible = false;
     cards.forEach(card => {
+      const created = card.dataset.created;
+      const limit = parseInt(card.dataset.limit, 10);
+      if (limit && created) {
+        const parts = created.split('-').map(Number);
+        const createdDate = new Date(parts[0], parts[1] - 1, parts[2]);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const diff = Math.round((today - createdDate) / (1000 * 60 * 60 * 24));
+        if (diff > limit) {
+          card.style.display = 'none';
+          return;
+        }
+      }
+      anyVisible = true;
+
       card.addEventListener('click', () => {
         const details = card.querySelector('.position-details');
         const title = card.querySelector('h3').innerText;
@@ -195,6 +211,14 @@
         document.body.style.overflow = 'hidden';
       });
     });
+
+    if (!anyVisible) {
+      const section = document.querySelector('section.reveal');
+      const fallback = document.createElement('div');
+      fallback.className = 'position-card';
+      fallback.innerHTML = '<h3>No specific open positions at the moment</h3><p>Spontaneous applications are always welcome.</p>';
+      section.appendChild(fallback);
+    }
 
     const closeModal = () => {
       modal.classList.remove('active');
