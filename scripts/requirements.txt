@@ -1,2 +1,1 @@
-scholarly
-fp-free-proxy
+# generate_publications.py is self-contained (stdlib only); no external deps needed.
