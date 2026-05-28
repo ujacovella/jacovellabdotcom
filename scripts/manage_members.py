@@ -1,22 +1,10 @@
-"""
-Manage Group Members — PyQt6 GUI editor for members.
-Generates group.html and theses.html from JSON data in assets/members/.
-"""
-
-import sys
+import tkinter as tk
+from tkinter import ttk, filedialog, messagebox
+import shutil
 import os
 import re
 import json
-import shutil
 import subprocess
-from PyQt6.QtWidgets import (
-    QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
-    QGridLayout, QLabel, QLineEdit, QTextEdit, QPushButton,
-    QComboBox, QCheckBox, QListWidget, QListWidgetItem, QScrollArea,
-    QGroupBox, QFrame, QMessageBox, QFileDialog, QSizePolicy
-)
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QAction
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HTML_FILE = os.path.join(BASE_DIR, "group.html")
@@ -77,12 +65,9 @@ def get_initials(data):
     middle = data.get("middle", "")
     last = data.get("last", "")
     initials = ""
-    if given:
-        initials += given[0].upper()
-    if middle:
-        initials += middle[0].upper()
-    if last:
-        initials += last[0].upper()
+    if given: initials += given[0].upper()
+    if middle: initials += middle[0].upper()
+    if last: initials += last[0].upper()
     return initials
 
 
@@ -115,16 +100,19 @@ def generate_card_html(data, filename):
     title = data.get("title", "")
     role = data.get("role", "")
     is_alumni = data.get("alumni", False)
+    is_senior = data.get("senior", False)
     email = data.get("email", "")
     master = data.get("master", "")
     phd = data.get("phd", "")
     project = data.get("project", "")
     photo = data.get("photo", "")
     thesis_title = data.get("thesis_title", "")
+
     name = format_name(data)
     display_name = f"{title} {name}".strip() if title else name
     initials = get_initials(data)
-    if is_alumni:
+
+    if is_alumni and not is_senior:
         bg_color = ALUMNI_BG
         text_color = ALUMNI_FG
         opacity_style = ' style="opacity: 0.7;"'
@@ -132,16 +120,20 @@ def generate_card_html(data, filename):
         c_idx = len(name) % len(MEMBER_COLORS)
         bg_color, text_color = MEMBER_COLORS[c_idx]
         opacity_style = ''
+
     lines = []
     lines.append(f'        <!-- MEMBER START: {name} -->')
-    lines.append(f'        <div class="member-card" data-pi="false" data-alumni="{str(is_alumni).lower()}"{opacity_style}>')
+    lines.append(f'        <div class="member-card" data-pi="false" data-senior="{str(is_senior).lower()}" data-alumni="{str(is_alumni).lower()}"{opacity_style}>')
+
     if photo:
         web_path = photo.replace("\\", "/")
         lines.append(f'          <img src="{web_path}" alt="{name}" class="member-avatar" style="object-fit: cover;">')
     else:
         lines.append(f'          <div class="member-avatar" style="background:{bg_color};color:{text_color}">{initials}</div>')
+
     lines.append(f'          <div class="member-name">{escape_html(display_name)}</div>')
     lines.append(f'          <div class="member-role">{escape_html(role)}</div>')
+
     lines.append(f'          <div class="member-details">')
     lines.append(f'            <p class="detail-email">{escape_html(email)}</p>')
     lines.append(f'            <p class="detail-master">{escape_html(master)}</p>')
@@ -150,6 +142,7 @@ def generate_card_html(data, filename):
     lines.append(f'          </div>')
     lines.append(f'        </div>')
     lines.append(f'        <!-- MEMBER END: {name} -->')
+
     return "\n".join(lines)
 
 
@@ -157,16 +150,21 @@ def generate_thesis_entry_html(data):
     thesis_title = data.get("thesis_title", "")
     thesis_link = data.get("thesis_link", "")
     phd_completed = data.get("phd_completed", False)
+
     if not thesis_title:
         return "", ""
+
     name = format_name(data)
+
     href_attr = f' href="{thesis_link}" target="_blank" rel="noopener noreferrer"' if thesis_link else ""
     tag = "a" if thesis_link else "span"
     link_style = 'text-decoration: none; color: var(--accent);' if thesis_link else 'color: var(--text);'
+
     entry = f'''            <div class="thesis-entry">
               <strong>{escape_html(name)}</strong><br>
               <{tag}{href_attr} style="{link_style} font-size: 14px;">"{escape_html(thesis_title)}"</{tag}>
             </div>'''
+
     if phd_completed:
         return "", entry
     else:
@@ -176,30 +174,46 @@ def generate_thesis_entry_html(data):
 def regenerate_html():
     all_members = list_members()
     members_count = len(all_members)
-    # group.html
+
+    # --- Update group.html ---
+    senior_cards = []
     members_cards = []
     alumni_cards = []
     for f, d in all_members:
         card = generate_card_html(d, f)
-        if d.get("alumni", False):
+        if d.get("senior", False):
+            senior_cards.append(card)
+        elif d.get("alumni", False):
             alumni_cards.append(card)
         else:
             members_cards.append(card)
+
     with open(HTML_FILE, 'r', encoding='utf-8') as f:
         group_content = f.read()
+
     member_pattern = r'(<!-- MEMBER_CARDS_START -->).*?(<!-- MEMBER_CARDS_END -->)'
     member_replacement = r'\1\n' + '\n'.join(members_cards) + '\n      \\2'
     if re.search(member_pattern, group_content, re.DOTALL):
         group_content = re.sub(member_pattern, member_replacement, group_content, flags=re.DOTALL)
     else:
         raise ValueError("Could not find MEMBER_CARDS markers in group.html")
+
+    senior_pattern = r'(<!-- SENIOR_CARDS_START -->).*?(<!-- SENIOR_CARDS_END -->)'
+    senior_replacement = r'\1\n' + '\n'.join(senior_cards) + '\n      \\2'
+    if re.search(senior_pattern, group_content, re.DOTALL):
+        group_content = re.sub(senior_pattern, senior_replacement, group_content, flags=re.DOTALL)
+    else:
+        raise ValueError("Could not find SENIOR_CARDS markers in group.html")
+
     alumni_pattern = r'(<!-- ALUMNI_CARDS_START -->).*?(<!-- ALUMNI_CARDS_END -->)'
     alumni_replacement = r'\1\n' + '\n'.join(alumni_cards) + '\n      \\2'
     if re.search(alumni_pattern, group_content, re.DOTALL):
         group_content = re.sub(alumni_pattern, alumni_replacement, group_content, flags=re.DOTALL)
+
     with open(HTML_FILE, 'w', encoding='utf-8') as f:
         f.write(group_content)
-    # theses.html
+
+    # --- Update theses.html ---
     ongoing_entries = []
     completed_entries = []
     for f, d in all_members:
@@ -208,330 +222,323 @@ def regenerate_html():
             ongoing_entries.append(ongoing)
         if completed:
             completed_entries.append(completed)
+
     with open(THESES_FILE, 'r', encoding='utf-8') as f:
         theses_content = f.read()
+
     ongoing_pattern = r'(<!-- THESES_ONGOING_START -->).*?(<!-- THESES_ONGOING_END -->)'
     ongoing_replacement = r'\1\n' + ''.join(ongoing_entries) + '\n      \\2'
     if re.search(ongoing_pattern, theses_content, re.DOTALL):
         theses_content = re.sub(ongoing_pattern, ongoing_replacement, theses_content, flags=re.DOTALL)
     else:
         raise ValueError("Could not find THESES_ONGOING markers in theses.html")
+
     completed_pattern = r'(<!-- THESES_COMPLETED_START -->).*?(<!-- THESES_COMPLETED_END -->)'
     completed_replacement = r'\1\n' + ''.join(completed_entries) + '\n      \\2'
     if re.search(completed_pattern, theses_content, re.DOTALL):
         theses_content = re.sub(completed_pattern, completed_replacement, theses_content, flags=re.DOTALL)
     else:
         raise ValueError("Could not find THESES_COMPLETED markers in theses.html")
+
     with open(THESES_FILE, 'w', encoding='utf-8') as f:
         f.write(theses_content)
+
     return members_count
 
 
-class ManageMembersGUI(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Manage Group Members")
-        self.setMinimumSize(640, 840)
-        self.resize(640, 840)
+class ManageMembersGUI:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Manage Group Members")
+        self.root.geometry("640x840")
         self.selected_photo_path = ""
         self.editing_filename = None
 
         os.makedirs(MEMBERS_DIR, exist_ok=True)
         os.makedirs(PHOTOS_DIR, exist_ok=True)
 
-        central = QWidget()
-        self.setCentralWidget(central)
-        main_layout = QVBoxLayout(central)
-        main_layout.setContentsMargins(10, 10, 10, 10)
+        # --- Scrollable wrapper ---
+        outer = ttk.Frame(root)
+        outer.pack(fill=tk.BOTH, expand=True)
 
-        scroll = QScrollArea()
-        scroll.setWidgetResizable(True)
-        main_layout.addWidget(scroll)
+        self.canvas = tk.Canvas(outer, borderwidth=0, highlightthickness=0)
+        scrollbar = ttk.Scrollbar(outer, orient="vertical", command=self.canvas.yview)
+        self.canvas.configure(yscrollcommand=scrollbar.set)
 
-        scroll_content = QWidget()
-        scroll.setWidget(scroll_content)
-        inner_layout = QVBoxLayout(scroll_content)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        self.scrollable_frame = ttk.Frame(self.canvas, padding="10")
+        self.scrollable_frame.bind(
+            "<Configure>",
+            lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+        )
+
+        self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
+
+        def _on_canvas_configure(e):
+            self.canvas.itemconfig(self.canvas.find_withtag("all")[0], width=e.width)
+        self.canvas.bind("<Configure>", _on_canvas_configure)
+
+        def _on_mousewheel(event):
+            if event.delta:
+                self.canvas.yview_scroll(-1 if event.delta > 0 else 1, "units")
+        self.canvas.bind_all("<MouseWheel>", _on_mousewheel)
+
+        main_frame = self.scrollable_frame
 
         # --- Member List ---
-        list_group = QGroupBox("Existing Members")
-        inner_layout.addWidget(list_group)
-        list_vlay = QVBoxLayout(list_group)
+        list_frame = ttk.LabelFrame(main_frame, text="Existing Members", padding="5")
+        list_frame.pack(fill=tk.BOTH, pady=(0, 5))
 
-        list_btn_row = QHBoxLayout()
-        list_vlay.addLayout(list_btn_row)
-        self.btn_add = QPushButton("Add New")
-        self.btn_add.clicked.connect(self.add_member)
-        list_btn_row.addWidget(self.btn_add)
-        self.btn_edit = QPushButton("Edit Selected")
-        self.btn_edit.clicked.connect(self.edit_member)
-        list_btn_row.addWidget(self.btn_edit)
-        self.btn_delete = QPushButton("Delete Selected")
-        self.btn_delete.clicked.connect(self.delete_member)
-        list_btn_row.addWidget(self.btn_delete)
+        list_btn_frame = ttk.Frame(list_frame)
+        list_btn_frame.pack(fill=tk.X, pady=(0, 5))
+        ttk.Button(list_btn_frame, text="Add New", command=self.add_member).pack(side=tk.LEFT, padx=(0, 4))
+        ttk.Button(list_btn_frame, text="Edit Selected", command=self.edit_member).pack(side=tk.LEFT, padx=(0, 4))
+        ttk.Button(list_btn_frame, text="Delete Selected", command=self.delete_member).pack(side=tk.LEFT)
 
-        self.listbox = QListWidget()
-        self.listbox.setMinimumHeight(150)
-        self.listbox.itemClicked.connect(self.on_list_select)
-        list_vlay.addWidget(self.listbox)
+        self.listbox = tk.Listbox(list_frame, height=6, font=("Consolas", 10))
+        self.listbox.pack(fill=tk.BOTH, expand=True)
+        self.listbox.bind('<<ListboxSelect>>', self.on_select)
 
         # --- Member Details ---
-        det_group = QGroupBox("Member Details")
-        inner_layout.addWidget(det_group)
-        det_grid = QGridLayout(det_group)
+        det_frame = ttk.LabelFrame(main_frame, text="Member Details", padding="10")
+        det_frame.pack(fill=tk.BOTH, expand=True, pady=(5, 5))
 
         # Row 0: Title
-        det_grid.addWidget(QLabel("Title:"), 0, 0, Qt.AlignmentFlag.AlignRight)
-        self.title_combo = QComboBox()
-        self.title_combo.addItems(["", "Dr.", "Prof.", "Mr.", "Ms."])
-        self.title_combo.setCurrentIndex(0)
-        self.title_combo.setMinimumWidth(200)
-        det_grid.addWidget(self.title_combo, 0, 1)
+        ttk.Label(det_frame, text="Title:").grid(row=0, column=0, sticky="w", pady=2)
+        self.title_combo = ttk.Combobox(det_frame, values=["", "Dr.", "Prof.", "Mr.", "Ms."], width=27)
+        self.title_combo.current(0)
+        self.title_combo.grid(row=0, column=1, pady=2, sticky="w")
 
         # Row 1: Given Name
-        det_grid.addWidget(QLabel("Given Name: *"), 1, 0, Qt.AlignmentFlag.AlignRight)
-        self.given_entry = QLineEdit()
-        self.given_entry.setMinimumWidth(200)
-        det_grid.addWidget(self.given_entry, 1, 1)
+        ttk.Label(det_frame, text="Given Name: *").grid(row=1, column=0, sticky="w", pady=2)
+        self.given_entry = ttk.Entry(det_frame, width=30)
+        self.given_entry.grid(row=1, column=1, pady=2, sticky="w")
 
         # Row 2: Middle Name
-        det_grid.addWidget(QLabel("Middle Name:"), 2, 0, Qt.AlignmentFlag.AlignRight)
-        self.middle_entry = QLineEdit()
-        self.middle_entry.setMinimumWidth(200)
-        det_grid.addWidget(self.middle_entry, 2, 1)
+        ttk.Label(det_frame, text="Middle Name:").grid(row=2, column=0, sticky="w", pady=2)
+        self.middle_entry = ttk.Entry(det_frame, width=30)
+        self.middle_entry.grid(row=2, column=1, pady=2, sticky="w")
 
         # Row 3: Last Name
-        det_grid.addWidget(QLabel("Last Name: *"), 3, 0, Qt.AlignmentFlag.AlignRight)
-        self.last_entry = QLineEdit()
-        self.last_entry.setMinimumWidth(200)
-        det_grid.addWidget(self.last_entry, 3, 1)
+        ttk.Label(det_frame, text="Last Name: *").grid(row=3, column=0, sticky="w", pady=2)
+        self.last_entry = ttk.Entry(det_frame, width=30)
+        self.last_entry.grid(row=3, column=1, pady=2, sticky="w")
 
         # Row 4: Role
-        det_grid.addWidget(QLabel("Role: *"), 4, 0, Qt.AlignmentFlag.AlignRight)
-        self.role_combo = QComboBox()
-        self.role_combo.addItems(ROLE_OPTIONS)
-        self.role_combo.setCurrentIndex(0)
-        self.role_combo.setMinimumWidth(200)
-        det_grid.addWidget(self.role_combo, 4, 1)
+        ttk.Label(det_frame, text="Role: *").grid(row=4, column=0, sticky="w", pady=2)
+        self.role_combo = ttk.Combobox(det_frame, values=ROLE_OPTIONS, width=27, state="readonly")
+        self.role_combo.current(0)
+        self.role_combo.grid(row=4, column=1, pady=2, sticky="w")
 
-        # Row 5: Alumni
-        det_grid.addWidget(QLabel("Status:"), 5, 0, Qt.AlignmentFlag.AlignRight)
-        self.alumni_cb = QCheckBox("Alumni?")
-        det_grid.addWidget(self.alumni_cb, 5, 1)
+        # Row 5: Status
+        ttk.Label(det_frame, text="Status:").grid(row=5, column=0, sticky="w", pady=2)
+        status_frame = ttk.Frame(det_frame)
+        status_frame.grid(row=5, column=1, sticky="w", pady=2)
+        self.senior_var = tk.BooleanVar(value=False)
+        ttk.Checkbutton(status_frame, text="Senior Collaborator?", variable=self.senior_var).pack(side=tk.LEFT, padx=(0, 10))
+        self.alumni_var = tk.BooleanVar(value=False)
+        ttk.Checkbutton(status_frame, text="Alumni?", variable=self.alumni_var).pack(side=tk.LEFT)
 
-        sep = QFrame()
-        sep.setFrameShape(QFrame.Shape.HLine)
-        sep.setFrameShadow(QFrame.Shadow.Sunken)
-        det_grid.addWidget(sep, 6, 0, 1, 2)
+        ttk.Separator(det_frame, orient='horizontal').grid(row=6, column=0, columnspan=2, sticky="ew", pady=8)
 
         # Row 7: Email
-        det_grid.addWidget(QLabel("Email:"), 7, 0, Qt.AlignmentFlag.AlignRight)
-        self.email_entry = QLineEdit()
-        self.email_entry.setMinimumWidth(200)
-        det_grid.addWidget(self.email_entry, 7, 1)
+        ttk.Label(det_frame, text="Email:").grid(row=7, column=0, sticky="w", pady=2)
+        self.email_entry = ttk.Entry(det_frame, width=30)
+        self.email_entry.grid(row=7, column=1, pady=2, sticky="w")
 
         # Row 8: Training 1
-        det_grid.addWidget(QLabel("Training Line 1:"), 8, 0, Qt.AlignmentFlag.AlignRight)
-        self.master_entry = QLineEdit()
-        self.master_entry.setMinimumWidth(200)
-        det_grid.addWidget(self.master_entry, 8, 1)
+        ttk.Label(det_frame, text="Training Line 1:").grid(row=8, column=0, sticky="w", pady=2)
+        self.master_entry = ttk.Entry(det_frame, width=30)
+        self.master_entry.grid(row=8, column=1, pady=2, sticky="w")
 
         # Row 9: Training 2
-        det_grid.addWidget(QLabel("Training Line 2:"), 9, 0, Qt.AlignmentFlag.AlignRight)
-        self.phd_entry = QLineEdit()
-        self.phd_entry.setMinimumWidth(200)
-        det_grid.addWidget(self.phd_entry, 9, 1)
+        ttk.Label(det_frame, text="Training Line 2:").grid(row=9, column=0, sticky="w", pady=2)
+        self.phd_entry = ttk.Entry(det_frame, width=30)
+        self.phd_entry.grid(row=9, column=1, pady=2, sticky="w")
 
         # Row 10: Project
-        det_grid.addWidget(QLabel("Current Project:"), 10, 0, Qt.AlignmentFlag.AlignRight)
-        self.project_text = QTextEdit()
-        self.project_text.setMinimumWidth(200)
-        self.project_text.setMaximumHeight(80)
-        det_grid.addWidget(self.project_text, 10, 1)
+        ttk.Label(det_frame, text="Current Project:").grid(row=10, column=0, sticky="w", pady=2)
+        self.project_text = tk.Text(det_frame, width=30, height=3)
+        self.project_text.grid(row=10, column=1, pady=2, sticky="w")
 
-        sep2 = QFrame()
-        sep2.setFrameShape(QFrame.Shape.HLine)
-        sep2.setFrameShadow(QFrame.Shadow.Sunken)
-        det_grid.addWidget(sep2, 11, 0, 1, 2)
+        ttk.Separator(det_frame, orient='horizontal').grid(row=11, column=0, columnspan=2, sticky="ew", pady=8)
 
         # Row 12: Photo
-        det_grid.addWidget(QLabel("Photo:"), 12, 0, Qt.AlignmentFlag.AlignRight)
-        photo_widget = QWidget()
-        photo_hbox = QHBoxLayout(photo_widget)
-        photo_hbox.setContentsMargins(0, 0, 0, 0)
-        self.btn_select_photo = QPushButton("Select Photo...")
-        self.btn_select_photo.clicked.connect(self.select_photo)
-        photo_hbox.addWidget(self.btn_select_photo)
-        self.photo_label = QLabel("No photo selected")
-        self.photo_label.setStyleSheet("color: gray; font-size: 11px;")
-        photo_hbox.addWidget(self.photo_label)
-        det_grid.addWidget(photo_widget, 12, 1)
+        ttk.Label(det_frame, text="Photo:").grid(row=12, column=0, sticky="w", pady=2)
+        photo_frame = ttk.Frame(det_frame)
+        photo_frame.grid(row=12, column=1, sticky="w", pady=2)
+        ttk.Button(photo_frame, text="Select Photo...", command=self.select_photo).pack(side=tk.LEFT)
+        self.photo_label = ttk.Label(photo_frame, text="No photo selected", font=("Arial", 8), foreground="gray")
+        self.photo_label.pack(side=tk.LEFT, padx=(5, 0))
 
-        sep3 = QFrame()
-        sep3.setFrameShape(QFrame.Shape.HLine)
-        sep3.setFrameShadow(QFrame.Shadow.Sunken)
-        det_grid.addWidget(sep3, 13, 0, 1, 2)
+        ttk.Separator(det_frame, orient='horizontal').grid(row=13, column=0, columnspan=2, sticky="ew", pady=8)
 
         # Row 14: Thesis Title
-        det_grid.addWidget(QLabel("PhD Title:"), 14, 0, Qt.AlignmentFlag.AlignRight)
-        self.thesis_title_entry = QLineEdit()
-        self.thesis_title_entry.setMinimumWidth(200)
-        det_grid.addWidget(self.thesis_title_entry, 14, 1)
+        ttk.Label(det_frame, text="PhD Title:").grid(row=14, column=0, sticky="w", pady=2)
+        self.thesis_title_entry = ttk.Entry(det_frame, width=30)
+        self.thesis_title_entry.grid(row=14, column=1, pady=2, sticky="w")
 
         # Row 15: Thesis Link
-        det_grid.addWidget(QLabel("Thesis Link:"), 15, 0, Qt.AlignmentFlag.AlignRight)
-        self.thesis_link_entry = QLineEdit()
-        self.thesis_link_entry.setMinimumWidth(200)
-        det_grid.addWidget(self.thesis_link_entry, 15, 1)
+        ttk.Label(det_frame, text="Thesis Link:").grid(row=15, column=0, sticky="w", pady=2)
+        self.thesis_link_entry = ttk.Entry(det_frame, width=30)
+        self.thesis_link_entry.grid(row=15, column=1, pady=2, sticky="w")
 
         # Row 16: PhD Completed
-        det_grid.addWidget(QLabel("PhD Completed?"), 16, 0, Qt.AlignmentFlag.AlignRight)
-        self.phd_completed_cb = QCheckBox("Yes")
-        det_grid.addWidget(self.phd_completed_cb, 16, 1)
+        ttk.Label(det_frame, text="PhD Completed?").grid(row=16, column=0, sticky="w", pady=2)
+        self.phd_completed_var = tk.BooleanVar(value=False)
+        ttk.Checkbutton(det_frame, text="Yes", variable=self.phd_completed_var).grid(row=16, column=1, sticky="w", pady=2)
 
         # Buttons
-        btn_row = QHBoxLayout()
-        self.save_btn = QPushButton("Save Member")
-        self.save_btn.clicked.connect(self.save_member)
-        btn_row.addWidget(self.save_btn)
-        self.clear_btn = QPushButton("Clear Form")
-        self.clear_btn.clicked.connect(self.clear_form)
-        btn_row.addWidget(self.clear_btn)
-        det_grid.addLayout(btn_row, 17, 0, 1, 2)
+        btn_frame = ttk.Frame(det_frame)
+        btn_frame.grid(row=17, column=0, columnspan=2, pady=(10, 0))
+        self.save_btn = ttk.Button(btn_frame, text="Save Member", command=self.save_member)
+        self.save_btn.pack(side=tk.LEFT, padx=5)
+        ttk.Button(btn_frame, text="Clear Form", command=self.clear_form).pack(side=tk.LEFT, padx=5)
 
         # --- Generate ---
-        gen_group = QGroupBox("Generate Webpage")
-        inner_layout.addWidget(gen_group)
-        gen_vlay = QVBoxLayout(gen_group)
+        gen_frame = ttk.LabelFrame(main_frame, text="Generate Webpage", padding="5")
+        gen_frame.pack(fill=tk.X, pady=(5, 0))
 
-        self.gen_status = QLabel("")
-        gen_vlay.addWidget(self.gen_status)
+        self.gen_status = ttk.Label(gen_frame, text="", font=("Arial", 9))
+        self.gen_status.pack(anchor="w", pady=(0, 5))
 
-        self.gen_btn = QPushButton("Generate group.html & theses.html")
-        self.gen_btn.clicked.connect(self.generate_page)
-        gen_vlay.addWidget(self.gen_btn)
+        ttk.Button(gen_frame, text="Generate group.html & theses.html", command=self.generate_page).pack()
 
         self.refresh_list()
 
     def refresh_list(self):
-        self.listbox.clear()
+        self.listbox.delete(0, tk.END)
         self.members = list_members()
         for f, d in self.members:
             name = format_name(d)
             role = d.get("role", "")
-            alumni = " [Alumni]" if d.get("alumni", False) else ""
+            tags = []
+            if d.get("senior", False):
+                tags.append("Senior")
+            if d.get("alumni", False):
+                tags.append("Alumni")
+            tag_str = f" [{', '.join(tags)}]" if tags else ""
             padded_role = role[:22].ljust(22)
-            display = f"  {padded_role}  {name}{alumni}"
-            item = QListWidgetItem(display)
-            item.setData(Qt.ItemDataRole.UserRole, f)
-            self.listbox.addItem(item)
+            display = f"  {padded_role}  {name}{tag_str}"
+            self.listbox.insert(tk.END, display)
 
-    def on_list_select(self, item):
-        fname = item.data(Qt.ItemDataRole.UserRole)
-        for f, d in self.members:
-            if f == fname:
-                self.load_member_to_form(f, d)
-                break
+    def on_select(self, event):
+        sel = self.listbox.curselection()
+        if not sel:
+            return
+        idx = sel[0]
+        filename, data = self.members[idx]
+        self.load_member_to_form(filename, data)
 
     def load_member_to_form(self, filename, data):
         self.editing_filename = filename
         title = data.get("title", "")
         if title in ["", "Dr.", "Prof.", "Mr.", "Ms."]:
-            self.title_combo.setCurrentText(title)
+            self.title_combo.set(title)
         else:
-            self.title_combo.setCurrentText("")
+            self.title_combo.set("")
 
-        self.given_entry.setText(data.get("given", ""))
-        self.middle_entry.setText(data.get("middle", ""))
-        self.last_entry.setText(data.get("last", ""))
+        self.given_entry.delete(0, tk.END)
+        self.given_entry.insert(0, data.get("given", ""))
+        self.middle_entry.delete(0, tk.END)
+        self.middle_entry.insert(0, data.get("middle", ""))
+        self.last_entry.delete(0, tk.END)
+        self.last_entry.insert(0, data.get("last", ""))
 
         role = data.get("role", "")
         if role in ROLE_OPTIONS:
-            self.role_combo.setCurrentText(role)
+            self.role_combo.set(role)
         else:
-            self.role_combo.setCurrentIndex(0)
+            self.role_combo.current(0)
 
-        self.alumni_cb.setChecked(data.get("alumni", False))
-        self.email_entry.setText(data.get("email", ""))
-        self.master_entry.setText(data.get("master", ""))
-        self.phd_entry.setText(data.get("phd", ""))
-        self.project_text.setPlainText(data.get("project", ""))
+        self.senior_var.set(data.get("senior", False))
+        self.alumni_var.set(data.get("alumni", False))
+        self.email_entry.delete(0, tk.END)
+        self.email_entry.insert(0, data.get("email", ""))
+        self.master_entry.delete(0, tk.END)
+        self.master_entry.insert(0, data.get("master", ""))
+        self.phd_entry.delete(0, tk.END)
+        self.phd_entry.insert(0, data.get("phd", ""))
+        self.project_text.delete("1.0", tk.END)
+        self.project_text.insert("1.0", data.get("project", ""))
 
         photo = data.get("photo", "")
         if photo:
             abs_photo = os.path.join(BASE_DIR, photo)
             if os.path.exists(abs_photo):
                 self.selected_photo_path = abs_photo
-                self.photo_label.setText(os.path.basename(photo))
+                self.photo_label.config(text=os.path.basename(photo))
             else:
                 self.selected_photo_path = ""
-                self.photo_label.setText("Photo file missing")
+                self.photo_label.config(text="Photo file missing")
         else:
             self.selected_photo_path = ""
-            self.photo_label.setText("No photo selected")
+            self.photo_label.config(text="No photo selected")
 
-        self.thesis_title_entry.setText(data.get("thesis_title", ""))
-        self.thesis_link_entry.setText(data.get("thesis_link", ""))
-        self.phd_completed_cb.setChecked(data.get("phd_completed", False))
+        self.thesis_title_entry.delete(0, tk.END)
+        self.thesis_title_entry.insert(0, data.get("thesis_title", ""))
+        self.thesis_link_entry.delete(0, tk.END)
+        self.thesis_link_entry.insert(0, data.get("thesis_link", ""))
+        self.phd_completed_var.set(data.get("phd_completed", False))
 
     def add_member(self):
         self.editing_filename = None
         self.clear_form()
-        self.given_entry.setFocus()
+        self.given_entry.focus()
 
     def edit_member(self):
-        sel = self.listbox.currentRow()
-        if sel < 0:
-            QMessageBox.information(self, "No Selection", "Select a member to edit.")
+        sel = self.listbox.curselection()
+        if not sel:
+            messagebox.showinfo("No Selection", "Select a member to edit.")
             return
-        filename, data = self.members[sel]
+        idx = sel[0]
+        filename, data = self.members[idx]
         self.load_member_to_form(filename, data)
 
     def delete_member(self):
-        sel = self.listbox.currentRow()
-        if sel < 0:
-            QMessageBox.information(self, "No Selection", "Select a member to delete.")
+        sel = self.listbox.curselection()
+        if not sel:
+            messagebox.showinfo("No Selection", "Select a member to delete.")
             return
-        filename, data = self.members[sel]
+        idx = sel[0]
+        filename, data = self.members[idx]
         name = format_name(data)
-        reply = QMessageBox.question(
-            self, "Confirm Delete", f'Delete member "{name}"?',
-            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
-        )
-        if reply != QMessageBox.StandardButton.Yes:
+        if not messagebox.askyesno("Confirm Delete", f'Delete member "{name}"?'):
             return
         try:
             delete_member_file(filename)
             self.refresh_list()
             self.clear_form()
-            QMessageBox.information(self, "Deleted", f'"{name}" deleted.')
+            messagebox.showinfo("Deleted", f'"{name}" deleted.')
         except Exception as e:
-            QMessageBox.critical(self, "Error", f"Failed to delete: {e}")
+            messagebox.showerror("Error", f"Failed to delete: {e}")
 
     def select_photo(self):
-        file_path, _ = QFileDialog.getOpenFileName(
-            self, "Select Photo", "",
-            "Image files (*.jpg *.jpeg *.png *.gif *.webp);;All files (*.*)"
+        file_path = filedialog.askopenfilename(
+            title="Select Photo",
+            filetypes=(("Image files", "*.jpg *.jpeg *.png *.gif *.webp"), ("All files", "*.*"))
         )
         if file_path:
             self.selected_photo_path = file_path
-            self.photo_label.setText(os.path.basename(file_path))
+            self.photo_label.config(text=os.path.basename(file_path))
 
     def save_member(self):
-        title = self.title_combo.currentText().strip()
-        given = self.given_entry.text().strip()
-        middle = self.middle_entry.text().strip()
-        last = self.last_entry.text().strip()
-        role = self.role_combo.currentText().strip()
-        email = self.email_entry.text().strip()
-        master = self.master_entry.text().strip()
-        phd_data = self.phd_entry.text().strip()
-        project = self.project_text.toPlainText().strip()
-        thesis_title = self.thesis_title_entry.text().strip()
-        thesis_link = self.thesis_link_entry.text().strip()
+        title = self.title_combo.get().strip()
+        given = self.given_entry.get().strip()
+        middle = self.middle_entry.get().strip()
+        last = self.last_entry.get().strip()
+        role = self.role_combo.get().strip()
+        email = self.email_entry.get().strip()
+        master = self.master_entry.get().strip()
+        phd = self.phd_entry.get().strip()
+        project = self.project_text.get("1.0", tk.END).strip()
+        thesis_title = self.thesis_title_entry.get().strip()
+        thesis_link = self.thesis_link_entry.get().strip()
 
         if not given or not last or not role:
-            QMessageBox.warning(self, "Validation",
-                                 "Given Name, Last Name, and Role are required.")
+            messagebox.showwarning("Validation", "Given Name, Last Name, and Role are required.")
             return
 
         if self.editing_filename:
@@ -555,7 +562,7 @@ class ManageMembersGUI(QMainWindow):
                 pass
 
         photo_web_path = old_photo if old_photo else ""
-        if self.selected_photo_path and self.photo_label.text() != "Photo file missing":
+        if self.selected_photo_path and self.photo_label.cget("text") != "Photo file missing":
             abs_selected = os.path.abspath(self.selected_photo_path)
             ext = os.path.splitext(self.selected_photo_path)[1].lower()
             name = f"{given} {last}"
@@ -567,7 +574,7 @@ class ManageMembersGUI(QMainWindow):
                     os.makedirs(PHOTOS_DIR, exist_ok=True)
                     shutil.copy(self.selected_photo_path, dest_path)
                 except Exception as e:
-                    QMessageBox.critical(self, "Error", f"Failed to copy photo: {e}")
+                    messagebox.showerror("Error", f"Failed to copy photo: {e}")
                     return
             photo_web_path = f"assets/group/{new_photo_name}"
 
@@ -577,42 +584,43 @@ class ManageMembersGUI(QMainWindow):
             "middle": middle,
             "last": last,
             "role": role,
-            "alumni": self.alumni_cb.isChecked(),
+            "senior": self.senior_var.get(),
+            "alumni": self.alumni_var.get(),
             "email": email,
             "master": master,
-            "phd": phd_data,
+            "phd": phd,
             "project": project,
             "photo": photo_web_path,
             "thesis_title": thesis_title,
             "thesis_link": thesis_link,
-            "phd_completed": self.phd_completed_cb.isChecked(),
+            "phd_completed": self.phd_completed_var.get(),
         }
 
         try:
             save_member(filename, data)
             self.editing_filename = filename
             self.refresh_list()
-            QMessageBox.information(self, "Saved",
-                                     f'"{format_name(data)}" saved.')
+            messagebox.showinfo("Saved", f'"{format_name(data)}" saved.')
         except Exception as e:
-            QMessageBox.critical(self, "Error", f"Failed to save: {e}")
+            messagebox.showerror("Error", f"Failed to save: {e}")
 
     def clear_form(self):
-        self.title_combo.setCurrentText("")
-        self.given_entry.clear()
-        self.middle_entry.clear()
-        self.last_entry.clear()
-        self.role_combo.setCurrentIndex(0)
-        self.alumni_cb.setChecked(False)
-        self.email_entry.clear()
-        self.master_entry.clear()
-        self.phd_entry.clear()
-        self.project_text.clear()
+        self.title_combo.set("")
+        self.given_entry.delete(0, tk.END)
+        self.middle_entry.delete(0, tk.END)
+        self.last_entry.delete(0, tk.END)
+        self.role_combo.current(0)
+        self.senior_var.set(False)
+        self.alumni_var.set(False)
+        self.email_entry.delete(0, tk.END)
+        self.master_entry.delete(0, tk.END)
+        self.phd_entry.delete(0, tk.END)
+        self.project_text.delete("1.0", tk.END)
         self.selected_photo_path = ""
-        self.photo_label.setText("No photo selected")
-        self.thesis_title_entry.clear()
-        self.thesis_link_entry.clear()
-        self.phd_completed_cb.setChecked(False)
+        self.photo_label.config(text="No photo selected")
+        self.thesis_title_entry.delete(0, tk.END)
+        self.thesis_link_entry.delete(0, tk.END)
+        self.phd_completed_var.set(False)
         self.editing_filename = None
 
     def generate_page(self):
@@ -628,31 +636,21 @@ class ManageMembersGUI(QMainWindow):
                     ["git", "commit", "-m", f"Update group members page ({count} members)"],
                     check=True, cwd=BASE_DIR, capture_output=True, text=True
                 )
-                subprocess.run(
-                    ["git", "push"],
-                    check=True, cwd=BASE_DIR, capture_output=True, text=True
-                )
-                git_msg = " (committed and pushed to Git)"
+                git_msg = " (committed to Git)"
             except Exception as e:
                 git_msg = f" (Git: {e})"
 
-            self.gen_status.setText(f"OK \u2014 {count} member(s){git_msg}")
-            self.gen_status.setStyleSheet("color: green;")
-            QMessageBox.information(
-                self, "Success",
-                f"Generated group.html and theses.html with {count} member(s).{git_msg}"
-            )
+            self.gen_status.config(text=f"OK — {count} member(s){git_msg}", foreground="green")
+            messagebox.showinfo("Success", f"Generated group.html and theses.html with {count} member(s).{git_msg}")
         except Exception as e:
-            self.gen_status.setText(f"Error: {e}")
-            self.gen_status.setStyleSheet("color: red;")
-            QMessageBox.critical(self, "Error", f"Failed to generate page: {e}")
+            self.gen_status.config(text=f"Error: {e}", foreground="red")
+            messagebox.showerror("Error", f"Failed to generate page: {e}")
 
 
 if __name__ == "__main__":
     if not os.path.exists(HTML_FILE):
         print(f"Error: {HTML_FILE} not found.")
     else:
-        app = QApplication(sys.argv)
-        window = ManageMembersGUI()
-        window.show()
-        sys.exit(app.exec())
+        root = tk.Tk()
+        app = ManageMembersGUI(root)
+        root.mainloop()
