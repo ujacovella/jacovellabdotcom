@@ -12,7 +12,7 @@ THESES_FILE = os.path.join(BASE_DIR, "theses.html")
 MEMBERS_DIR = os.path.join(BASE_DIR, "assets", "members")
 PHOTOS_DIR = os.path.join(BASE_DIR, "assets", "group")
 
-ROLE_OPTIONS = ["PhD Student", "Postdoctoral Fellow", "Master Student", "Bachelor Student", "Other"]
+ROLE_OPTIONS = ["PhD Student", "Postdoctoral Fellow", "Master Student", "Bachelor Student", "Senior Collaborator", "Other"]
 
 
 def slugify(text):
