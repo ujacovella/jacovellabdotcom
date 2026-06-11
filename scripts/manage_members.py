@@ -636,7 +636,11 @@ class ManageMembersGUI:
                     ["git", "commit", "-m", f"Update group members page ({count} members)"],
                     check=True, cwd=BASE_DIR, capture_output=True, text=True
                 )
-                git_msg = " (committed to Git)"
+                subprocess.run(
+                    ["git", "push"],
+                    check=True, cwd=BASE_DIR, capture_output=True, text=True
+                )
+                git_msg = " (committed and pushed to Git)"
             except Exception as e:
                 git_msg = f" (Git: {e})"
 

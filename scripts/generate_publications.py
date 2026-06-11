@@ -10,6 +10,7 @@ Citation style (matching the group's convention):
 import os
 import re
 import sys
+import subprocess
 
 BIB_FILE = 'assets/publications.bib'
 HTML_FILE = 'publications.html'
@@ -439,6 +440,23 @@ def main():
     print(f"Writing {total} publications to {HTML_FILE} …")
     update_html(HTML_FILE, pubs_html)
     print("Done.")
+
+    try:
+        subprocess.run(
+            ["git", "add", HTML_FILE, BIB_FILE],
+            check=True, cwd=repo_root, capture_output=True, text=True
+        )
+        subprocess.run(
+            ["git", "commit", "-m", f"Update publications page ({total} entries)"],
+            check=True, cwd=repo_root, capture_output=True, text=True
+        )
+        subprocess.run(
+            ["git", "push"],
+            check=True, cwd=repo_root, capture_output=True, text=True
+        )
+        print("Committed and pushed to Git.")
+    except Exception as e:
+        print(f"Git: {e}")
 
 
 if __name__ == '__main__':
