@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HTML_FILE = os.path.join(BASE_DIR, "positions.html")
 POSITIONS_DIR = os.path.join(BASE_DIR, "assets", "positions")
 
-STATUS_OPTIONS = ["Bachelor internship", "Master internship", "PhD", "Postdoc", "Other"]
+STATUS_OPTIONS = ["Bachelor internship", "Master internship", "PhD", "Postdoc", "Other", "Custom"]
 
 
 def slugify(text):
@@ -100,6 +100,7 @@ STATUS_COLORS = {
     "PhD": ("#fce4ec", "#c62828"),
     "Postdoc": ("#fff3e0", "#e65100"),
     "Other": ("#f3e5f5", "#6a1b9a"),
+    "Custom": ("#f0f0f0", "#555555"),
 }
 
 DEFAULT_BG = "#f0f0f0"
@@ -226,11 +227,21 @@ class ManagePositionsGUI(QMainWindow):
 
         # Row 1: Status
         det_grid.addWidget(QLabel("Status:"), 1, 0, Qt.AlignmentFlag.AlignRight)
+        status_widget = QWidget()
+        status_hbox = QHBoxLayout(status_widget)
+        status_hbox.setContentsMargins(0, 0, 0, 0)
         self.status_combo = QComboBox()
         self.status_combo.addItems(STATUS_OPTIONS)
         self.status_combo.setCurrentIndex(0)
-        self.status_combo.setMinimumWidth(280)
-        det_grid.addWidget(self.status_combo, 1, 1)
+        self.status_combo.setMinimumWidth(150)
+        status_hbox.addWidget(self.status_combo)
+        self.custom_status_entry = QLineEdit()
+        self.custom_status_entry.setPlaceholderText("Enter custom status...")
+        self.custom_status_entry.setMinimumWidth(120)
+        self.custom_status_entry.hide()
+        status_hbox.addWidget(self.custom_status_entry)
+        det_grid.addWidget(status_widget, 1, 1)
+        self.status_combo.currentIndexChanged.connect(self.on_status_changed)
 
         # Row 2: Description
         det_grid.addWidget(QLabel("Description:"), 2, 0, Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignTop)
@@ -339,7 +350,9 @@ class ManagePositionsGUI(QMainWindow):
         if status in STATUS_OPTIONS:
             self.status_combo.setCurrentText(status)
         else:
-            self.status_combo.setCurrentIndex(0)
+            self.status_combo.setCurrentText("Custom")
+            self.custom_status_entry.setText(status)
+            self.custom_status_entry.show()
         self.desc_text.setPlainText(data.get("description", ""))
         self.public_cb.setChecked(data.get("public", True))
         self.limit_spin.setValue(data.get("day_limit", 90))
@@ -411,7 +424,14 @@ class ManagePositionsGUI(QMainWindow):
 
     def save_position(self):
         title = self.title_entry.text().strip()
-        status = self.status_combo.currentText().strip()
+        status_raw = self.status_combo.currentText().strip()
+        if status_raw == "Custom":
+            status = self.custom_status_entry.text().strip()
+            if not status:
+                QMessageBox.warning(self, "Validation", "Custom status text is required.")
+                return
+        else:
+            status = status_raw
         description = self.desc_text.toPlainText().strip()
 
         if not title:
@@ -496,9 +516,17 @@ class ManagePositionsGUI(QMainWindow):
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Failed to save: {e}")
 
+    def on_status_changed(self, index):
+        is_custom = self.status_combo.currentText() == "Custom"
+        self.custom_status_entry.setVisible(is_custom)
+        if is_custom:
+            self.custom_status_entry.setFocus()
+
     def clear_form(self):
         self.title_entry.clear()
         self.status_combo.setCurrentIndex(0)
+        self.custom_status_entry.clear()
+        self.custom_status_entry.hide()
         self.desc_text.clear()
         self.selected_image_path = ""
         self.image_label.setText("No image selected")
