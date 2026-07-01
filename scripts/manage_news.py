@@ -451,7 +451,7 @@ class ManageNewsGUI(QMainWindow):
                 try:
                     subprocess.run(
                         ["git", "push"],
-                        check=True, cwd=BASE_DIR, capture_output=True, text=True, timeout=60
+                        check=True, cwd=BASE_DIR, capture_output=True, text=True, timeout=30
                     )
                     git_msg = " (committed and pushed to GitHub)"
                 except Exception as e:

@@ -657,15 +657,30 @@ class ManageMembersGUI:
             try:
                 subprocess.run(
                     ["git", "add", HTML_FILE, THESES_FILE, PHOTOS_DIR],
-                    check=True, cwd=BASE_DIR, capture_output=True, text=True
+                    check=True, cwd=BASE_DIR, capture_output=True, text=True, timeout=30
                 )
                 subprocess.run(
                     ["git", "commit", "-m", f"Update group members page ({count} members)"],
-                    check=True, cwd=BASE_DIR, capture_output=True, text=True
+                    check=True, cwd=BASE_DIR, capture_output=True, text=True, timeout=30
                 )
-                git_msg = " (committed to Git)"
+                git_msg = " (committed)"
+                try:
+                    subprocess.run(
+                        ["git", "push"],
+                        check=True, cwd=BASE_DIR, capture_output=True, text=True, timeout=30
+                    )
+                    git_msg = " (committed and pushed to GitHub)"
+                except Exception as e:
+                    git_msg = " (committed, but push to GitHub failed)"
+                    messagebox.showwarning(
+                        "Push to GitHub Failed",
+                        "The local commit succeeded, but pushing to GitHub failed.\n\n"
+                        f"Error: {e}\n\n"
+                        "To push manually, run in the terminal:\n"
+                        "  git push"
+                    )
             except Exception as e:
-                git_msg = f" (Git: {e})"
+                git_msg = f" (Git error: {e})"
 
             self.gen_status.config(text=f"OK — {count} member(s){git_msg}", foreground="green")
             messagebox.showinfo("Success", f"Generated group.html and theses.html with {count} member(s).{git_msg}")
