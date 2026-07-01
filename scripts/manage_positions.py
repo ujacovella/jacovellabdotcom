@@ -159,7 +159,7 @@ def regenerate_html(html_file, positions_dir):
         cards = placeholder
     with open(html_file, 'r', encoding='utf-8') as f:
         content = f.read()
-    pattern = r'(<p style="margin-bottom: 2rem; max-width: 60ch; color: var\(--muted\);">.*?</p>\s*)(.*?)(\s*</section>)'
+    pattern = r'(<p style="margin-bottom: 2rem; text-align: justify; color: var\(--muted\);">.*?</p>\s*)(.*?)(\s*</section>)'
     match = re.search(pattern, content, re.DOTALL)
     if not match:
         raise ValueError(
