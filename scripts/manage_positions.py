@@ -180,7 +180,7 @@ class ManagePositionsGUI(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Manage Open Positions")
-        self.setMinimumSize(640, 840)
+        self.setMinimumSize(480, 400)
         self.resize(640, 840)
         self.selected_image_path = ""
         self.selected_attachment_path = ""
@@ -190,12 +190,22 @@ class ManagePositionsGUI(QMainWindow):
 
         central = QWidget()
         self.setCentralWidget(central)
-        main_layout = QVBoxLayout(central)
-        main_layout.setContentsMargins(10, 10, 10, 10)
+        layout = QVBoxLayout(central)
+        layout.setContentsMargins(0, 0, 0, 0)
+
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        layout.addWidget(scroll, 1)
+
+        scroll_content = QWidget()
+        scroll.setWidget(scroll_content)
+        content_layout = QVBoxLayout(scroll_content)
+        content_layout.setContentsMargins(10, 10, 10, 10)
 
         # --- Position List ---
         list_group = QGroupBox("Existing Positions")
-        main_layout.addWidget(list_group)
+        content_layout.addWidget(list_group)
         list_vlay = QVBoxLayout(list_group)
 
         list_btn_row = QHBoxLayout()
@@ -216,7 +226,7 @@ class ManagePositionsGUI(QMainWindow):
 
         # --- Position Details ---
         det_group = QGroupBox("Position Details")
-        main_layout.addWidget(det_group, stretch=1)
+        content_layout.addWidget(det_group, stretch=1)
         det_grid = QGridLayout(det_group)
 
         # Row 0: Title
@@ -306,7 +316,7 @@ class ManagePositionsGUI(QMainWindow):
 
         # --- Generate ---
         gen_group = QGroupBox("Generate Webpage")
-        main_layout.addWidget(gen_group)
+        content_layout.addWidget(gen_group)
         gen_vlay = QVBoxLayout(gen_group)
 
         self.gen_status = QLabel("")
@@ -543,19 +553,30 @@ class ManagePositionsGUI(QMainWindow):
             try:
                 subprocess.run(
                     ["git", "add", HTML_FILE, POSITIONS_DIR],
-                    check=True, cwd=BASE_DIR, capture_output=True, text=True
+                    check=True, cwd=BASE_DIR, capture_output=True, text=True, timeout=30
                 )
                 subprocess.run(
                     ["git", "commit", "-m", f"Update open positions page ({count} active)"],
-                    check=True, cwd=BASE_DIR, capture_output=True, text=True
+                    check=True, cwd=BASE_DIR, capture_output=True, text=True, timeout=30
                 )
-                subprocess.run(
-                    ["git", "push"],
-                    check=True, cwd=BASE_DIR, capture_output=True, text=True
-                )
-                git_msg = " (committed and pushed to Git)"
+                git_msg = " (committed)"
+                try:
+                    subprocess.run(
+                        ["git", "push"],
+                        check=True, cwd=BASE_DIR, capture_output=True, text=True, timeout=30
+                    )
+                    git_msg = " (committed and pushed to GitHub)"
+                except Exception as e:
+                    git_msg = " (committed, but push to GitHub failed)"
+                    QMessageBox.warning(
+                        self, "Push to GitHub Failed",
+                        "The local commit succeeded, but pushing to GitHub failed.\n\n"
+                        f"Error: {e}\n\n"
+                        "To push manually, run in the terminal:\n"
+                        "  git push"
+                    )
             except Exception as e:
-                git_msg = f" (Git: {e})"
+                git_msg = f" (Git error: {e})"
 
             self.gen_status.setText(f"OK \u2014 {count} active position(s){git_msg}")
             self.gen_status.setStyleSheet("color: green;")

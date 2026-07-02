@@ -149,7 +149,7 @@ class ManageNewsGUI(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Manage News")
-        self.setMinimumSize(640, 780)
+        self.setMinimumSize(480, 400)
         self.resize(640, 780)
         self.selected_image_path = ""
         self.editing_filename = None
@@ -158,13 +158,14 @@ class ManageNewsGUI(QMainWindow):
 
         central = QWidget()
         self.setCentralWidget(central)
-        main_layout = QVBoxLayout(central)
-        main_layout.setContentsMargins(10, 10, 10, 10)
+        layout = QVBoxLayout(central)
+        layout.setContentsMargins(0, 0, 0, 0)
 
         # --- Scrollable area ---
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
-        main_layout.addWidget(scroll)
+        scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        layout.addWidget(scroll, 1)
 
         scroll_content = QWidget()
         scroll.setWidget(scroll_content)
@@ -440,19 +441,30 @@ class ManageNewsGUI(QMainWindow):
             try:
                 subprocess.run(
                     ["git", "add", HTML_FILE, NEWS_DIR],
-                    check=True, cwd=BASE_DIR, capture_output=True, text=True
+                    check=True, cwd=BASE_DIR, capture_output=True, text=True, timeout=30
                 )
                 subprocess.run(
                     ["git", "commit", "-m", f"Update news page ({count} items)"],
-                    check=True, cwd=BASE_DIR, capture_output=True, text=True
+                    check=True, cwd=BASE_DIR, capture_output=True, text=True, timeout=30
                 )
-                subprocess.run(
-                    ["git", "push"],
-                    check=True, cwd=BASE_DIR, capture_output=True, text=True
-                )
-                git_msg = " (committed and pushed to Git)"
+                git_msg = " (committed)"
+                try:
+                    subprocess.run(
+                        ["git", "push"],
+                        check=True, cwd=BASE_DIR, capture_output=True, text=True, timeout=30
+                    )
+                    git_msg = " (committed and pushed to GitHub)"
+                except Exception as e:
+                    git_msg = " (committed, but push to GitHub failed)"
+                    QMessageBox.warning(
+                        self, "Push to GitHub Failed",
+                        "The local commit succeeded, but pushing to GitHub failed.\n\n"
+                        f"Error: {e}\n\n"
+                        "To push manually, run in the terminal:\n"
+                        "  git push"
+                    )
             except Exception as e:
-                git_msg = f" (Git: {e})"
+                git_msg = f" (Git error: {e})"
 
             self.gen_status.setText(f"OK \u2014 {count} news item(s){git_msg}")
             self.gen_status.setStyleSheet("color: green;")
