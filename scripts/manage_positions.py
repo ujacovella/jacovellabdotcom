@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HTML_FILE = os.path.join(BASE_DIR, "positions.html")
 POSITIONS_DIR = os.path.join(BASE_DIR, "assets", "positions")
 
-STATUS_OPTIONS = ["Bachelor internship", "Master internship", "PhD", "Postdoc", "Other"]
+STATUS_OPTIONS = ["Bachelor internship", "Master internship", "PhD", "Postdoc", "Other", "Custom"]
 
 
 def slugify(text):
@@ -100,6 +100,7 @@ STATUS_COLORS = {
     "PhD": ("#fce4ec", "#c62828"),
     "Postdoc": ("#fff3e0", "#e65100"),
     "Other": ("#f3e5f5", "#6a1b9a"),
+    "Custom": ("#f0f0f0", "#555555"),
 }
 
 DEFAULT_BG = "#f0f0f0"
@@ -158,7 +159,7 @@ def regenerate_html(html_file, positions_dir):
         cards = placeholder
     with open(html_file, 'r', encoding='utf-8') as f:
         content = f.read()
-    pattern = r'(<p style="margin-bottom: 2rem; max-width: 60ch; color: var\(--muted\);">.*?</p>\s*)(.*?)(\s*</section>)'
+    pattern = r'(<p style="margin-bottom: 2rem; text-align: justify; color: var\(--muted\);">.*?</p>\s*)(.*?)(\s*</section>)'
     match = re.search(pattern, content, re.DOTALL)
     if not match:
         raise ValueError(
@@ -179,7 +180,7 @@ class ManagePositionsGUI(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Manage Open Positions")
-        self.setMinimumSize(640, 840)
+        self.setMinimumSize(480, 400)
         self.resize(640, 840)
         self.selected_image_path = ""
         self.selected_attachment_path = ""
@@ -189,12 +190,22 @@ class ManagePositionsGUI(QMainWindow):
 
         central = QWidget()
         self.setCentralWidget(central)
-        main_layout = QVBoxLayout(central)
-        main_layout.setContentsMargins(10, 10, 10, 10)
+        layout = QVBoxLayout(central)
+        layout.setContentsMargins(0, 0, 0, 0)
+
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        layout.addWidget(scroll, 1)
+
+        scroll_content = QWidget()
+        scroll.setWidget(scroll_content)
+        content_layout = QVBoxLayout(scroll_content)
+        content_layout.setContentsMargins(10, 10, 10, 10)
 
         # --- Position List ---
         list_group = QGroupBox("Existing Positions")
-        main_layout.addWidget(list_group)
+        content_layout.addWidget(list_group)
         list_vlay = QVBoxLayout(list_group)
 
         list_btn_row = QHBoxLayout()
@@ -215,7 +226,7 @@ class ManagePositionsGUI(QMainWindow):
 
         # --- Position Details ---
         det_group = QGroupBox("Position Details")
-        main_layout.addWidget(det_group, stretch=1)
+        content_layout.addWidget(det_group, stretch=1)
         det_grid = QGridLayout(det_group)
 
         # Row 0: Title
@@ -226,11 +237,21 @@ class ManagePositionsGUI(QMainWindow):
 
         # Row 1: Status
         det_grid.addWidget(QLabel("Status:"), 1, 0, Qt.AlignmentFlag.AlignRight)
+        status_widget = QWidget()
+        status_hbox = QHBoxLayout(status_widget)
+        status_hbox.setContentsMargins(0, 0, 0, 0)
         self.status_combo = QComboBox()
         self.status_combo.addItems(STATUS_OPTIONS)
         self.status_combo.setCurrentIndex(0)
-        self.status_combo.setMinimumWidth(280)
-        det_grid.addWidget(self.status_combo, 1, 1)
+        self.status_combo.setMinimumWidth(150)
+        status_hbox.addWidget(self.status_combo)
+        self.custom_status_entry = QLineEdit()
+        self.custom_status_entry.setPlaceholderText("Enter custom status...")
+        self.custom_status_entry.setMinimumWidth(120)
+        self.custom_status_entry.hide()
+        status_hbox.addWidget(self.custom_status_entry)
+        det_grid.addWidget(status_widget, 1, 1)
+        self.status_combo.currentIndexChanged.connect(self.on_status_changed)
 
         # Row 2: Description
         det_grid.addWidget(QLabel("Description:"), 2, 0, Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignTop)
@@ -295,7 +316,7 @@ class ManagePositionsGUI(QMainWindow):
 
         # --- Generate ---
         gen_group = QGroupBox("Generate Webpage")
-        main_layout.addWidget(gen_group)
+        content_layout.addWidget(gen_group)
         gen_vlay = QVBoxLayout(gen_group)
 
         self.gen_status = QLabel("")
@@ -339,7 +360,9 @@ class ManagePositionsGUI(QMainWindow):
         if status in STATUS_OPTIONS:
             self.status_combo.setCurrentText(status)
         else:
-            self.status_combo.setCurrentIndex(0)
+            self.status_combo.setCurrentText("Custom")
+            self.custom_status_entry.setText(status)
+            self.custom_status_entry.show()
         self.desc_text.setPlainText(data.get("description", ""))
         self.public_cb.setChecked(data.get("public", True))
         self.limit_spin.setValue(data.get("day_limit", 90))
@@ -411,7 +434,14 @@ class ManagePositionsGUI(QMainWindow):
 
     def save_position(self):
         title = self.title_entry.text().strip()
-        status = self.status_combo.currentText().strip()
+        status_raw = self.status_combo.currentText().strip()
+        if status_raw == "Custom":
+            status = self.custom_status_entry.text().strip()
+            if not status:
+                QMessageBox.warning(self, "Validation", "Custom status text is required.")
+                return
+        else:
+            status = status_raw
         description = self.desc_text.toPlainText().strip()
 
         if not title:
@@ -496,9 +526,17 @@ class ManagePositionsGUI(QMainWindow):
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Failed to save: {e}")
 
+    def on_status_changed(self, index):
+        is_custom = self.status_combo.currentText() == "Custom"
+        self.custom_status_entry.setVisible(is_custom)
+        if is_custom:
+            self.custom_status_entry.setFocus()
+
     def clear_form(self):
         self.title_entry.clear()
         self.status_combo.setCurrentIndex(0)
+        self.custom_status_entry.clear()
+        self.custom_status_entry.hide()
         self.desc_text.clear()
         self.selected_image_path = ""
         self.image_label.setText("No image selected")
@@ -515,19 +553,30 @@ class ManagePositionsGUI(QMainWindow):
             try:
                 subprocess.run(
                     ["git", "add", HTML_FILE, POSITIONS_DIR],
-                    check=True, cwd=BASE_DIR, capture_output=True, text=True
+                    check=True, cwd=BASE_DIR, capture_output=True, text=True, timeout=30
                 )
                 subprocess.run(
                     ["git", "commit", "-m", f"Update open positions page ({count} active)"],
-                    check=True, cwd=BASE_DIR, capture_output=True, text=True
+                    check=True, cwd=BASE_DIR, capture_output=True, text=True, timeout=30
                 )
-                subprocess.run(
-                    ["git", "push"],
-                    check=True, cwd=BASE_DIR, capture_output=True, text=True
-                )
-                git_msg = " (committed and pushed to Git)"
+                git_msg = " (committed)"
+                try:
+                    subprocess.run(
+                        ["git", "push"],
+                        check=True, cwd=BASE_DIR, capture_output=True, text=True, timeout=30
+                    )
+                    git_msg = " (committed and pushed to GitHub)"
+                except Exception as e:
+                    git_msg = " (committed, but push to GitHub failed)"
+                    QMessageBox.warning(
+                        self, "Push to GitHub Failed",
+                        "The local commit succeeded, but pushing to GitHub failed.\n\n"
+                        f"Error: {e}\n\n"
+                        "To push manually, run in the terminal:\n"
+                        "  git push"
+                    )
             except Exception as e:
-                git_msg = f" (Git: {e})"
+                git_msg = f" (Git error: {e})"
 
             self.gen_status.setText(f"OK \u2014 {count} active position(s){git_msg}")
             self.gen_status.setStyleSheet("color: green;")

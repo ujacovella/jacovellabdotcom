@@ -12,7 +12,7 @@ THESES_FILE = os.path.join(BASE_DIR, "theses.html")
 MEMBERS_DIR = os.path.join(BASE_DIR, "assets", "members")
 PHOTOS_DIR = os.path.join(BASE_DIR, "assets", "group")
 
-ROLE_OPTIONS = ["PhD Student", "Postdoctoral Fellow", "Master Student", "Bachelor Student", "Senior Collaborator", "Other"]
+ROLE_OPTIONS = ["PhD Student", "Postdoctoral Fellow", "Master Student", "Bachelor Student", "Senior Collaborator", "Other", "Custom"]
 
 
 def slugify(text):
@@ -328,9 +328,15 @@ class ManageMembersGUI:
 
         # Row 4: Role
         ttk.Label(det_frame, text="Role: *").grid(row=4, column=0, sticky="w", pady=2)
-        self.role_combo = ttk.Combobox(det_frame, values=ROLE_OPTIONS, width=27, state="readonly")
+        role_frame = ttk.Frame(det_frame)
+        role_frame.grid(row=4, column=1, sticky="w", pady=2)
+        self.role_combo = ttk.Combobox(role_frame, values=ROLE_OPTIONS, width=20, state="readonly")
         self.role_combo.current(0)
-        self.role_combo.grid(row=4, column=1, pady=2, sticky="w")
+        self.role_combo.grid(row=0, column=0)
+        self.custom_role_entry = ttk.Entry(role_frame, width=20)
+        self.custom_role_entry.grid(row=0, column=1, padx=(5, 0))
+        self.custom_role_entry.grid_remove()
+        self.role_combo.bind('<<ComboboxSelected>>', self.on_role_changed)
 
         # Row 5: Status
         ttk.Label(det_frame, text="Status:").grid(row=5, column=0, sticky="w", pady=2)
@@ -432,6 +438,14 @@ class ManageMembersGUI:
         filename, data = self.members[idx]
         self.load_member_to_form(filename, data)
 
+    def on_role_changed(self, event=None):
+        is_custom = self.role_combo.get() == "Custom"
+        if is_custom:
+            self.custom_role_entry.grid()
+            self.custom_role_entry.focus()
+        else:
+            self.custom_role_entry.grid_remove()
+
     def load_member_to_form(self, filename, data):
         self.editing_filename = filename
         title = data.get("title", "")
@@ -450,8 +464,12 @@ class ManageMembersGUI:
         role = data.get("role", "")
         if role in ROLE_OPTIONS:
             self.role_combo.set(role)
+            self.custom_role_entry.grid_remove()
         else:
-            self.role_combo.current(0)
+            self.role_combo.set("Custom")
+            self.custom_role_entry.delete(0, tk.END)
+            self.custom_role_entry.insert(0, role)
+            self.custom_role_entry.grid()
 
         self.senior_var.set(data.get("senior", False))
         self.alumni_var.set(data.get("alumni", False))
@@ -529,7 +547,14 @@ class ManageMembersGUI:
         given = self.given_entry.get().strip()
         middle = self.middle_entry.get().strip()
         last = self.last_entry.get().strip()
-        role = self.role_combo.get().strip()
+        role_raw = self.role_combo.get().strip()
+        if role_raw == "Custom":
+            role = self.custom_role_entry.get().strip()
+            if not role:
+                messagebox.showwarning("Validation", "Custom role text is required.")
+                return
+        else:
+            role = role_raw
         email = self.email_entry.get().strip()
         master = self.master_entry.get().strip()
         phd = self.phd_entry.get().strip()
@@ -610,6 +635,8 @@ class ManageMembersGUI:
         self.middle_entry.delete(0, tk.END)
         self.last_entry.delete(0, tk.END)
         self.role_combo.current(0)
+        self.custom_role_entry.delete(0, tk.END)
+        self.custom_role_entry.grid_remove()
         self.senior_var.set(False)
         self.alumni_var.set(False)
         self.email_entry.delete(0, tk.END)
@@ -630,15 +657,30 @@ class ManageMembersGUI:
             try:
                 subprocess.run(
                     ["git", "add", HTML_FILE, THESES_FILE, PHOTOS_DIR],
-                    check=True, cwd=BASE_DIR, capture_output=True, text=True
+                    check=True, cwd=BASE_DIR, capture_output=True, text=True, timeout=30
                 )
                 subprocess.run(
                     ["git", "commit", "-m", f"Update group members page ({count} members)"],
-                    check=True, cwd=BASE_DIR, capture_output=True, text=True
+                    check=True, cwd=BASE_DIR, capture_output=True, text=True, timeout=30
                 )
-                git_msg = " (committed to Git)"
+                git_msg = " (committed)"
+                try:
+                    subprocess.run(
+                        ["git", "push"],
+                        check=True, cwd=BASE_DIR, capture_output=True, text=True, timeout=30
+                    )
+                    git_msg = " (committed and pushed to GitHub)"
+                except Exception as e:
+                    git_msg = " (committed, but push to GitHub failed)"
+                    messagebox.showwarning(
+                        "Push to GitHub Failed",
+                        "The local commit succeeded, but pushing to GitHub failed.\n\n"
+                        f"Error: {e}\n\n"
+                        "To push manually, run in the terminal:\n"
+                        "  git push"
+                    )
             except Exception as e:
-                git_msg = f" (Git: {e})"
+                git_msg = f" (Git error: {e})"
 
             self.gen_status.config(text=f"OK — {count} member(s){git_msg}", foreground="green")
             messagebox.showinfo("Success", f"Generated group.html and theses.html with {count} member(s).{git_msg}")
