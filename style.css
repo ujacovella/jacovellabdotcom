@@ -648,7 +648,6 @@ section {
 
 .topic-image {
   width: 100%;
-  aspect-ratio: 16 / 9;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
@@ -663,8 +662,8 @@ section {
 
 .topic-image img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  display: block;
 }
 
 .topic-description {
