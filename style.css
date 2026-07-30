@@ -19,6 +19,24 @@
   --grid: 1fr;
   --content-max: 1000px;
   --nav-h: 64px;
+  color-scheme: light;
+}
+
+:root[data-theme="light"] {
+  --bg: #f2f2f3;
+  --surface: #ffffff;
+  --text: #1c1c1e;
+  --muted: #48484a;
+  --hint: #8e8e93;
+  --border: rgba(0, 0, 0, 0.07);
+  --border-strong: rgba(0, 0, 0, 0.14);
+  --accent: #0066cc;
+  --accent-hover: #0052a3;
+  --accent-light: rgba(0, 102, 204, 0.06);
+  --nav-bg: #ffffff;
+  --dropdown-bg: #1c1c1e;
+  --dropdown-text: #f2f2f3;
+  color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -36,7 +54,25 @@
     --nav-bg: #121213;
     --dropdown-bg: #2c2c2e;
     --dropdown-text: #f2f2f3;
+    color-scheme: dark;
   }
+}
+
+:root[data-theme="dark"] {
+  --bg: #121213;
+  --surface: #1c1c1e;
+  --text: #f2f2f3;
+  --muted: #98989d;
+  --hint: #636366;
+  --border: rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --accent: #2997ff;
+  --accent-hover: #40a9ff;
+  --accent-light: rgba(41, 151, 255, 0.08);
+  --nav-bg: #121213;
+  --dropdown-bg: #2c2c2e;
+  --dropdown-text: #f2f2f3;
+  color-scheme: dark;
 }
 
 *, *::before, *::after {
@@ -209,6 +245,37 @@ a {
 
 .dropdown-content a:hover {
   background: rgba(255, 255, 255, 0.07);
+}
+
+/* ── Theme toggle (floating, bottom-right) ── */
+#theme-toggle-btn {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--muted);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  transition: color 0.15s, border-color 0.15s, box-shadow 0.15s;
+  padding: 0;
+}
+
+#theme-toggle-btn:hover {
+  color: var(--text);
+  border-color: var(--accent);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+}
+
+#theme-toggle-btn svg {
+  stroke: var(--bg);
 }
 
 /* ── Hero (Swiss poster-field) ── */

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Open Positions - Jacovella Group</title>
   <link rel="icon" href="assets/icon.png" />
-  <link rel="stylesheet" href="style.css?v=1.11" />
+  <link rel="stylesheet" href="style.css?v=1.12" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -15,10 +15,7 @@
     <div class="nav-container">
       <button class="mobile-menu-toggle" aria-label="Toggle Menu"><span></span><span></span><span></span></button>
       <a href="index.html" class="nav-logo">
-        <picture>
-          <source srcset="assets/logos/JacovelLab_dark.png" media="(prefers-color-scheme: dark)">
-          <img src="assets/logos/JacovelLab.png" alt="JacovelLab Logo">
-        </picture>
+        <img src="assets/logos/JacovelLab.png" alt="JacovelLab Logo">
       </a>
       <ul class="nav-links">
         <li><a href="news.html">News</a></li>
@@ -274,6 +271,8 @@ You will take part in the development of an instrument that combines ion mobilit
     });
   });
 </script>
+<button id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle theme"></button>
+<script src="theme-toggle.js?v=1"></script>
 </body>
 </html>
 
