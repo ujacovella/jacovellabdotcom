@@ -15,6 +15,7 @@ import argparse
 import json
 import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -780,10 +781,41 @@ class ManagePublicationsGUI(QMainWindow):
         pubs_html = generate_pubs_html(entries_sorted, self.selections)
         update_html_file(pubs_html)
         total_sel = sum(1 for it in self.items if it.selected)
-        QMessageBox.information(
-            self, "Generated",
-            f"Generated {HTML_FILE} with {len(entries_sorted)} publications ({total_sel} selected)."
-        )
+        save_selections(self.selections)
+
+        msg = f"Generated {HTML_FILE} with {len(entries_sorted)} publications ({total_sel} selected)."
+
+        try:
+            subprocess.run(
+                ["git", "add", str(HTML_FILE), str(SELECTION_FILE)],
+                check=True, cwd=str(REPO_ROOT), capture_output=True, text=True, timeout=30
+            )
+            subprocess.run(
+                ["git", "commit", "-m", f"Update publications ({total_sel} selected)"],
+                check=True, cwd=str(REPO_ROOT), capture_output=True, text=True, timeout=30
+            )
+            msg += "\nCommitted locally."
+            try:
+                subprocess.run(
+                    ["git", "push"],
+                    check=True, cwd=str(REPO_ROOT), capture_output=True, text=True, timeout=30
+                )
+                msg += "\nPushed to GitHub."
+            except subprocess.CalledProcessError as e:
+                msg += "\n\nCommit succeeded, but push to GitHub failed.\n\nTo push manually:\n  git push"
+                QMessageBox.warning(
+                    self, "Push Failed",
+                    f"Commit succeeded, but pushing to GitHub failed.\n\nError: {e}\n\n"
+                    "To push manually, run:\n  git push"
+                )
+        except subprocess.CalledProcessError as e:
+            stderr = (e.stderr or "").strip()
+            if "nothing to commit" in stderr:
+                msg += "\nNo changes to commit."
+            else:
+                msg += f"\n\nGit error: {stderr}"
+
+        QMessageBox.information(self, "Done", msg)
         self._update_status()
 
 
