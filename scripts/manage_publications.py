@@ -135,13 +135,20 @@ def clean_latex(text):
     text = re.sub(r'\{\{(.+?)\}\}', r'\1', text)
     for pattern, repl in LATEX_ACCENT_COMMANDS:
         text = re.sub(pattern, repl, text)
+    # Convert sub/superscripts to HTML *before* stripping generic braces, so
+    # chemical formulas (e.g. C{\textsubscript{6}}H{\textsubscript{4}}) keep
+    # their markup. Tolerates the optional wrapping braces Zotero emits.
+    text = re.sub(r'\{?\\textsubscript\s*\{([^{}]*)\}\}?', r'<sub>\1</sub>', text)
+    text = re.sub(r'\{?\\textsuperscript\s*\{([^{}]*)\}\}?', r'<sup>\1</sup>', text)
+    # Unwrap emphasis (and the braces Zotero wraps it in) before the generic
+    # brace strip, otherwise "{\emph{n}}" collapses to "\emphn" and is dropped.
+    text = re.sub(r'\{?\\(?:emph|textit)\s*\{([^{}]*)\}\}?', r'\1', text)
+    text = re.sub(r'\\textleftarrow\s*\{\}', '\u2190', text)
+    text = re.sub(r'\\textrightarrow\s*\{\}', '\u2192', text)
+    # Non-braced tilde accent (Zotero emits e.g. {{\~X}} for spectroscopic
+    # state labels); render as the letter with a combining tilde.
+    text = re.sub(r'\\~\s*([A-Za-z])', '\\1\u0303', text)
     text = re.sub(r'\{([^{}]*)\}', r'\1', text)
-    text = re.sub(r'\\textsubscript\{([^{}]*)\}', r'<sub>\1</sub>', text)
-    text = re.sub(r'\\textsuperscript\{([^{}]*)\}', r'<sup>\1</sup>', text)
-    text = re.sub(r'\\emph\{([^{}]*)\}', r'\1', text)
-    text = re.sub(r'\\textit\{([^{}]*)\}', r'\1', text)
-    text = re.sub(r'\\textleftarrow\{\}', '\u2190', text)
-    text = re.sub(r'\\textrightarrow\{\}', '\u2192', text)
     text = re.sub(r'\\relax\s?', '', text)
     text = text.replace('---', '\u2014')
     text = text.replace('--', '\u2013')
