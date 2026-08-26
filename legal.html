@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>PhD Theses - Jacovella Group</title>
+  <title>Legal notice - Jacovella Group</title>
   <link rel="icon" href="assets/icon.png" />
   <link rel="stylesheet" href="style.css?v=1.13" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -33,7 +33,7 @@
           </div>
         </li>
         <li class="has-dropdown">
-          <a href="research.html" class="active-category">Research</a>
+          <a href="research.html">Research</a>
           <div class="dropdown">
             <div class="dropdown-content">
               <a href="research.html">Research topics</a>
@@ -50,31 +50,47 @@
   </nav>
 
   <div class="container">
-    <section class="reveal">
-      <div class="section-heading">PhD &amp; Master's theses</div>
+    <section class="reveal legal-page">
+      <div class="section-heading">Legal notice</div>
+      <p class="legal-lede">Legal notice / <span lang="fr">Mentions légales</span>, published in accordance with Article 6 of the French Law No. 2004-575 of 21 June 2004 for confidence in the digital economy (LCEN).</p>
 
-      <div class="thesis-item">
-        <h3>Ongoing PhD theses</h3>
-        <!-- THESES_ONGOING_START -->
-            <div class="thesis-entry">
-              <strong>Corentin Rossi</strong><br>
-              <span style="color: var(--text); font-size: 14px;">"Development of an instrument for spectroscopy of isomer-selected molecular ions in the context of the diffuse interstellar bands"</span>
-            </div>            <div class="thesis-entry">
-              <strong>Ching-Hua Chang</strong><br>
-              <span style="color: var(--text); font-size: 14px;">"High-Finesse Cavity Spectroscopy as a Tool for Astronomical Detection"</span>
-            </div>            <div class="thesis-entry">
-              <strong>Zekai Li</strong><br>
-              <span style="color: var(--text); font-size: 14px;">"Hydrogenated Fullerenes: When Molecular Physics meets Astronomy"</span>
-            </div>
-      <!-- THESES_ONGOING_END -->
-      </div>
+      <h3>Site publisher</h3>
+      <p>
+        Jacovella Group (JacovelLab), a research group of the<br>
+        Institut des Sciences Moléculaires d'Orsay (ISMO, UMR 8214)<br>
+        Université Paris-Saclay, CNRS<br>
+        Bâtiment 520, Rue André Rivière, 91405 Orsay, France<br>
+        Email: <a href="mailto:ugo.jacovella@cnrs.fr">ugo.jacovella@cnrs.fr</a>
+      </p>
 
-      <div class="thesis-item">
-        <h3>Completed theses</h3>
-        <!-- THESES_COMPLETED_START -->
+      <h3>Director of publication</h3>
+      <p>Dr. Ugo Jacovella, principal investigator of the group.</p>
 
-      <!-- THESES_COMPLETED_END -->
-      </div>
+      <h3>Hosting</h3>
+      <p>
+        This site is published with GitHub Pages, a service provided by<br>
+        GitHub, Inc.<br>
+        88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, United States<br>
+        <a href="https://github.com" target="_blank" rel="noopener">https://github.com</a>
+      </p>
+
+      <h3>Intellectual property</h3>
+      <p>Unless otherwise stated, the text and original graphics on this site are the property of the Jacovella Group. Reproduction for non-commercial academic or educational use is permitted provided the source is acknowledged.</p>
+      <p>The logos of CNRS, Université Paris-Saclay, ISMO and of the funding agencies displayed on this site remain the property of their respective organisations and are used for identification purposes only. Photographs of group members are published with their consent.</p>
+      <p>Bibliographic references and links to scientific publications are provided for academic information; the articles themselves remain subject to the copyright of their respective publishers.</p>
+
+      <h3>External links</h3>
+      <p>This site contains links to third-party websites. The Jacovella Group has no control over their content and accepts no responsibility for it.</p>
+
+      <h3>Personal data and cookies</h3>
+      <p>This website does not use advertising or tracking cookies, and does not collect personal data through forms or web-analytics tools. A single <code>localStorage</code> entry named <code>theme</code> stores your light/dark display preference locally in your browser; it is never transmitted to a server.</p>
+      <p>The site loads web fonts from Google Fonts and retrieves the date of its last update from the GitHub API. When these resources are fetched, the third-party providers (Google, GitHub) may record your IP address as part of serving the request, and the GitHub Pages infrastructure may keep standard connection logs. Please refer to the privacy policies of Google and GitHub for details. No other data is processed.</p>
+      <p>For any question regarding this notice or your personal data, contact <a href="mailto:ugo.jacovella@cnrs.fr">ugo.jacovella@cnrs.fr</a>.</p>
+
+      <h3>Contact</h3>
+      <p>See the <a href="contact.html">Contact</a> page for postal and email details.</p>
+
+      <p class="legal-updated">Last reviewed: August 2026.</p>
     </section>
 
     <div class="institutions">
@@ -100,9 +116,9 @@
           .then(data => {
             if (data && data.commit && data.commit.author && data.commit.author.date) {
               const date = new Date(data.commit.author.date);
-              lastUpdatedEl.innerText = date.toLocaleString('en-GB', { 
-                day: '2-digit', month: '2-digit', year: 'numeric', 
-                hour: '2-digit', minute: '2-digit' 
+              lastUpdatedEl.innerText = date.toLocaleString('en-GB', {
+                day: '2-digit', month: '2-digit', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
               });
             }
           })
