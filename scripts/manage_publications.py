@@ -570,7 +570,7 @@ class PublicationItem:
         self.filter_visible = True
 
 
-class ManagePublicationsGUI(QMainWindow):
+class ManagePublicationsGUI(QMainWindow if HAS_PYQT6 else object):
     def __init__(self, entries, selections):
         super().__init__()
         self.entries = sorted(entries, key=get_sort_key)
