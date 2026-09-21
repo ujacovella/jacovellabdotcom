@@ -1,6 +1,6 @@
 """
 Manage News — PyQt6 GUI editor for news items.
-Generates news.html from JSON data in assets/news/.
+Generates news.html and one page per item (news/<id>.html) from JSON data in assets/news/.
 """
 
 import sys
@@ -22,6 +22,8 @@ from PyQt6.QtCore import Qt
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HTML_FILE = os.path.join(BASE_DIR, "news.html")
 NEWS_DIR = os.path.join(BASE_DIR, "assets", "news")
+NEWS_PAGES_DIR = os.path.join(BASE_DIR, "news")
+CNAME_FILE = os.path.join(BASE_DIR, "CNAME")
 
 MONTHS = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
           "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -63,6 +65,9 @@ def save_news(filename, data):
 
 def delete_news_file(filename):
     path = os.path.join(NEWS_DIR, filename)
+    page = os.path.join(NEWS_PAGES_DIR, os.path.splitext(filename)[0] + ".html")
+    if os.path.exists(page):
+        os.remove(page)
     if os.path.exists(path):
         os.remove(path)
     base = os.path.splitext(path)[0]
@@ -118,7 +123,7 @@ def generate_item_html(data, filename):
     lines.append(f'        <div class="blog-item {cls}" id="news-{item_id}" data-news="{filename}">')
     lines.append(f'          <div class="blog-date">{display_date}</div>')
     lines.append(f'          <div class="blog-body">')
-    lines.append(f'            <div class="blog-title">{title}</div>')
+    lines.append(f'            <div class="blog-title"><a href="news/{item_id}.html">{title}</a></div>')
     lines.append(f'            <div class="blog-excerpt">{excerpt}</div>')
     lines.append(f'          </div>')
     if image:
@@ -127,6 +132,149 @@ def generate_item_html(data, filename):
     lines.append(f'        </div>')
     lines.append(f'        <!-- NEWS END: {filename} -->')
     return "\n".join(lines)
+
+
+def site_url():
+    """Canonical site origin, taken from the CNAME file (empty if unavailable)."""
+    try:
+        with open(CNAME_FILE, 'r', encoding='utf-8') as f:
+            domain = f.read().strip()
+        return f"https://{domain}" if domain else ""
+    except OSError:
+        return ""
+
+
+def linkify(escaped_text):
+    """Turn bare URLs and doi.org links in already-escaped text into anchors."""
+    def repl(m):
+        url = m.group(0)
+        trail = ""
+        while url and url[-1] in ".,;:)":
+            trail = url[-1] + trail
+            url = url[:-1]
+        href = url if url.startswith("http") else "https://" + url
+        return f'<a href="{href}" target="_blank" rel="noopener">{url}</a>{trail}'
+    return re.sub(r'(?:https?://|\bdoi\.org/)[^\s<]+', repl, escaped_text)
+
+
+SHARE_SCRIPT = """<script>
+    (function () {
+      var btn = document.querySelector('[data-share]');
+      if (!btn) return;
+      var label = btn.querySelector('span');
+      var original = label.textContent;
+      function url() {
+        var c = document.querySelector('link[rel="canonical"]');
+        return c ? c.href : location.href.split('#')[0].split('?')[0];
+      }
+      function done(ok) {
+        label.textContent = ok ? 'Link copied' : 'Copy failed';
+        btn.classList.toggle('copied', ok);
+        setTimeout(function () { label.textContent = original; btn.classList.remove('copied'); }, 2000);
+      }
+      function fallback(text) {
+        var ta = document.createElement('textarea');
+        ta.value = text; ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+        done(ok);
+      }
+      btn.addEventListener('click', function () {
+        var text = url();
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () { done(true); }, function () { fallback(text); });
+        } else {
+          fallback(text);
+        }
+      });
+    })();
+  </script>"""
+
+
+def generate_detail_page(data, filename, template):
+    """Build the standalone page for one news item from the news.html template."""
+    item_id = filename.replace(".json", "")
+    title = escape_html(data.get("title", ""))
+    excerpt_raw = data.get("excerpt", "")
+    image = data.get("image", "").replace("\\", "/")
+    display_date = format_display_date(data.get("date", ""))
+    origin = site_url()
+    page_url = f"{origin}/news/{item_id}.html" if origin else ""
+
+    description = escape_html((excerpt_raw or data.get("title", "")).strip()[:200])
+
+    # Start from the news.html shell so nav, footer and scripts stay in sync.
+    html = re.sub(r'<section id="news".*?</section>', '@@CONTENT@@', template, flags=re.DOTALL)
+    html = re.sub(r'<title>.*?</title>', f'<title>{title} - Jacovella Group</title>', html, count=1, flags=re.DOTALL)
+
+    meta = [f'<meta name="description" content="{description}" />']
+    if page_url:
+        meta.append(f'<link rel="canonical" href="{page_url}" />')
+    meta.append('<meta property="og:type" content="article" />')
+    meta.append('<meta property="og:site_name" content="Jacovella Group" />')
+    meta.append(f'<meta property="og:title" content="{title}" />')
+    meta.append(f'<meta property="og:description" content="{description}" />')
+    if page_url:
+        meta.append(f'<meta property="og:url" content="{page_url}" />')
+    if image and origin:
+        meta.append(f'<meta property="og:image" content="{origin}/{image}" />')
+    meta.append(f'<meta name="twitter:card" content="{"summary_large_image" if image else "summary"}" />')
+    html = re.sub(r'[ \t]*<meta name="description"[^>]*/>', "  " + "\n  ".join(meta), html, count=1)
+
+    # Pages live in news/, so relative links to the rest of the site need "../".
+    html = re.sub(
+        r'\b(href|src)="(?!https?:|//|#|/|mailto:|data:)([^"]*)"',
+        lambda m: f'{m.group(1)}="../{m.group(2)}"', html)
+
+    paragraphs = [p.strip() for p in excerpt_raw.replace("\r\n", "\n").split("\n\n") if p.strip()]
+    body = "\n".join(
+        f'        <p>{linkify(escape_html(p)).replace(chr(10), "<br>")}</p>' for p in paragraphs)
+    img_html = (f'\n      <img src="../{image}" alt="{title}" class="news-article-image">'
+                if image else "")
+
+    content = f"""<section id="news-detail" class="reveal">
+      <div class="section-heading">News</div>
+      <article class="news-article">
+        <div class="blog-date">{display_date}</div>
+        <h1 class="news-article-title">{title}</h1>
+        <div class="news-article-body">
+{body}
+        </div>{img_html}
+        <div class="news-article-actions">
+          <button type="button" class="share-btn" data-share aria-live="polite">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>
+            <span>Copy link</span>
+          </button>
+          <a class="all-link" href="../news.html">&larr; All news</a>
+        </div>
+      </article>
+    </section>
+    {SHARE_SCRIPT}"""
+    return html.replace('@@CONTENT@@', content)
+
+
+def generate_detail_pages(all_news, template):
+    os.makedirs(NEWS_PAGES_DIR, exist_ok=True)
+    expected = set()
+    for filename, data in all_news:
+        name = filename.replace(".json", ".html")
+        expected.add(name)
+        with open(os.path.join(NEWS_PAGES_DIR, name), 'w', encoding='utf-8') as f:
+            f.write(generate_detail_page(data, filename, template))
+    # /news/ has no listing of its own; send it to the main news page.
+    with open(os.path.join(NEWS_PAGES_DIR, "index.html"), 'w', encoding='utf-8') as f:
+        f.write('<!DOCTYPE html>\n<meta charset="UTF-8" />\n'
+                '<meta http-equiv="refresh" content="0; url=../news.html" />\n'
+                '<link rel="canonical" href="../news.html" />\n'
+                '<title>News - Jacovella Group</title>\n'
+                '<a href="../news.html">News</a>\n')
+    expected.add("index.html")
+    for name in os.listdir(NEWS_PAGES_DIR):
+        if name.endswith(".html") and name not in expected:
+            os.remove(os.path.join(NEWS_PAGES_DIR, name))
 
 
 def regenerate_html():
@@ -142,6 +290,7 @@ def regenerate_html():
         raise ValueError("Could not find NEWS_START/NEWS_END markers in news.html")
     with open(HTML_FILE, 'w', encoding='utf-8') as f:
         f.write(content)
+    generate_detail_pages(all_news, content)
     return len(all_news)
 
 
@@ -440,7 +589,7 @@ class ManageNewsGUI(QMainWindow):
             git_msg = ""
             try:
                 subprocess.run(
-                    ["git", "add", HTML_FILE, NEWS_DIR],
+                    ["git", "add", "-A", HTML_FILE, NEWS_DIR, NEWS_PAGES_DIR],
                     check=True, cwd=BASE_DIR, capture_output=True, text=True, timeout=30
                 )
                 subprocess.run(

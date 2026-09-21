@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Congratulation to Luis Bonah - Jacovella Group</title>
+  <meta name="description" content="We congratulate and welcome Luis, who is joining us as a postdoctoral fellow under the Star-Phy European Programme to implement the leak out spectroscpy on our existing iSELECTION instrument." />
+  <link rel="canonical" href="https://jacovellab.com/news/congratulation-to-luis-bonah.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Jacovella Group" />
+  <meta property="og:title" content="Congratulation to Luis Bonah" />
+  <meta property="og:description" content="We congratulate and welcome Luis, who is joining us as a postdoctoral fellow under the Star-Phy European Programme to implement the leak out spectroscpy on our existing iSELECTION instrument." />
+  <meta property="og:url" content="https://jacovellab.com/news/congratulation-to-luis-bonah.html" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="icon" href="../assets/icon.png" />
+  <link rel="stylesheet" href="../style.css?v=1.15" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <nav class="main-nav">
+    <div class="nav-container">
+      <button class="mobile-menu-toggle" aria-label="Toggle Menu"><span></span><span></span><span></span></button>
+      <a href="../index.html" class="nav-logo">
+        <img src="../assets/logos/JacovelLab.png" alt="JacovelLab Logo">
+      </a>
+      <ul class="nav-links">
+        <li><a href="../news.html" class="active-category">News</a></li>
+        <li class="has-dropdown">
+          <a href="../group.html">Group</a>
+          <div class="dropdown">
+            <div class="dropdown-content">
+              <a href="../group.html#pi">Principal Investigator</a>
+              <a href="../group.html#members">Group members</a>
+              <a href="../group.html#senior">Senior collaborators</a>
+              <a href="../group.html#alumni">Alumni</a>
+            </div>
+          </div>
+        </li>
+        <li class="has-dropdown">
+          <a href="../research.html">Research</a>
+          <div class="dropdown">
+            <div class="dropdown-content">
+              <a href="../research.html">Research topics</a>
+              <a href="../publications.html">Publications</a>
+              <a href="../theses.html">PhD theses</a>
+              <a href="../funding.html">Funding</a>
+            </div>
+          </div>
+        </li>
+        <li><a href="../positions.html">Open positions</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <section id="news-detail" class="reveal">
+      <div class="section-heading">News</div>
+      <article class="news-article">
+        <div class="blog-date">1 May 2026</div>
+        <h1 class="news-article-title">Congratulation to Luis Bonah</h1>
+        <div class="news-article-body">
+        <p>We congratulate and welcome Luis, who is joining us as a postdoctoral fellow under the Star-Phy European Programme to implement the leak out spectroscpy on our existing iSELECTION instrument.</p>
+        </div>
+        <div class="news-article-actions">
+          <button type="button" class="share-btn" data-share aria-live="polite">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>
+            <span>Copy link</span>
+          </button>
+          <a class="all-link" href="../news.html">&larr; All news</a>
+        </div>
+      </article>
+    </section>
+    <script>
+    (function () {
+      var btn = document.querySelector('[data-share]');
+      if (!btn) return;
+      var label = btn.querySelector('span');
+      var original = label.textContent;
+      function url() {
+        var c = document.querySelector('link[rel="canonical"]');
+        return c ? c.href : location.href.split('#')[0].split('?')[0];
+      }
+      function done(ok) {
+        label.textContent = ok ? 'Link copied' : 'Copy failed';
+        btn.classList.toggle('copied', ok);
+        setTimeout(function () { label.textContent = original; btn.classList.remove('copied'); }, 2000);
+      }
+      function fallback(text) {
+        var ta = document.createElement('textarea');
+        ta.value = text; ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+        done(ok);
+      }
+      btn.addEventListener('click', function () {
+        var text = url();
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () { done(true); }, function () { fallback(text); });
+        } else {
+          fallback(text);
+        }
+      });
+    })();
+  </script>
+
+    <footer>
+      <span>&copy; 2026 Ugo Jacovella</span>
+      <span>Last updated: <span id="last-updated">Loading...</span></span>
+      <span>Built with GitHub Pages</span>
+      <span><a href="../legal.html">Legal notice</a></span>
+    </footer>
+  </div>
+
+  <script src="../motion.js?v=1"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const repo = 'ujacovella/jacovelladotcom';
+      const lastUpdatedEl = document.getElementById('last-updated');
+      if (lastUpdatedEl) {
+        fetch(`https://api.github.com/repos/${repo}/commits/main`)
+          .then(r => r.json())
+          .then(data => {
+            if (data && data.commit && data.commit.author && data.commit.author.date) {
+              const date = new Date(data.commit.author.date);
+              lastUpdatedEl.innerText = date.toLocaleString('en-GB', {
+                day: '2-digit', month: '2-digit', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+              });
+            }
+          })
+          .catch(err => {
+            console.error('Failed to fetch last commit:', err);
+            lastUpdatedEl.innerText = 'N/A';
+          });
+      }
+    });
+  </script>
+<button id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle theme"></button>
+  <script src="../theme-toggle.js?v=2"></script>
+  <script src="../nav.js?v=4"></script>
+</body>
+
+</html>

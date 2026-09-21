@@ -490,6 +490,31 @@ section {
   align-items: start;
 }
 
+.blog-item {
+  position: relative;
+}
+
+/* Title link stretches over the whole card so the entire item is clickable */
+.blog-title a {
+  text-decoration: none;
+}
+
+.blog-title a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.blog-item:hover .blog-title a {
+  color: var(--accent);
+}
+
+.blog-title a:focus-visible::after {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: var(--radius);
+}
+
 .blog-item:last-of-type {
   border-bottom: none;
 }
@@ -524,6 +549,80 @@ section {
   width: 100%;
   height: auto;
   border-radius: 8px;
+}
+
+/* ── News article page ── */
+.news-article {
+  max-width: 720px;
+  padding-top: 0.5rem;
+}
+
+.news-article-title {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 0.5rem 0 1.25rem;
+}
+
+.news-article-body p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+.news-article-body a {
+  color: var(--accent);
+  overflow-wrap: anywhere;
+}
+
+.news-article-image {
+  width: 100%;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+}
+
+.news-article-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: inherit;
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 6px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.1s, color 0.1s;
+}
+
+.share-btn:hover,
+.share-btn.copied {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.share-btn.copied {
+  color: var(--accent);
+}
+
+@media (max-width: 768px) {
+  .news-article-title {
+    font-size: 1.5rem;
+  }
 }
 
 /* ── Home page news ── */

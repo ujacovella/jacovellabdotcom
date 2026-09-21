@@ -11,7 +11,8 @@
   function updateLogo(theme) {
     var logo = document.querySelector('.nav-logo img');
     if (logo) {
-      logo.src = theme === 'dark' ? 'assets/logos/JacovelLab_dark.png' : 'assets/logos/JacovelLab.png';
+      // Keep the page-relative prefix already in the markup (pages in subfolders use "../")
+      logo.setAttribute('src', logo.getAttribute('src').replace(/JacovelLab(_dark)?\.png/, theme === 'dark' ? 'JacovelLab_dark.png' : 'JacovelLab.png'));
     }
   }
 
