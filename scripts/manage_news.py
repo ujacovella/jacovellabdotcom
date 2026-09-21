@@ -208,6 +208,8 @@ def generate_detail_page(data, filename, template):
 
     # Start from the news.html shell so nav, footer and scripts stay in sync.
     html = re.sub(r'<section id="news".*?</section>', '@@CONTENT@@', template, flags=re.DOTALL)
+    # news.html's own canonical tag must not leak into the item pages.
+    html = re.sub(r'[ \t]*<link rel="canonical"[^>]*>\n?', '', html)
     html = re.sub(r'<title>.*?</title>', f'<title>{title} - Jacovella Group</title>', html, count=1, flags=re.DOTALL)
 
     meta = [f'<meta name="description" content="{description}" />']
@@ -248,7 +250,7 @@ def generate_detail_page(data, filename, template):
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg>
             <span>Copy link</span>
           </button>
-          <a class="all-link" href="../news.html">&larr; All news</a>
+          <a class="all-link" href="../news">&larr; All news</a>
         </div>
       </article>
     </section>
@@ -267,10 +269,10 @@ def generate_detail_pages(all_news, template):
     # /news/ has no listing of its own; send it to the main news page.
     with open(os.path.join(NEWS_PAGES_DIR, "index.html"), 'w', encoding='utf-8') as f:
         f.write('<!DOCTYPE html>\n<meta charset="UTF-8" />\n'
-                '<meta http-equiv="refresh" content="0; url=../news.html" />\n'
-                '<link rel="canonical" href="../news.html" />\n'
+                '<meta http-equiv="refresh" content="0; url=../news" />\n'
+                '<link rel="canonical" href="../news" />\n'
                 '<title>News - Jacovella Group</title>\n'
-                '<a href="../news.html">News</a>\n')
+                '<a href="../news">News</a>\n')
     expected.add("index.html")
     for name in os.listdir(NEWS_PAGES_DIR):
         if name.endswith(".html") and name not in expected:

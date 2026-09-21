@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Jacovella Group</title>
   <meta name="description" content="Personal academic website of Dr. Ugo Jacovella." />
+  <link rel="canonical" href="https://jacovellab.com/" />
   <link rel="icon" href="assets/icon.png" />
   <link rel="stylesheet" href="style.css?v=1.16" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,35 +18,35 @@
   <nav class="main-nav">
     <div class="nav-container">
       <button class="mobile-menu-toggle" aria-label="Toggle Menu"><span></span><span></span><span></span></button>
-      <a href="index.html" class="nav-logo">
+      <a href="/" class="nav-logo">
         <img src="assets/logos/JacovelLab.png" alt="JacovelLab Logo">
       </a>
       <ul class="nav-links">
-        <li><a href="news.html">News</a></li>
+        <li><a href="news">News</a></li>
         <li class="has-dropdown">
-          <a href="group.html">Group</a>
+          <a href="group">Group</a>
           <div class="dropdown">
             <div class="dropdown-content">
-              <a href="group.html#pi">Principal Investigator</a>
-              <a href="group.html#members">Group members</a>
-              <a href="group.html#senior">Senior collaborators</a>
-              <a href="group.html#alumni">Alumni</a>
+              <a href="group#pi">Principal Investigator</a>
+              <a href="group#members">Group members</a>
+              <a href="group#senior">Senior collaborators</a>
+              <a href="group#alumni">Alumni</a>
             </div>
           </div>
         </li>
         <li class="has-dropdown">
-          <a href="research.html">Research</a>
+          <a href="research">Research</a>
           <div class="dropdown">
             <div class="dropdown-content">
-              <a href="research.html">Research topics</a>
-              <a href="publications.html">Publications</a>
-              <a href="theses.html">PhD theses</a>
-              <a href="funding.html">Funding</a>
+              <a href="research">Research topics</a>
+              <a href="publications">Publications</a>
+              <a href="theses">PhD theses</a>
+              <a href="funding">Funding</a>
             </div>
           </div>
         </li>
-        <li><a href="positions.html">Open positions</a></li>
-        <li><a href="contact.html">Contact</a></li>
+        <li><a href="positions">Open positions</a></li>
+        <li><a href="contact">Contact</a></li>
       </ul>
     </div>
   </nav>
@@ -93,7 +94,7 @@
       <div class="projects-grid" id="research-topics-container">
         <p style="font-size:14px;color:var(--muted);">Loading research topics...</p>
       </div>
-      <a class="all-link" href="research.html">View research details →</a>
+      <a class="all-link" href="research">View research details →</a>
     </section>
 
     <section id="publications" class="reveal">
@@ -101,7 +102,7 @@
       <div id="selected-pubs-container">
         <p style="font-size:14px;color:var(--muted);">Loading...</p>
       </div>
-      <a class="all-link" href="publications.html">All publications →</a>
+      <a class="all-link" href="publications">All publications →</a>
     </section>
 
     <section id="news" class="reveal">
@@ -109,7 +110,7 @@
       <div id="news-container">
         <p style="font-size:14px;color:var(--muted);">Loading...</p>
       </div>
-      <a class="all-link" href="news.html">All news →</a>
+      <a class="all-link" href="news">All news →</a>
     </section>
 
     <div class="institutions">
@@ -122,7 +123,7 @@
       <span>&copy; 2026 Ugo Jacovella</span>
       <span>Last updated: <span id="last-updated">Loading...</span></span>
       <span>Built with GitHub Pages</span>
-      <span><a href="legal.html">Legal notice</a></span>
+      <span><a href="legal">Legal notice</a></span>
     </footer>
   </div>
 
@@ -285,7 +286,7 @@
               <div class="project-card">
                 <h3>${title}</h3>
                 <p>${firstPara.substring(0, 150)}...</p>
-                <a href="research.html#${id}" class="pub-link" style="margin-top:1rem; display:inline-block;">Learn more →</a>
+                <a href="research#${id}" class="pub-link" style="margin-top:1rem; display:inline-block;">Learn more →</a>
               </div>
             `;
           }).join('\n');
