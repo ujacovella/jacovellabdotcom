@@ -123,7 +123,7 @@ def generate_item_html(data, filename):
     lines.append(f'        <div class="blog-item {cls}" id="news-{item_id}" data-news="{filename}">')
     lines.append(f'          <div class="blog-date">{display_date}</div>')
     lines.append(f'          <div class="blog-body">')
-    lines.append(f'            <div class="blog-title"><a href="news/{item_id}.html">{title}</a></div>')
+    lines.append(f'            <div class="blog-title"><a href="news/{item_id}">{title}</a></div>')
     lines.append(f'            <div class="blog-excerpt">{excerpt}</div>')
     lines.append(f'          </div>')
     if image:
@@ -202,7 +202,7 @@ def generate_detail_page(data, filename, template):
     image = data.get("image", "").replace("\\", "/")
     display_date = format_display_date(data.get("date", ""))
     origin = site_url()
-    page_url = f"{origin}/news/{item_id}.html" if origin else ""
+    page_url = f"{origin}/news/{item_id}" if origin else ""
 
     description = escape_html((excerpt_raw or data.get("title", "")).strip()[:200])
 
