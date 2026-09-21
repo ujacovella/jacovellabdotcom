@@ -1596,3 +1596,31 @@ footer a:hover {
     gap: 1rem;
   }
 }
+
+/* ── News: stacked layout on mobile ── */
+@media (max-width: 768px) {
+  .blog-item,
+  .blog-item.has-image {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .blog-excerpt {
+    text-align: left;
+  }
+
+  .blog-image {
+    max-height: 220px;
+    object-fit: cover;
+    margin-top: 0.5rem;
+  }
+
+  #news-container .blog-item.has-image {
+    grid-template-columns: 1fr;
+  }
+
+  #news-container .blog-image {
+    max-width: 100%;
+    align-self: start;
+  }
+}
