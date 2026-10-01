@@ -5,7 +5,7 @@
   "last": "Rossi",
   "role": "PhD Student",
   "senior": false,
-  "alumni": false,
+  "alumni": true,
   "email": "corentin.rossi@universite-paris-saclay.fr",
   "master": "Master at Université de Paris-Sud",
   "phd": "PhD at Université Paris-Saclay",
